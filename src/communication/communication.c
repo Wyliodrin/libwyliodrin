@@ -64,9 +64,10 @@ void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
             data = r->element[j]->str;
           	if(strcmp(data, "message") == 0)
           	{
+
           		data = r->element[j+2]->str;
           		f(0, data);
-          	}          
+          	}         
         }
     }
 }
@@ -103,6 +104,5 @@ int sendMessage (char *id, int communication_port, char *data)
 int closeCommunication ()
 {
 	redisFree(context);
-	redisAsyncDisconnect(c); 
+	redisAsyncDisconnect(c);
 }
-
