@@ -14,7 +14,7 @@ set (wyliodrin_LIB_SRCS
 )
 
 add_library (wyliodrin SHARED ${wyliodrin_LIB_SRCS})
-target_link_libraries (wyliodrin ${HIREDIS_LIBRARIES} -lrt -pthread -lmaa)
+target_link_libraries (wyliodrin ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} -lrt -pthread -lmaa)
 
 set_target_properties (
   wyliodrin

@@ -238,7 +238,7 @@ void TwoWire::onService(void)
 {
 }
 
-#if WIRE_INTERFACES_COUNT > 0
+//#if WIRE_INTERFACES_COUNT > 0
 static void Wire_Init(void)
 {
 }
@@ -248,7 +248,7 @@ TwoWire Wire = TwoWire(Wire_Init);
 void WIRE_ISR_HANDLER(void) {
 	Wire.onService();
 }
-#endif
+//#endif
 
 #if WIRE_INTERFACES_COUNT > 1
 static void Wire1_Init(void)
