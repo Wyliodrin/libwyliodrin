@@ -11,8 +11,13 @@
 #define IP "127.0.0.1"
 #define REDIS_ECONNECT -1
 
-redisAsyncContext *c;
+struct priv_data
+{
+	void (*f)(int err, char *data);
+	int port;
+}
 
+redisAsyncContext *c;
 
 int initCommunication(int redis_port)
 {
@@ -28,38 +33,40 @@ int initCommunication(int redis_port)
 	return 0;
 }
 
-int openConnection (int communication_port, void (*f)(int err, char *data))
-{
-
-}
-
 void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
     int j;
+    char *data;
+    char *token;
+    char *port_temp;
+    int port;
     redisReply *r = reply;
     if (reply == NULL) return;
 
     if (r->type == REDIS_REPLY_ARRAY) {
         for (j = 0; j < r->elements; j++) {
-            printf("%u) %s\n", j, r->element[j]->str);
+            data = r->element[j]->str);
+			if(strchr(data, ":"))
+			{
+				token = strtok(data, ":");
+				strcpy(port_temp, token);
+				int port = atoi(port_temp);
+				token = strtok(NULL, ":");
+				if(port == privdatap->port)
+			}
         }
     }
 }
 
-void *m()
+int openConnection (int communication_port, void (*f)(int err, char *data))
 {
-	
+	struct priv_data *pd = malloc(sizeof(struct priv_data));
+	pd->f = f;
+	pd->port = communication_port;
 	struct event_base *base = event_base_new();
 	initCommunication(6379);
 	redisLibeventAttach(c, base);
-    redisAsyncCommand(c, onMessage, NULL, "SUBSCRIBE a");
-    event_base_dispatch(base);   
-}
-
-int main()
-{
-	pthread_t a;
-	pthread_create(&a, NULL, &m, NULL);
-	printf("ana");
+    redisAsyncCommand(c, onMessage, pd, "SUBSCRIBE communication");
+    event_base_dispatch(base);
 }
 
 
