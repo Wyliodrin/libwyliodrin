@@ -6,8 +6,10 @@ extern "C" {
 #endif
 
 //sends messages
-int initCommunication(int redis_port);
-int openConnection (int communication_port, void (*f)(int err, char *data));
+int initCommunication (int redis_port);
+void openConnection (int communication_port, void (*f)(int err, char *data));
+int sendMessage (int communication_port, char *data);
+int closeCommunication ();
 
 #ifdef __cplusplus
 }
