@@ -24,9 +24,29 @@ static maa_i2c_context i2c_buses[MAX_I2C_PINS];
 // struct i2c_msg i2c_buf[2];
 // unsigned int i2c_buf_count = 0;
 
+void resetPin (int pin);
+void pwmReset (int pin);
+
 int wiringSetup ()
 {
 	maa_init ();
+}
+
+void pinReset (int pin)
+{
+	pinMode (pin, OUTPUT);
+	resetPin (pin);
+	pwmReset (pin);
+}
+
+void pwmReset (pin)
+{
+	maa_pwm_context p = maa_pwm_init (pin);
+	if (p) 
+	{
+		maa_pwm_enable (p, 0);
+		maa_pwm_close (p);
+	}
 }
 
 void resetPin (int pin)
