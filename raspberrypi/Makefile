@@ -9,7 +9,7 @@ install:
 	cp bass/lib* /usr/local/lib; ldconfig
 
 python:
-	cd python/WiringPi2-Python; ./build
+	cd python/WiringPi2-Python; ./build.sh
 	cd python/pybass; python setup.py install
 
 clean:
