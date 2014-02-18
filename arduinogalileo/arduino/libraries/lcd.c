@@ -431,13 +431,13 @@ int lcdInit (const int rows, const int cols, const int bits,
 
   lcds [lcdFd] = lcd ;
 
-  digitalWrite (lcd->rsPin,   0) ; pinMode (lcd->rsPin,   OUTPUT) ;
-  digitalWrite (lcd->strbPin, 0) ; pinMode (lcd->strbPin, OUTPUT) ;
+  pinMode (lcd->rsPin,   OUTPUT) ; digitalWrite (lcd->rsPin,   0) ; 
+  pinMode (lcd->strbPin, OUTPUT) ; digitalWrite (lcd->strbPin, 0) ; 
 
   for (i = 0 ; i < bits ; ++i)
   {
-    digitalWrite (lcd->dataPins [i], 0) ;
     pinMode      (lcd->dataPins [i], OUTPUT) ;
+    digitalWrite (lcd->dataPins [i], 0) ;
   }
   delay (35) ; // mS
 
