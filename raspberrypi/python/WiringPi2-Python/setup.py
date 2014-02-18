@@ -61,7 +61,7 @@ setup(
         'WiringPi/wiringPi/wiringPiI2C.h',
         'WiringPi/wiringPi/max31855.h',
         'WiringPi/wiringPi/max5322.h',
-        'WiringPi/wiringPi/drc.h',
+#        'WiringPi/wiringPi/drc.h',
         'WiringPi/wiringPi/sn3218.h',
         'WiringPi/wiringPi/mcp23s08.h',
         'WiringPi/wiringPi/mcp3422.h',

@@ -11,6 +11,7 @@ wyliodrin:$(BOARD) $(OBJS)
 
 python:
 	make --directory=$(BOARD) python	
+	cd pyhton/wyliodrin; python setup.py install; cd ../..
 
 clean:
 	make --directory=raspberrypi clean	
