@@ -1,9 +1,13 @@
 import os
 
-if os.environ['GADGET'] == 'RASPBERYPI':
+try:
     from wiringpi2 import *
     wiringPiSetup ()
+except:
+    pass
 
-elif os.environg['GADGET'] == 'ARDUINOGALILEO':
+try:
     from arduino import *
     wiringSetup ()
+except:
+    pass

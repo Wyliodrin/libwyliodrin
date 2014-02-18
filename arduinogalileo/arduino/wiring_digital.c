@@ -141,6 +141,9 @@ void pinMode(uint8_t pin, uint8_t mode)
 
 	trace_debug("%s: pin=%d, mode=%d", __func__, pin, mode);
 
+	muxSelectDigitalPin (pin);
+
+
 	switch (mode) {
 	/* TODO this doesn't handle the (input, high) setup yet!!! */
 	case INPUT:
