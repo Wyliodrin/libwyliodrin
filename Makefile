@@ -1,13 +1,18 @@
 .PHONY: clean wyliodrin python
 
 SRC = ${wildcard *.c}
-OBJS = ${$SRC:.cpp=.o}
+OBJS = ${SRC:.c=.o}
 
-wyliodrin:$(BOARD) $(OBJS)
+wyliodrin:$(BOARD)
 	echo "wyliodrin setup"
 	make --directory=$(BOARD) install
-	gcc -shared $(OBJS) -o wyliodrin.so
+	make build
 	cp wyliodrin.so /usr/lib
+
+build:$(OBJS)
+	echo $(OBJS)
+	gcc -shared $(OBJS) -o libwyliodrin.so
+	
 
 python:
 	make --directory=$(BOARD) python	

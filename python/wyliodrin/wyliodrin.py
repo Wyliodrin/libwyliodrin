@@ -1,4 +1,8 @@
 import os
+try:
+    from libwyliodrin import *
+except:
+    pass
 
 try:
     from wiringpi2 import *

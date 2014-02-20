@@ -2,12 +2,14 @@
 
 from distutils.core import setup, Extension
 
-setup(name='Wyliodrin',
+setup(name='Lib Wyliodrin',
       version='1.0',
-      description='Python Wyliodrin',
+      description='Python Lib Wyliodrin',
       author='Wyliodrin',
       author_email='office@wyliodrin.com',
       url='http://www.github.com/Wyliodrin/libwyliodrin',
-      py_modules = ['wyliodrin']
+      ext_modules = [Extension('_libwyliodrin', ['libwyliodrin.i'], 
+                             swig_opts=['-modern', '-I .'], libraries=['wyliodrin'] )],
+      py_modules = ['wyliodrin', 'libwyliodrin'],
      )
 
