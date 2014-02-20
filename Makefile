@@ -12,7 +12,9 @@ wyliodrin:$(BOARD)
 build:$(OBJS)
 	echo $(OBJS)
 	gcc -shared $(OBJS) -o libwyliodrin.so
-	
+	cp Wyliodrin.h /usr/include
+	cp libwyliodrin.so /usr/lib
+	ldconfig	
 
 python:
 	make --directory=$(BOARD) python	
