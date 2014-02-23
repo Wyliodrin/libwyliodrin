@@ -9,7 +9,7 @@ install:
 	make --directory=arduino LIBRARY=wiring
 	make --directory=arduino install
 	# bass
-	cp bass/lib* /usr/local/lib; ldconfig
+	cp bass/lib* /usr/local/lib; cp bass/libbass.so /usr/lib; ldconfig
 
 clean:
 	make --directory=arduino clean
