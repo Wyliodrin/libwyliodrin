@@ -1,0 +1,35 @@
+0.	Before running 'sudo make build' please pay attention to this aspect:
+
+	wyliodrin_wrap.c needs to know the location of jni.h.
+	In my station, the jni.h is located at /usr/lib/jvm/java-7-openjdk-i386/include.
+	Most likely the jni.h file has not the same path in your system.
+	Run 'locate jni.h' to find the path to jni.h.
+	After finding the path to jni.h. please modify the third line of the makefile,
+	pasting the path to jni.h after the -I parameter.
+
+1. 	After running 'sudo make build', run 'make test' to verify whether the java porting
+	was successful or not. Running make test should print "It Works!". If you get
+	any error, please let me know about it!
+
+2.	I copied Wyliodrin.c and the rest of the files it needs in the WyliodrinCopy
+	because I added a test() method that returns "It Works!". 
+
+	I did not want to modify the original header only for this dummy method.
+	I will modify the Makefile to use the original header after some testing on rp.
+	Till then, the test() method is the only method that gives some guarantess that
+	the Java porting was successful.
+
+3.	It seems like when generating the -o files, gcc needs the -fPIC parameter.
+	Otherwise I get this stupid error:
+
+	Exception in thread "main" java.lang.UnsatisfiedLinkError: /usr/lib/libwyliodrin.so: /usr/lib/libwyliodrin.so: undefined symbol: create_inet_stream_socket
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1965)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1890)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1880)
+	at java.lang.Runtime.loadLibrary0(Runtime.java:849)
+	at java.lang.System.loadLibrary(System.java:1088)
+	at main.main(main.java:3)
+
+	I ask permission to modify the original Makefile to generate the -o files
+	using the -fPIC parameter. Please include your answer in the review.
