@@ -8,7 +8,6 @@ class Timer
         Timer(unsigned int Delay, void (*pToFunction)(Timer* timer));
         ~Timer();
         bool Probe();
-        bool Probe(timeval& SomeTime); //could be useful if there're 1000 timers in row
         void Start() { isActive=true;}
         void Stop() { isActive=false;}
         bool IsActive() { return isActive; }
