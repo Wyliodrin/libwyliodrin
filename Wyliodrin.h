@@ -2,13 +2,13 @@
 #define WYLIODRIN_H
 
 #ifdef RASPBERRYPI
-#include <wiringPi.h>
+	#include <wiringPi.h>
 #elif ARDUINOGALILEO
-#include <Arduino.h>
+	#include <Arduino.h>
 #endif
 
 void initWyliodrin ();
-void sendSignal (const char *name, double value);
+void sendSignal    (const char *name, double value);
 
-#endif
+#endif // WYLIODRIN_H
 
