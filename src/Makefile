@@ -25,6 +25,7 @@ build:$(OBJS) $(OBJWIRING) $(OBJLIBRARIES)
 
 clean:
 	rm -f *.o
+	rm -f wiring/*.o
 	rm -f libraries/*.o
 	rm -f libwyliodrin.so
 	rm -rf ../build
