@@ -3,7 +3,7 @@ libwyliodrin
 
 
 Requirements
-____________
+------------
 Libwyliodrin has the following requirements
   * redis-server
   * libhiredis
@@ -26,8 +26,7 @@ Javascript
 
 
 Install
-_______
-
+-------
 
     make $BOARDNAME - can be raspberrypi or arduinogalileo
     sudo make install
