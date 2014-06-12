@@ -37,6 +37,8 @@ void resetPin (int pin)
 #define isGpioPin(pin)   (gpio_pins[pin] != NULL)
 #define isAioPin(pin)   (aio_pins[pin] != NULL)
 #define isPwmPin(pin)   (pwm_pins[pin] != NULL)
+#define inPin(pin) do { if (!gpio_pins[pin]) pinMode (pin, INPUT); } while (0);
+#define outPin(pin) do { if (!gpio_pins[pin]) pinMode (pin, OUTPUT); } while (0);
 
 void pinMode (int pin, int mode)
 {
@@ -57,11 +59,13 @@ void pinMode (int pin, int mode)
 
 void digitalWrite (int pin, int value)
 {
+	outPin (pin);
 	maa_gpio_write (gpio_pins[pin], value);
 }
 
 int digitalRead (int pin)
 {
+	inPin (pin);
 	return maa_gpio_read (gpio_pins[pin]);
 }
 
