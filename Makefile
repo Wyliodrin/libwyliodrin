@@ -1,27 +1,45 @@
-.PHONY: clean wyliodrin python
+.PHONY: clean raspberrypi arduinogalileo install
 
-SRC = ${wildcard *.c}
+SRC = ${src/wildcard *.c}
 
-wyliodrin:$(BOARD)
-	echo "wyliodrin setup"
-	make --directory=$(BOARD) install
-	make build
-	cp wyliodrin.so /usr/lib
+all:
+	@echo "Please choose a target"
+	@echo "targets:"
+	@echo "  raspberrypi"
+	@echo "  arduinogalileo"
 
-build:objs
-	gcc -shared *.o -o libwyliodrin.so
-	cp Wyliodrin.h /usr/include
-	cp libwyliodrin.so /usr/lib
-	ldconfig
+raspberrypi:
+	echo "Building for Raspberry Pi"
+	cd src && BOARD=RASPBERRYPI make
 
-objs:$(SRC)
-	gcc -fPIC -c $(SRC)
+arduinogalileo:
+	echo "Building for Arduino Galileo"
+	cd src && BOARD=ARDUINOGALILEO make
 
-python:
-	make --directory=$(BOARD) python	
-	cd pyhton/wyliodrin; python setup.py install; cd ../..
+# wyliodrin:$(BOARD)
+# 	echo "wyliodrin setup"
+# 	make --directory=$(BOARD) install
+# 	make build
+# 	cp wyliodrin.so /usr/lib
+
+# build:objs
+# 	gcc -shared *.o -o libwyliodrin.so
+# 	cp Wyliodrin.h /usr/include
+# 	cp libwyliodrin.so /usr/lib
+# 	ldconfig
+
+#objs:$(SRC)
+#	gcc -fPIC -c $(SRC)
+
+#python:
+#	make --directory=$(BOARD) python	
+#	cd pyhton/wyliodrin; python setup.py install; cd ../..
+
+install:
+	test $PREFIX || PREFIX=/usr/
+	cp -r build/* $$PREFIX
 
 clean:
-	make --directory=raspberrypi clean	
-	make --directory=arduinogalileo clean
+	cd src && make clean
+#	make --directory=arduinogalileo clean
 	
