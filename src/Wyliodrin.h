@@ -8,14 +8,14 @@
 #include <Wyliodrin/wiring.h>
 
 // Plugins
-#include <Wyliodrin/libraries/lcd.h>
+#include <Wyliodrin/lcd.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Intialize wyliodrin
-void wyliodrin ();
+void wyliodrinSetup (void);
 
 //  send signal value
 

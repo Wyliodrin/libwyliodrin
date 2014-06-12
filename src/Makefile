@@ -1,4 +1,4 @@
-.PHONY: clean build
+.PHONY: clean build 
 
 CPPFLAGS = -I . -fPIC -D$(BOARD)
 
@@ -11,8 +11,11 @@ OBJWIRING = ${SRCWIRING:.c=.o}
 SRCLIBRARIES = ${wildcard libraries/*.c}
 OBJLIBRARIES = ${SRCLIBRARIES:.c=.o}
 
-build:$(OBJS) $(OBJWIRING) $(OBJLIBRARIES)
-	g++ -shared -o libwyliodrin.so $(OBJS) $(OBJWIRING) $(OBJLIBRARIES) -lpthread -lrt -lmaa 
+SRCSIGNALS = ${wildcard signals/*.c}
+OBJSIGNALS = ${SRCSIGNALS:.c=.o}
+
+build:$(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJSIGNALS)
+	g++ -shared -o libwyliodrin.so $(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJSIGNALS) -lpthread -lrt -lmaa -lhiredis -ljansson
 	mkdir ../build
 	mkdir ../build/include
 	mkdir ../build/include/Wyliodrin

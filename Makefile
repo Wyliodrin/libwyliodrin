@@ -1,4 +1,8 @@
-.PHONY: clean raspberrypi arduinogalileo install
+.PHONY: clean raspberrypi arduinogalileo install python javascript
+
+ifeq ($(PREFIX),)
+PREFIX=/usr/
+endif
 
 SRC = ${src/wildcard *.c}
 
@@ -16,30 +20,19 @@ arduinogalileo:
 	echo "Building for Arduino Galileo"
 	cd src && BOARD=ARDUINOGALILEO make
 
-# wyliodrin:$(BOARD)
-# 	echo "wyliodrin setup"
-# 	make --directory=$(BOARD) install
-# 	make build
-# 	cp wyliodrin.so /usr/lib
+python:
+	cd languages/python && make install
 
-# build:objs
-# 	gcc -shared *.o -o libwyliodrin.so
-# 	cp Wyliodrin.h /usr/include
-# 	cp libwyliodrin.so /usr/lib
-# 	ldconfig
-
-#objs:$(SRC)
-#	gcc -fPIC -c $(SRC)
-
-#python:
-#	make --directory=$(BOARD) python	
-#	cd pyhton/wyliodrin; python setup.py install; cd ../..
+javascript:
+	cd languages/nodejs && make install
 
 install:
-	test $PREFIX || PREFIX=/usr/
-	cp -r build/* $$PREFIX
+	echo $(PREFIX)
+	cp -r build/* $(PREFIX)
 
 clean:
 	cd src && make clean
-#	make --directory=arduinogalileo clean
+	cd languages/python && make clean
+	cd languages/nodejs && make clean
+
 	

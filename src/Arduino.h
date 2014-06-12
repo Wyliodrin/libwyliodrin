@@ -6,6 +6,18 @@
 
 // main fucntion for Arduino
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void setup ();
+void loop ();
+
+
+#ifdef __cplusplus
+}
+#endif
+
 int main ()
 {
 	wyliodrinSetup ();

@@ -8,6 +8,11 @@ static maa_aio_context aio_pins[MAX_AIO_PINS];
 static maa_pwm_context pwm_pins[MAX_PWM_PINS];
 static maa_i2c_context i2c_buses[MAX_I2C_PINS];
 
+int wiringSetup ()
+{
+	maa_init ();
+}
+
 void resetPin (int pin)
 {
 	if (gpio_pins[pin] != NULL)
