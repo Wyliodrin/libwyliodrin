@@ -29,6 +29,7 @@ build:$(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJSIGNALS)
 clean:
 	rm -f *.o
 	rm -f wiring/*.o
+	rm -f signals/*.o
 	rm -f libraries/*.o
 	rm -f libwyliodrin.so
 	rm -rf ../build

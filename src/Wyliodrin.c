@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include "signals/signals.h"
 
 // #define VERBOSE
 
@@ -23,6 +24,18 @@ static int sock = -1;
 void wyliodrinSetup()
 {
 	wiringSetup ();
+	//wyliodrin_port, wyliodrin_project, wyliodrin_session - environment variables
+	char * val = getenv("wyliodrin_port");
+	int port;
+	if(val != NULL)
+		port = atoi(val);
+	else
+		port = 6379;
+
+	char *projectId = getenv("wyliodrin_project");
+	printf("projid = %s\n", projectId);
+	char *sessionId = getenv("wyliodrin_session");
+	initSignal(port, projectId, sessionId);
 	// signalSetup ();
 }
 
