@@ -8,7 +8,6 @@ typedef unsigned char uint8_t;
 // use wiring library
 #ifdef RASPBERRYPI
 #include <wiringPi.h>
-
 #endif
 
 // Arduino Galileo
@@ -46,6 +45,12 @@ typedef unsigned char uint8_t;
 
 #endif
 
+#include "binary.h"
+#include "BitsAndBytes.h"
+
+typedef uint8_t byte;
+typedef unsigned short uint16_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -73,6 +78,15 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val);
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder);
 // void tone(uint8_t _pin, unsigned int frequency, unsigned long duration);
 // void noTone(uint8_t _pin);
+
+// Math
+long randomMinMax( long, long ) ;
+
+long map( long, long, long, long, long ) ;
+
+uint16_t makeWord( uint8_t h, uint8_t l ) ;
+
+#define word(...) makeWord(__VA_ARGS__)
 
 // SPI
 

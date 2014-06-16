@@ -45,7 +45,7 @@ http://www.arduino.cc/en/Tutorial/Stepper
  */
 
 
-#include "Arduino.h"
+#include "../wiring/wiring.h"
 #include "Stepper.h"
 
 /*

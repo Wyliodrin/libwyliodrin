@@ -22,7 +22,7 @@
 #define TwoWire_h
 
 #include "Stream.h"
-#include "variant.h"
+//#include "variant.h"
 
 #define BUFFER_LENGTH 32
 #define I2C2 0x4819c000

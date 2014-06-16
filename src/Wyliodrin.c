@@ -24,18 +24,20 @@ static int sock = -1;
 void wyliodrinSetup()
 {
 	wiringSetup ();
-	//wyliodrin_port, wyliodrin_project, wyliodrin_session - environment variables
+	//wyliodrin_port, wyliodrin_project, wyliodrin_session, wyliodrin_userid - environment variables
 	char * val = getenv("wyliodrin_port");
-	int port;
+	int port = 0;
 	if(val != NULL)
 		port = atoi(val);
-	else
+	if(port == 0)
 		port = 6379;
 
 	char *projectId = getenv("wyliodrin_project");
 	printf("projid = %s\n", projectId);
 	char *sessionId = getenv("wyliodrin_session");
-	initSignal(port, projectId, sessionId);
+	char *userid = getenv("wyliodrin_userid");
+	printf("port = %d\nprojectid = %s\nsessionid = %s\nuserid=%s\n",port,projectId,sessionId,userid);
+	initSignal(port, projectId, sessionId, userid);
 	// signalSetup ();
 }
 

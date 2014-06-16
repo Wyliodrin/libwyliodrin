@@ -20,13 +20,12 @@
 
 extern "C" {
 #include <string.h>
-#include <i2c.h>
+#include "../wiring/wiring.h"
 }
 
 #include "Wire.h"
 
-#include <Mux.h>
-#include <trace.h>
+// #include <trace.h>
 #define MY_TRACE_PREFIX "Wire"
 
 TwoWire::TwoWire(void(*_beginCb)(void)) : rxBufferIndex(0), rxBufferLength(0), 
@@ -41,12 +40,13 @@ TwoWire::TwoWire(void(*_beginCb)(void)) : rxBufferIndex(0), rxBufferLength(0),
 
 void TwoWire::begin(void)
 {
-	muxSelectI2c(0);
+	// muxSelectI2c(0);
 	if (onBeginCallback)
 		onBeginCallback();
-	if ((adapter_nr = i2c_getadapter(I2C2)) < 0) {
-		return;	
-	}
+	// if ((adapter_nr = i2c_getadapter(I2C2)) < 0) {
+	// 	return;	
+	// }
+	adapter_nr = 0;
 	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
 		return;	
 	}
@@ -72,21 +72,21 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
 	/* Set slave address via ioctl  */ 
 	i2c_setslave(i2c_fd, address);
 
-	if(i2c_transfer) {
-	/* Need to perform a combined read/write operation
-	 */
-		i2c_transfer = 0;
-		if (sendStop == false)
-			return 0;
-		i2c_add_to_buf(address, 1, rxBuffer, quantity);
-		if (!i2c_readwrite(i2c_fd)) {
-			rxBufferIndex = 0;
-			rxBufferLength = quantity;
-			i2c_transfer = 0;
-			return quantity;
-		} else
-			return 0;
-	}
+	// if(i2c_transfer) {
+	// /* Need to perform a combined read/write operation
+	//  */
+	// 	i2c_transfer = 0;
+	// 	if (sendStop == false)
+	// 		return 0;
+	// 	i2c_add_to_buf(address, 1, rxBuffer, quantity);
+	// 	if (!i2c_readwrite(i2c_fd)) {
+	// 		rxBufferIndex = 0;
+	// 		rxBufferLength = quantity;
+	// 		i2c_transfer = 0;
+	// 		return quantity;
+	// 	} else
+	// 		return 0;
+	// }
 	if (i2c_readbytes(i2c_fd, rxBuffer, quantity) < 0)
 		return 0;
 	// set rx buffer iterator vars
@@ -168,8 +168,8 @@ uint8_t TwoWire::endTransmission(uint8_t sendStop)
 	 * pretend we have held the bus while
 	 * actually waiting for the next operation
 	 */
-		i2c_add_to_buf(txAddress, 0, txBuffer, txBufferLength);		
-		i2c_transfer = 1;
+		// i2c_add_to_buf(txAddress, 0, txBuffer, txBufferLength);		
+		// i2c_transfer = 1;
 		return 0;
 	}
 }

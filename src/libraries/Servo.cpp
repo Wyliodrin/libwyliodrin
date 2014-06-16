@@ -1,5 +1,7 @@
 #include "Servo.h"
-#include <trace.h>
+
+#define trace_debug printf
+#define trace_error printf
 
 uint8_t Servo::counter = 0;   // init the counter here.. static...
 
@@ -178,7 +180,7 @@ byte Servo::transform_cypress_duty_cycle_byte(int microsecs)
   int freq =  (this->is188hz) ? 188:43.4;
   int max_byte = MAX_PULSE_WIDTH*255*freq/1000000L;
 
-  if(this->min=1000) Serial.println(max_byte);
+  // if(this->min=1000) Serial.println(max_byte);
 
   byte b_duty = map(microsecs, 0, MAX_PULSE_WIDTH, 0, max_byte);
   

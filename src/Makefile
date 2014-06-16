@@ -1,6 +1,6 @@
 .PHONY: clean build 
 
-CPPFLAGS = -I . -fPIC -D$(BOARD)
+CPPFLAGS = -I . -g -fPIC -D$(BOARD)
 
 SRCS = ${wildcard *.c}
 OBJS = ${SRCS:.c=.o}
@@ -11,19 +11,22 @@ OBJWIRING = ${SRCWIRING:.c=.o}
 SRCLIBRARIES = ${wildcard libraries/*.c}
 OBJLIBRARIES = ${SRCLIBRARIES:.c=.o}
 
+SRCCPPLIBRARIES = ${wildcard libraries/*.cpp}
+OBJCPPLIBRARIES = ${SRCCPPLIBRARIES:.cpp=.o}
+
 SRCSIGNALS = ${wildcard signals/*.c}
 OBJSIGNALS = ${SRCSIGNALS:.c=.o}
 
-build:$(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJSIGNALS)
-	g++ -shared -o libwyliodrin.so $(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJSIGNALS) -lpthread -lrt -lmaa -lhiredis -ljansson
-	mkdir ../build
-	mkdir ../build/include
-	mkdir ../build/include/Wyliodrin
+build:$(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJCPPLIBRARIES) $(OBJSIGNALS)
+	g++ -shared -o libwyliodrin.so $(OBJS) $(OBJWIRING) $(OBJLIBRARIES) $(OBJCPPLIBRARIES) $(OBJSIGNALS) -lpthread -lrt -lmaa -lhiredis -ljansson
+	mkdir -p ../build
+	mkdir -p ../build/include
+	mkdir -p ../build/include/Wyliodrin
 	cp *.h ../build/include
 	cp wiring/*.h ../build/include/Wyliodrin
 	cp signals/*.h ../build/include/Wyliodrin
 	cp libraries/*.h ../build/include/Wyliodrin
-	mkdir ../build/lib
+	mkdir -p ../build/lib
 	cp libwyliodrin.so ../build/lib
 
 clean:

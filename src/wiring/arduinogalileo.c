@@ -8,6 +8,22 @@ static maa_aio_context aio_pins[MAX_AIO_PINS];
 static maa_pwm_context pwm_pins[MAX_PWM_PINS];
 static maa_i2c_context i2c_buses[MAX_I2C_PINS];
 
+// struct i2c_msg {
+// 	__u16 addr;	/* slave address			*/
+// 	unsigned short flags;		
+// #define I2C_M_TEN	0x10	/* we have a ten bit chip address	*/
+// #define I2C_M_RD	0x01
+// #define I2C_M_NOSTART	0x4000
+// #define I2C_M_REV_DIR_ADDR	0x2000
+// #define I2C_M_IGNORE_NAK	0x1000
+// #define I2C_M_NO_RD_ACK		0x0800
+// 	short len;		/* msg length				*/
+// 	char *buf;		/* pointer to msg data			*/
+// };
+
+// struct i2c_msg i2c_buf[2];
+// unsigned int i2c_buf_count = 0;
+
 int wiringSetup ()
 {
 	maa_init ();
@@ -37,8 +53,8 @@ void resetPin (int pin)
 #define isGpioPin(pin)   (gpio_pins[pin] != NULL)
 #define isAioPin(pin)   (aio_pins[pin] != NULL)
 #define isPwmPin(pin)   (pwm_pins[pin] != NULL)
-#define inPin(pin) do { if (!gpio_pins[pin]) pinMode (pin, INPUT); } while (0);
-#define outPin(pin) do { if (!gpio_pins[pin]) pinMode (pin, OUTPUT); } while (0);
+#define inPin(pin) do { if (!isGpioPin(pin)) pinMode (pin, INPUT); } while (0);
+#define outPin(pin) do { if (!isGpioPin(pin)) pinMode (pin, OUTPUT); } while (0);
 
 void pinMode (int pin, int mode)
 {
@@ -170,7 +186,7 @@ int i2c_getadapter(uint32_t i2c_bus_address)
 int i2c_openadapter(uint8_t i2c_bus)
 {
 	i2c_buses[i2c_bus] = maa_i2c_init (i2c_bus);
-	return i2c_buses[i2c_bus]!=NULL;
+	return i2c_bus;
 }
 
 int i2c_setslave(int i2c_bus, uint8_t addr)
@@ -200,13 +216,28 @@ int i2c_readbytes(int i2c_bus, uint8_t *buf, int length)
 
 int i2c_readwrite(int i2c_bus)
 {
-
+	// struct i2c_rdwr_ioctl_data packets;
+	// packets.msgs = i2c_buf;
+	// packets.nmsgs = i2c_buf_count;
+	// if (ioctl(i2c_fd, I2C_RDWR, &packets) < 0) {
+	// 	perror("Unable to send data");
+	// 	i2c_buf_count = 0;
+	// 	return -1;
+	// }
+	// i2c_buf_count = 0;
+	// return 0;
 }
 
 int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 {
-	// error, function not implemented
-	return -1;
+	// if(i2c_buf_count < 2) {
+	// 	i2c_buf[i2c_buf_count].addr = addr;
+	// 	i2c_buf[i2c_buf_count].flags = rw ? I2C_M_RD : 0;
+	// 	i2c_buf[i2c_buf_count].len = length;
+	// 	i2c_buf[i2c_buf_count].buf = (char *)value;
+	// 	return ++i2c_buf_count;
+	// } else
+	// 	return -1;
 }
 
 #endif
