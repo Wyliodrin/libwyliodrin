@@ -1,4 +1,5 @@
 #include "Servo.h"
+#include "../wiring/wiring.h"
 
 #define trace_debug printf
 #define trace_error printf

@@ -28,6 +28,8 @@
 
 #define MY_TRACE_PREFIX "ServoX86Lib"
 
+typedef uint8_t byte;
+
 typedef struct  {
   uint8_t pin;
   uint8_t reg28_data;

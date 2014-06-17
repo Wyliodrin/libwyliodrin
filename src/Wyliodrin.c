@@ -33,10 +33,10 @@ void wyliodrinSetup()
 		port = 6379;
 
 	char *projectId = getenv("wyliodrin_project");
-	printf("projid = %s\n", projectId);
+	//printf("projid = %s\n", projectId);
 	char *sessionId = getenv("wyliodrin_session");
 	char *userid = getenv("wyliodrin_userid");
-	printf("port = %d\nprojectid = %s\nsessionid = %s\nuserid=%s\n",port,projectId,sessionId,userid);
+	//printf("port = %d\nprojectid = %s\nsessionid = %s\nuserid=%s\n",port,projectId,sessionId,userid);
 	initSignal(port, projectId, sessionId, userid);
 	// signalSetup ();
 }

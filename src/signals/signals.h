@@ -6,10 +6,12 @@
 extern "C" {
 #endif
 
+#define sendDebug(tag)  sendSignal ("debug_"tag, __LINE__)
+
 // timestamps and sends values
 int initSignal(int port, const char *pId, const char *sId, const char *userid);
-void sendSignal  (const char *name, float value);
-// void sendSignals  (const char *name, float values, ...);
+int sendSignal  (const char *name, double value);
+int sendSignals  (const char *name, double value, ...);
 // void sendSignalsList  (const char *names[], float values[]);
 
 #ifdef __cplusplus
