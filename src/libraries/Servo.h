@@ -1,7 +1,6 @@
 #ifndef Servo_h
 #define Servo_h
 
-#include "../wiring/wiring.h"
 #include "Wire.h"
 
 #define MIN_ANGLE              0      // min angle

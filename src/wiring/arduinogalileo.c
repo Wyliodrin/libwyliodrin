@@ -94,8 +94,8 @@ void analogWrite (int pin, int value)
 	}
 	if (pwm_pins[pin])
 	{
-		maa_pwm_period_us(pwm_pinspin], 1200);
-		maa_pwm_write (pwm_pinspin], value/255.0);
+		maa_pwm_period_us(pwm_pins[pin], 1200);
+		maa_pwm_write (pwm_pins[pin], value/255.0);
 		maa_pwm_enable (pwm_pins[pin], 1);
 	}
 	else
