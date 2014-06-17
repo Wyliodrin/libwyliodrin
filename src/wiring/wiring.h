@@ -30,11 +30,6 @@ typedef unsigned char uint8_t;
 #define	LSBFIRST	0
 #define	MSBFIRST	1
 
-#define HIGH 1
-#define LOW 0
-#define INPUT 0
-#define OUTPUT 1
-
 #define A0	14
 #define A1	15
 #define A2	16
@@ -44,6 +39,11 @@ typedef unsigned char uint8_t;
 #define A6	20
 
 #endif
+
+#define HIGH 1
+#define LOW 0
+#define INPUT 0
+#define OUTPUT 1
 
 #include "binary.h"
 #include "BitsAndBytes.h"

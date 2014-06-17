@@ -2,8 +2,8 @@
   "targets": [
     {
       "target_name": "wyliodrin",
-      "sources": [ "wyliodrin_wrap.cxx" ]
+      "sources": [ "wyliodrin_wrap.cxx" ],
+      "libraries": [ "-lwyliodrin" ]
     }
   ],
-  "libraries": [ "-lwyliodrin" ]
 }

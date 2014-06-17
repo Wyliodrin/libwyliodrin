@@ -92,9 +92,9 @@ private:
 	int i2c_transfer;
 };
 
-#if WIRE_INTERFACES_COUNT > 0
+//#if WIRE_INTERFACES_COUNT > 0
 extern TwoWire Wire;
-#endif
+//#endif
 #if WIRE_INTERFACES_COUNT > 1
 extern TwoWire Wire1;
 #endif

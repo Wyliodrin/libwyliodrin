@@ -1,9 +1,9 @@
 .PHONY: clean build install
 
-wyliodrin_wrap.c:
-	swig -python wyliodrin.i
+wyliodrin_wrap.cxx:
+	swig -python -c++ wyliodrin.i
 
-build:wyliodrin_wrap.c
+build:wyliodrin_wrap.cxx
 	python setup.py build
 
 install:build
@@ -12,5 +12,5 @@ install:build
 clean:
 	python setup.py clean
 	rm -rf build
-	rm -f *.c
+	rm -f *.cxx
 	rm -f wyliodrin.py

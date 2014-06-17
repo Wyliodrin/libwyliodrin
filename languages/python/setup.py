@@ -4,7 +4,7 @@ from distutils.core import setup, Extension
 
 
 wyliodrin_module = Extension('_wyliodrin',
-                           sources=['wyliodrin_wrap.c'],
+                           sources=['wyliodrin_wrap.cxx'],
                            libraries=['wyliodrin'],
                            )
 
