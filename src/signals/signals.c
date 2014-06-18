@@ -131,10 +131,10 @@ int sendSignals  (const char *name, double value, ...)
 			return JSON_ERROR;
 
 		//printf("comanda: rpush %s %s\n",projectId, j);
-		redisReply *reply = redisCommand(c, "rpush %s %s", projectId, j);
+		redisCommand(c, "rpush %s %s", projectId, j);
 		free(j);
 
-		reply = redisCommand(c, "publish wyliodrin signal:%s",projectId);
+		redisCommand(c, "publish wyliodrin signal:%s",projectId);
 	}
 	else
 	{
@@ -191,12 +191,12 @@ int sendSignal(const char *name, double value)
 		if(j == NULL)
 			return JSON_ERROR;
 		// printf("comanda: rpush %s %s\n",projectId, j);
-		redisReply *reply = redisCommand(c, "rpush %s %s", projectId, j);
+		redisCommand(c, "rpush %s %s", projectId, j);
 		// printf(" error = %s\n", c->errstr);
 		// printf("repl = %p\n",reply);
 		free(j);
 
-		reply = redisCommand(c, "publish wyliodrin signal:%s",projectId);
+		redisCommand(c, "publish wyliodrin signal:%s",projectId);
 		free(n);
 	//printf("repl = %s\n",reply->str);
 	}

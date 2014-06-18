@@ -1,9 +1,9 @@
 {
   "name" : "wyliodrin",
-  "main" : "./wyliodrin.node",
-  "version" : "0.0.1",
+  "main" : "./wyliodrinjs.node",
+  "version" : "1.1.0",
   "engines": {
     "node": ">= 0.10.x"
   },
-  "license": "GPL"
+  "license": "GPLv2"
 }

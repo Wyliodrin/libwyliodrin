@@ -45,6 +45,8 @@
 #ifndef Stepper_h
 #define Stepper_h
 
+#include <stdlib.h>
+
 // library interface description
 class Stepper {
   public:
