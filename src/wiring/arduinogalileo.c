@@ -41,11 +41,11 @@ void resetPin (int pin)
 		maa_pwm_close (pwm_pins[pin]);
 		pwm_pins[pin] = NULL;
 	}
-	if (aio_pins[pin] != NULL)
-	{
-		maa_aio_close (aio_pins[pin]);
-		aio_pins[pin] = NULL;
-	}
+	// if (aio_pins[pin] != NULL)
+	// {
+	// 	maa_aio_close (aio_pins[pin]);
+	// 	aio_pins[pin] = NULL;
+	// }
 }
 
 #define pinValue(pin)  (pin = (pin >= 14)?(pin - 14):pin)
