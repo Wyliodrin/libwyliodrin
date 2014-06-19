@@ -25,7 +25,7 @@ find_package(Jansson REQUIRED)
 include_directories(${JANSSON_INCLUDE_DIR})
 
 set (wyliodrin_VERSION_MAJOR 1)
-set (wyliodrin_VERSION_MINOR 1)
+set (wyliodrin_VERSION_MINOR 2)
 set (wyliodrin_VERSION_PATCH 0})
 
 option (GALILEO "Build for the Intel Galileo." OFF)
