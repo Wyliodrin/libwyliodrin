@@ -19,16 +19,21 @@ Languages
   * swig
 
 Python
+  * python
   * distools
 
 Javascript
-  * distools
+  * node
+  * npm
 
 
 Install
 -------
-
-    make $BOARDNAME - can be raspberrypi or arduinogalileo
+    
+    mkdir build
+    cd build
+    cmake -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI
+    make
     sudo make install
   
 
