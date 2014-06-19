@@ -16,7 +16,6 @@ set_source_files_properties (wyliodrin.i PROPERTIES SWIG_FLAGS "-node;-I${CMAKE_
 set_source_files_properties (wyliodrin.i PROPERTIES CPLUSPLUS ON)
 swig_add_module (wyliodrinjs javascript wyliodrin.i  ${wyliodrin_LIB_SRCS})
 swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${MAA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lrt)
-add_dependencies (${SWIG_MODULE_wyliodrinjs_REAL_NAME} wyliodrin)
 
 set_target_properties (wyliodrinjs PROPERTIES
   PREFIX ""
