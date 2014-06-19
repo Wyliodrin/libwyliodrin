@@ -9,7 +9,8 @@ include_directories (
 set_source_files_properties (wyliodrin.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties (wyliodrin.i PROPERTIES SWIG_FLAGS "-I${CMAKE_SOURCE_DIR}/src")
 swig_add_module (wyliodrin python wyliodrin.i ${wyliodrin_LIB_SRCS})
-swig_link_libraries (wyliodrin ${PYTHON_LIBRARIES} ${CMAKE_BINARY_DIR}/src/libwyliodrin.so)
+swig_link_libraries (wyliodrin ${PYTHON_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${MAA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lrt)
+add_dependencies (${SWIG_MODULE_wyliodrin_REAL_NAME} wyliodrin)
 
 # Essentially do seperate_arguments but with "." instead of " "
 string (REPLACE "." ";" PYTHON_VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
