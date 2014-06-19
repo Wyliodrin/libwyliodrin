@@ -19,9 +19,11 @@ swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${CMAKE_BINARY_DIR}/src/libwy
 
 set_target_properties (wyliodrinjs PROPERTIES
   PREFIX ""
+  OUTPUT_NAME "wyliodrin"
+  OUTPUT_NAME "wyliodrin"
   SUFFIX ".node"
 )
 
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/package.json
-         ${CMAKE_CURRENT_BINARY_DIR}/wyliodrinjs.node
+         ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.node
          DESTINATION lib/node_modules/wyliodrin)
