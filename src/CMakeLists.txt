@@ -24,7 +24,7 @@ set_target_properties (
 )
 
 file (GLOB wyiliodrin_headers
-  "signals/.h"
+  "signals/*.h"
   "libraries/*.h"
   "wiring/*.h"
 )
