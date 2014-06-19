@@ -1,14 +1,12 @@
-#find_path (NODE_ROOT_DIR "node/node.h")                                                                   
+find_path (NODE_ROOT_DIR "node/node.h" "nodejs/node.h")
 
 set (NODE_INCLUDE_DIRS
-  ${NODE_ROOT_DIR}/src
   ${NODE_ROOT_DIR}/node
-  ${NODE_ROOT_DIR}/deps/v8/include
-  ${NODE_ROOT_DIR}/deps/uv/include
+  ${NODE_ROOT_DIR}/nodejs
 )
 
 include_directories (
-#  ${NODE_INCLUDE_DIRS}
+  ${NODE_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/src
 )
 

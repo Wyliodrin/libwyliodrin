@@ -7,6 +7,8 @@ set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable.                                                                                                 
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
+find_package (Threads)
+
 find_package (SWIG)
 if (SWIG_FOUND)                                                                                                                                                
   include (${SWIG_USE_FILE})
