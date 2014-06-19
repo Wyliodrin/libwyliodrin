@@ -14,7 +14,7 @@ set (CMAKE_CXX_FLAGS -DBUILDING_NODE_EXTENSION)
 
 set_source_files_properties (wyliodrin.i PROPERTIES SWIG_FLAGS "-node;-I${CMAKE_BINARY_DIR}/src")
 set_source_files_properties (wyliodrin.i PROPERTIES CPLUSPLUS ON)
-swig_add_module (wyliodrinjs javascript wyliodrin.i)
+swig_add_module (wyliodrinjs javascript wyliodrin.i  ${wyliodrin_LIB_SRCS})
 swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${CMAKE_BINARY_DIR}/src/libwyliodrin.so)
 
 set_target_properties (wyliodrinjs PROPERTIES
