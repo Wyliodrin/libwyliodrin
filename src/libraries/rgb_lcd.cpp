@@ -230,14 +230,14 @@ void rgb_lcd::createChar(uint8_t location, uint8_t charmap[])
 /*********** mid level commands, for sending data/cmds */
 
 // send command
-inline void rgb_lcd::command(uint8_t value)
+void rgb_lcd::command(uint8_t value)
 {
     unsigned char dta[2] = {0x80, value};
     i2c_send_byteS(dta, 2);
 }
 
 // send data
-inline size_t rgb_lcd::write(uint8_t value)
+size_t rgb_lcd::write(uint8_t value)
 {
 
     unsigned char dta[2] = {0x40, value};
