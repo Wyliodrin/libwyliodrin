@@ -1,6 +1,8 @@
 #ifndef WYLIODRIN_H
 #define WYLIODRIN_H
 
+#include <stdlib.h>
+
 // Signals library
 #include <Wyliodrin/signals.h>
 
