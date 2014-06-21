@@ -45,7 +45,7 @@ fi
 export NODE_PATH=`npm root -g`
 
 echo "Checking javascript facebook"
-if ! echo "require ('fb')" | grep node; then
+if ! echo "require ('fb')" | node; then
 	echo "Installing javascript facebook"
 	npm install -g fb
 fi
