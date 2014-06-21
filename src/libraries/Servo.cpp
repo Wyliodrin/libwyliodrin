@@ -54,7 +54,7 @@ uint8_t Servo::attach(int pin, int min, int max)
   if (min < MIN_PULSE_WIDTH) min = MIN_PULSE_WIDTH;
   if (max > MAX_PULSE_WIDTH) max = MAX_PULSE_WIDTH;
 
-  trace_debug("******* pin:%d min:%d max:%d\n", pin, min, max);
+  //trace_debug("******* pin:%d min:%d max:%d\n", pin, min, max);
 
   for (list_index = 0; list_index < sizeof(pinData)/sizeof(servoPinData_t); list_index++) 
   {
@@ -88,7 +88,7 @@ uint8_t Servo::attach(int pin, int min, int max)
 
   }
 
-  trace_debug("\nattached ok on pin:%d min:%d max:%d\n",pin, this->min, this->max);
+  //trace_debug("\nattached ok on pin:%d min:%d max:%d\n",pin, this->min, this->max);
 
   return this->index;
 }
@@ -231,12 +231,12 @@ void Servo::write(int val)
     else if (val > 180)
       val = 180;
 
-    trace_debug("it is an angle:%d  this->min:%d  this->max:%d\n", val, this->min, this->max);
+    //trace_debug("it is an angle:%d  this->min:%d  this->max:%d\n", val, this->min, this->max);
     writeMicroseconds(map(val, MIN_ANGLE, MAX_ANGLE, this->min, this->max));
   }
   else
   {
-    trace_debug("it is microseconds:%d\n", val);
+    //trace_debug("it is microseconds:%d\n", val);
     // actually angle on this case it is microsencods 
     writeMicroseconds(val);
   }
