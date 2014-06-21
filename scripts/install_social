@@ -1,0 +1,64 @@
+#!/bin/bash
+
+
+#python
+
+echo "Checking for python setuptools"
+if ! echo "import setuptools" | python; then
+	echo "Installing python setuptools"
+	curl -L https://bootstrap.pypa.io/ez_setup.py | python
+fi
+
+cd /tmp
+echo "Checking python facebook"
+if ! echo "import facebook" | python; then
+	echo "Installing python facebook"
+	curl -L https://github.com/pythonforfacebook/facebook-sdk/archive/master.zip > facebook.zip
+	unzip facebook.zip
+	cd facebook-sdk-master
+	python setup.py install
+	cd ..
+fi
+
+echo "Checking python tweepy"
+if ! echo "import tweepy" | python; then
+	echo "Installing python tweepy"
+	curl -L https://github.com/tweepy/tweepy/archive/v2.3.0.zip > tweepy.zip
+	unzip tweepy.zip
+	cd tweepy-2.3.0
+	python setup.py install
+	cd ..
+fi
+
+echo "Checking python twilio"
+if ! echo "import twilio" | python; then
+	echo "Installing python twilio"
+	curl -L https://github.com/twilio/twilio-python/archive/3.6.5.zip > twilio-python.zip
+	unzip twilio-python.zip
+	cd twilio-python-3.6.5
+	python setup.py install
+	cd ..
+fi
+
+#javascript
+
+export NODE_PATH=`npm root -g`
+
+echo "Checking javascript facebook"
+if ! echo "require ('fb')" | grep node; then
+	echo "Installing javascript facebook"
+	npm install -g fb
+fi
+
+echo "Checking javascript twitter"
+if ! echo "require ('ntwitter')" | node; then
+	echo "Installing javascript twitter"
+	npm install -g ntwitter
+fi
+
+echo "Checking javascript twilio"
+if ! echo "require ('twilio')" | node; then
+	echo "Installing javascript twilio"
+	npm install -g twilio
+fi
+
