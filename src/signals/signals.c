@@ -54,6 +54,7 @@ int initSignal(int port, const char *pId, const char *sId, const char *uid)
 void addSignal(const char * sig_name, double sig_value, json_t *signals)
 {
 	//char val[50];
+	//printf("%s : %lf\n",sig_name, sig_value);
 				char *n = strndup(sig_name,100);
 				int i;
 				for (i=0; i<strnlen(n, 100); i++)
@@ -68,10 +69,87 @@ void addSignal(const char * sig_name, double sig_value, json_t *signals)
 				free(n);
 }
 
+int sendSignalsAndDebug  (const char *text, const char *name, double value, ...)
+{
+	if(projectId != NULL)
+	{
+		//printf("sendSignalsAndDebug\n");
+		va_list arguments;
+		va_start ( arguments, value );  
+
+		json_t *root, *signals;
+		root = json_object();
+		signals = json_object();
+
+		if(sessionId != NULL)
+			json_object_set_new(root, "session", json_string(sessionId));
+
+		struct timeval tv;
+		gettimeofday(&tv, NULL);
+		double time_in_mill = (tv.tv_sec) + ((tv.tv_usec) / 1000)/1000.0 ;
+		json_object_set_new(root, "timestamp", json_real(time_in_mill));
+		json_object_set_new(root, "userid", json_string(userId));
+
+		if(text != NULL)
+			json_object_set_new(root, "text", json_string(text));
+
+		addSignal(name, value, signals);
+
+		const char *sig_name;
+		double sig_value;
+		do
+		{
+			//printf("do\n");
+			sig_name = va_arg(arguments, const char*);
+			if(sig_name != NULL)
+			{
+				sig_value = va_arg(arguments, double);
+				addSignal(sig_name, sig_value, signals);
+				//printf("sig_name = \"%s\n sig_value = %lf\n",sig_name, sig_value);
+				//char val[50];
+				//sprintf(val, "%lf",sig_value);
+
+				// char *n = strndup(sig_name,100);
+				// int i;
+				// for (i=0; i<strnlen(n, 100); i++)
+				// {
+				// 	char c = n[i];
+				// 	if(!(c>='0' && c<='9') && !(c>='A' && c<='Z') && !(c>='a' && c<='z') && c!='_' && c!='.')
+				// 	{
+				// 		n[i] = '_';
+				// 	}
+				// }
+				//json_object_set_new(signals, n, json_string(val));
+				//free(n);
+			}
+		}
+		while(sig_name != NULL);
+		va_end(arguments);
+
+		json_object_set_new(root, "signals", signals);
+		char *j = json_dumps(root, 0);
+		if(j == NULL)
+			return JSON_ERROR;
+
+		//printf("comanda: rpush %s %s\n",projectId, j);
+		redisCommand(c, "rpush %s %s", projectId, j);
+		free(j);
+
+		redisCommand(c, "publish wyliodrin signal:%s",projectId);
+	}
+	else
+	{
+		printf("No projectId\n");
+		return REDIS_EENV;
+	}
+	return 0;
+}
+
 int sendSignals  (const char *name, double value, ...)
 {
 	if(projectId != NULL)
 	{
+		//printf("sendSignals\n");
 		va_list arguments;
 		va_start ( arguments, value );  
 
@@ -140,10 +218,11 @@ int sendSignals  (const char *name, double value, ...)
 	return 0;
 }
 
-int sendSignal(const char *name, double value)
+int sendSignalAndDebug(const char *tag, const char *name, double value)
 {
 	if(projectId != NULL)
 	{
+		//printf("sendSignalAndDebug\n");
 		json_t *root, *signals;
 		root = json_object();
 		signals = json_object();
@@ -156,6 +235,10 @@ int sendSignal(const char *name, double value)
 		double time_in_mill = (tv.tv_sec) + ((tv.tv_usec) / 1000)/1000.0 ; // convert tv_sec & tv_usec to millisecond
 		json_object_set_new(root, "timestamp", json_real(time_in_mill));
 		json_object_set_new(root, "userid", json_string(userId));
+		if(tag != NULL)
+		{
+			json_object_set_new(root, "text", json_string(tag));
+		}
 
 		// char val[50];
 		// sprintf(val, "%lf",value);
@@ -198,4 +281,10 @@ int sendSignal(const char *name, double value)
 		return REDIS_EENV;
 	}
 	return 0;
+}
+
+int sendSignal  (const char *name, double value)
+{
+	//printf("sendSignal\n");
+	return sendSignalAndDebug(NULL, name, value);
 }
