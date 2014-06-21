@@ -38,7 +38,7 @@ void Servo::set188hz()
     }
 }
 
-uint8_t Servo::attach(int16_t pin)
+uint8_t Servo::attach(int pin)
 {
   
   return attach(pin, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);

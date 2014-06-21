@@ -53,9 +53,7 @@ int initSignal(int port, const char *pId, const char *sId, const char *uid)
 
 void addSignal(const char * sig_name, double sig_value, json_t *signals)
 {
-	char val[50];
-				sprintf(val, "%lf",sig_value);
-
+	//char val[50];
 				char *n = strndup(sig_name,100);
 				int i;
 				for (i=0; i<strnlen(n, 100); i++)
@@ -66,7 +64,7 @@ void addSignal(const char * sig_name, double sig_value, json_t *signals)
 						n[i] = '_';
 					}
 				}
-				json_object_set_new(signals, n, json_string(val));
+				json_object_set_new(signals, n, json_real(sig_value));
 				free(n);
 }
 
@@ -87,9 +85,7 @@ int sendSignals  (const char *name, double value, ...)
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
 		double time_in_mill = (tv.tv_sec) + ((tv.tv_usec) / 1000)/1000.0 ;
-		char t[100];
-		sprintf(t, "%.3lf", time_in_mill);
-		json_object_set_new(root, "timestamp", json_string(t));
+		json_object_set_new(root, "timestamp", json_real(time_in_mill));
 		json_object_set_new(root, "userid", json_string(userId));
 
 		addSignal(name, value, signals);
@@ -102,24 +98,24 @@ int sendSignals  (const char *name, double value, ...)
 			sig_name = va_arg(arguments, const char*);
 			if(sig_name != NULL)
 			{
-				
 				sig_value = va_arg(arguments, double);
+				addSignal(sig_name, sig_value, signals);
 				//printf("sig_name = \"%s\n sig_value = %lf\n",sig_name, sig_value);
-				char val[50];
-				sprintf(val, "%lf",sig_value);
+				//char val[50];
+				//sprintf(val, "%lf",sig_value);
 
-				char *n = strndup(sig_name,100);
-				int i;
-				for (i=0; i<strnlen(n, 100); i++)
-				{
-					char c = n[i];
-					if(!(c>='0' && c<='9') && !(c>='A' && c<='Z') && !(c>='a' && c<='z') && c!='_' && c!='.')
-					{
-						n[i] = '_';
-					}
-				}
-				json_object_set_new(signals, n, json_string(val));
-				free(n);
+				// char *n = strndup(sig_name,100);
+				// int i;
+				// for (i=0; i<strnlen(n, 100); i++)
+				// {
+				// 	char c = n[i];
+				// 	if(!(c>='0' && c<='9') && !(c>='A' && c<='Z') && !(c>='a' && c<='z') && c!='_' && c!='.')
+				// 	{
+				// 		n[i] = '_';
+				// 	}
+				// }
+				//json_object_set_new(signals, n, json_string(val));
+				//free(n);
 			}
 		}
 		while(sig_name != NULL);
@@ -146,7 +142,6 @@ int sendSignals  (const char *name, double value, ...)
 
 int sendSignal(const char *name, double value)
 {
-	//printf ("%s: %f\n", name, value);
 	if(projectId != NULL)
 	{
 		json_t *root, *signals;
@@ -159,30 +154,27 @@ int sendSignal(const char *name, double value)
 		struct timeval  tv;
 		gettimeofday(&tv, NULL);
 		double time_in_mill = (tv.tv_sec) + ((tv.tv_usec) / 1000)/1000.0 ; // convert tv_sec & tv_usec to millisecond
-		char t[100];
-		sprintf(t, "%.3lf", time_in_mill);
-		// sprintf(t, "%lu", tv.tv_sec);
-		json_object_set_new(root, "timestamp", json_string(t));
+		json_object_set_new(root, "timestamp", json_real(time_in_mill));
 		json_object_set_new(root, "userid", json_string(userId));
 
-		char val[50];
-		sprintf(val, "%lf",value);
-		// printf("float = %f\n",value);
-		// printf("char = %s\n",val);
-		char *n = strndup(name,100);
-		int i;
-		for (i=0; i<strnlen(n, 100); i++)
-		{
-			char c = n[i];
-			if(!(c>='0' && c<='9') && !(c>='A' && c<='Z') && !(c>='a' && c<='z') && c!='_' && c!='.')
-			{
-				n[i] = '_';
-				// printf("a intrat in if %c\n",n[i]);
-			}
-		}
+		// char val[50];
+		// sprintf(val, "%lf",value);
+		// // printf("float = %f\n",value);
+		// // printf("char = %s\n",val);
+		// char *n = strndup(name,100);
+		// int i;
+		// for (i=0; i<strnlen(n, 100); i++)
+		// {
+		// 	char c = n[i];
+		// 	if(!(c>='0' && c<='9') && !(c>='A' && c<='Z') && !(c>='a' && c<='z') && c!='_' && c!='.')
+		// 	{
+		// 		n[i] = '_';
+		// 		// printf("a intrat in if %c\n",n[i]);
+		// 	}
+		// }
 		// printf("a iesit din for\n");
-		json_object_set_new(signals, n, json_string(val));
-		
+		//json_object_set_new(signals, n, json_string(val));
+		addSignal(name, value, signals);
 		json_object_set_new(root, "signals", signals);
 
 		char *j = json_dumps(root, 0);
@@ -197,7 +189,7 @@ int sendSignal(const char *name, double value)
 		free(j);
 
 		redisCommand(c, "publish wyliodrin signal:%s",projectId);
-		free(n);
+		//free(n);
 	//printf("repl = %s\n",reply->str);
 	}
 	else
