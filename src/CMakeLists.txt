@@ -15,5 +15,6 @@ file (GLOB wyiliodrin_headers
 )
 
 install (TARGETS wyliodrin DESTINATION lib)
+install (FILES scripts/install_social.sh DESTINATION bin/)
 install (FILES Arduino.h Wyliodrin.h DESTINATION include/)
 install (FILES ${wyiliodrin_headers} DESTINATION include/Wyliodrin/)
