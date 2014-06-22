@@ -55,3 +55,5 @@ set (wyliodrin_LIB_SRCS
 
 add_subdirectory (src)
 add_subdirectory (languages)
+
+install (FILES scripts/install_social.sh DESTINATION bin/)
