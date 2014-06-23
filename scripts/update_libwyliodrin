@@ -1,0 +1,5 @@
+#! /bin/bash
+
+echo "Updating libwyliodrin"
+curl -L -k https://www.wyliodrin.com/public/scripts/update.sh | bash
+
