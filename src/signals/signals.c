@@ -186,7 +186,7 @@ int sendSignals  (const char *name, double value, ...)
 	return 0;
 }
 
-int sendSignalsListAndFlag  (const char *flag, const char *names[], float values[], int elements)
+int sendSignalsListAndFlag  (const char *flag, const char **names, double *values, int elements)
 {
 	if(projectId != NULL && c!=NULL)
 	{
@@ -230,7 +230,7 @@ int sendSignalsListAndFlag  (const char *flag, const char *names[], float values
 	return 0;
 }
 
-int sendSignalsList (const char *names[], float values[], int elements)
+int sendSignalsList (const char **names, double *values, int elements)
 {
 	return sendSignalsListAndFlag(NULL, names, values, elements);
 }
