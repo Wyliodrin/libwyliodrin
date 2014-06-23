@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "Installing extra social libraries"
-curl -L -k https://www.wyliodrin.com/scripts/install_social.sh | bash
+curl -L -k https://www.wyliodrin.com/public/scripts/install_social.sh | bash
