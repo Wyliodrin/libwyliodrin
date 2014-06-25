@@ -15,8 +15,8 @@ if (SWIG_FOUND)
 endif ()
 
 find_package (PkgConfig REQUIRED)
-pkg_check_modules (MAA REQUIRED maa>=0.2.6)
-message (INFO " found libmaa version: ${MAA_VERSION}")
+pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
+message (INFO " found libmraa version: ${MRAA_VERSION}")
 
 find_package(Hiredis REQUIRED)
 include_directories(${HIREDIS_INCLUDE_DIR})

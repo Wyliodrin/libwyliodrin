@@ -14,7 +14,7 @@
 %}
 
 %init %{
-    //Adding maa_init() to the module initialisation process
+    //Adding mraa_init() to the module initialisation process
     wyliodrinSetup();
 %}
 
