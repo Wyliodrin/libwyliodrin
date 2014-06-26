@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)                                                                                                                           
+cmake_minimum_required (VERSION 2.8.12)                                                                                                                           
 project (libwyliodrin)
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
@@ -15,6 +15,7 @@ if (SWIG_FOUND)
 endif ()
 
 find_package (PkgConfig REQUIRED)
+
 pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
 message (INFO " found libmraa version: ${MRAA_VERSION}")
 
