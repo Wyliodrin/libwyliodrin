@@ -11,14 +11,14 @@ typedef unsigned char uint8_t;
 #endif
 
 // Arduino Galileo
-// use the maa library
+// use the mraa library
 #ifdef ARDUINOGALILEO
 
-#include <maa/gpio.h>
-#include <maa/aio.h>
-#include <maa/pwm.h>
-#include <maa/i2c.h>
-#include <maa/spi.h>
+#include <mraa/gpio.h>
+#include <mraa/aio.h>
+#include <mraa/pwm.h>
+#include <mraa/i2c.h>
+#include <mraa/spi.h>
 #include <unistd.h>
 
 #define MAX_GPIO_PINS 100

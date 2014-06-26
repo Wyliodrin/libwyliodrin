@@ -13,7 +13,7 @@ Raspberry Pi
   * wiringPi
 
 ArduinoGalileo
-  * libmaa
+  * libmraa
 
 Languages
   * swig
