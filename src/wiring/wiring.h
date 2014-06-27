@@ -94,6 +94,15 @@ uint16_t makeWord( uint8_t h, uint8_t l ) ;
 // SPI
 
 // TODO
+int spi_getadapter(uint32_t spi_bus_address);
+int spi_openadapter(uint8_t spi_bus);
+int spi_setmode(int spi_bus, unsigned short mode);
+int spi_set_frequency(int spi_bus, int freq);
+uint8_t spi_writebyte(int spi_bus, uint8_t byte);
+unsigned char * spi_writebytes(int spi_bus, uint8_t *bytes, uint8_t length);
+int spi_lsb_mode(int spi_bus, unsigned char lsb);
+int spi_bit_per_word(int spi_bus, unsigned int bits);
+int spi_closeadapter (int spi_bus);
 
 // I2C
 
@@ -103,6 +112,7 @@ int i2c_setslave(int i2c_bus, uint8_t addr);
 int i2c_writebyte(int i2c_bus, uint8_t byte);
 int i2c_writebytes(int i2c_bus, uint8_t *bytes, uint8_t length);
 int i2c_readbyte(int i2c_bus);
+int i2c_closeadapter (int i2c_bus);
 int i2c_readbytes(int i2c_bus, uint8_t *buf, int length);
 int i2c_readwrite(int i2c_bus);
 // int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length);
