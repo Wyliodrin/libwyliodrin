@@ -67,11 +67,12 @@ int digitalRead (int pin);
 void analogWrite (int pin, int value);
 int analogRead (int pin);
 
+#ifndef RASPBERRYPI 
 void delay (int milliseconds);
 void delayMicroseconds (int microseconds);
-
 unsigned long millis ();
 unsigned long micros ();
+#endif
 
 // Shift
 
