@@ -6,6 +6,12 @@
 
 uint8_t Servo::counter = 0;   // init the counter here.. static...
 
+servoPinData_t Servo::pinData[6] = {{3,  GPORT0_BIT4_PWM7, false},
+                                    {5,  GPORT0_BIT1_PWM5, false},
+                                    {6,  GPORT1_BIT0_PWM6, false},
+                                    {9,  GPORT0_BIT3_PWM1, false},
+                                    {10, GPORT0_BIT0_PWM7, false},
+                                    {11, GPORT1_BIT1_PWM4, false}};
 
 Servo::Servo()
 {
@@ -60,7 +66,7 @@ uint8_t Servo::attach(int pin, int min, int max)
   {
       if (pinData[list_index].pin == pin) 
       {
-	  is_valid_pin = true;
+    is_valid_pin = true;
           break;
       }
   }
