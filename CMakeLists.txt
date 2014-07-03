@@ -29,8 +29,10 @@ set (wyliodrin_VERSION_MAJOR 1)
 set (wyliodrin_VERSION_MINOR 4)
 set (wyliodrin_VERSION_PATCH 0})
 
-option (GALILEO "Build for the Intel Galileo." OFF)
-option (RASPBERRYPI "Build for the RaspberryPi." OFF)
+option (GALILEO     "Build for the Intel Galileo." OFF)
+option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
+option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
+
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
 elseif (RASPBERRYPI)
@@ -54,6 +56,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/WString.cpp
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
 )
 
 add_subdirectory (src)
