@@ -4,13 +4,13 @@ project (libwyliodrin)
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-# Appends the cmake/modules path to MAKE_MODULE_PATH variable.                                                                                                 
+# Appends the cmake/modules path to MAKE_MODULE_PATH variable.
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 find_package (Threads)
 
 find_package (SWIG)
-if (SWIG_FOUND)                                                                                                                                                
+if (SWIG_FOUND)
   include (${SWIG_USE_FILE})
 endif ()
 
@@ -35,8 +35,10 @@ if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
+elseif (BEAGLEBONE)
+  add_definitions(-DBEAGLEBONE)
 else ()
-  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON or -DGALILEO=ON")
+  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON or -DBEAGLEBONE=ON")
 endif ()
 
 set (wyliodrin_LIB_SRCS                                                                                   
