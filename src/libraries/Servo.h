@@ -59,13 +59,7 @@ private:
    uint8_t index;                 // servo index
 
    // this compiler does not accept [] should use [6]
-   servoPinData_t pinData[6] = {{3,  GPORT0_BIT4_PWM7, false},
-                                {5,  GPORT0_BIT1_PWM5, false},
-                                {6,  GPORT1_BIT0_PWM6, false},
-                                {9,  GPORT0_BIT3_PWM1, false},
-                                {10, GPORT0_BIT0_PWM7, false},
-                                {11, GPORT1_BIT1_PWM4, false}};
- 
+   static servoPinData_t pinData[6];
 
    static uint8_t counter;   // only for counting 
 
