@@ -16,7 +16,7 @@ ArduinoGalileo
   * libmraa
 
 Languages
-  * swig
+  * swig 3.0.1+
 
 Python
   * python
@@ -32,7 +32,7 @@ Install
     
     mkdir build
     cd build
-    cmake -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI
+    cmake -DBOARD=ON .. - BOARD can be GALILEO, RASPBERRYPI or BEAGLEBONE
     make
     sudo make install
   
