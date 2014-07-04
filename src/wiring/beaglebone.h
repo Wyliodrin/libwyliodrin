@@ -1,4 +1,5 @@
-#ifdef BEAGLEBONE
+#ifdef  BEAGLEBONE_H
+#define BEAGLEBONE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -120,10 +121,10 @@ pin_t pinTable[] = {
   {"DGND"      , "P9_43", 0  , -1, -1, -1 },
   {"DGND"      , "P9_44", 0  , -1, -1, -1 },
   {"DGND"      , "P9_45", 0  , -1, -1, -1 },
-  {"DGND"      , "P9_46", 0  , -1, -1, -1 }}
+  {"DGND"      , "P9_46", 0  , -1, -1, -1 }};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // BEAGLEBONE
+#endif // BEAGLEBONE_H
