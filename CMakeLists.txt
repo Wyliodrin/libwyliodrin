@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.12)                                                                                                                           
+cmake_minimum_required (VERSION 2.8.8)                                                                                                                           
 project (libwyliodrin)
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
