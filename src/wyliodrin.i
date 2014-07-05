@@ -13,6 +13,8 @@
     #include "libraries/Servo.h"
     #include "libraries/Stepper.h"
     #include "libraries/rgb_lcd.h"
+    #include "libraries/Pixy.h"
+    #include "libraries/TPixy.h"
     #include "libraries/Adafruit_GFX.h"
     #include "libraries/Adafruit_PCD8544.h"
     #include "libraries/Adafruit_ST7735.h"
@@ -34,6 +36,10 @@
 %include "libraries/Servo.h"
 %include "libraries/Stepper.h"
 %include "libraries/rgb_lcd.h"
+%include "libraries/Pixy.h"
+%include "libraries/TPixy.h"
 %include "libraries/Adafruit_GFX.h"
 %include "libraries/Adafruit_PCD8544.h"
 %include "libraries/Adafruit_ST7735.h"
+
+%template(Pixy) TPixy<LinkSPI>;
