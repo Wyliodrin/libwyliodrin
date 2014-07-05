@@ -5,6 +5,9 @@
 extern "C" {
 #endif
 
+# define INPUT  0
+# define OUTPUT 1
+
 /**
  * Pin Structure
  */

@@ -10,6 +10,17 @@ extern "C" {
  * Digital I/O
  *****************************************************************************/
 
+/**
+ * DESCRIPTION:
+ * Configures the specified pin to behave either as an input or an output.
+ * See pinTable in beaglebone.h for details on the functionality of the pins.
+ *
+ * PARAMETERS:
+ * pin  - the number of the pin whose pin you wish to set 
+ *        (gpio in pins_t struct from beaglebone.h)
+ * mode - INPUT or OUTPUT
+ */
+
 void pinMode (int pin, int mode) {
   // TODO
 }
