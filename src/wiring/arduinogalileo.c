@@ -6,6 +6,7 @@
 static mraa_gpio_context gpio_pins[MAX_GPIO_PINS];
 static mraa_aio_context aio_pins[MAX_AIO_PINS];
 static mraa_pwm_context pwm_pins[MAX_PWM_PINS];
+static mraa_spi_context spi_buses[MAX_SPI_PINS];
 static mraa_i2c_context i2c_buses[MAX_I2C_PINS];
 
 // struct i2c_msg {
@@ -205,6 +206,55 @@ void shiftOut (uint8_t dPin, uint8_t cPin, uint8_t order, uint8_t val)
     }
 }
 
+int spi_getadapter(uint32_t spi_bus_address)
+{
+	// error, function not implemented
+	return -1;
+}
+
+int spi_openadapter(uint8_t spi_bus)
+{
+	spi_buses[spi_bus] = mraa_spi_init (spi_bus);
+	return spi_bus;
+}
+
+int spi_setmode(int spi_bus, unsigned short mode)
+{
+	return mraa_spi_mode (spi_buses[spi_bus], mode);
+}
+
+int spi_set_frequency(int spi_bus, int freq)
+{
+	return mraa_spi_frequency (spi_buses[spi_bus], freq);
+}
+
+uint8_t spi_writebyte(int spi_bus, uint8_t byte)
+{
+	return mraa_spi_write (spi_buses[spi_bus], byte);
+}
+
+unsigned char * spi_writebytes(int spi_bus, uint8_t *bytes, uint8_t length)
+{
+	return mraa_spi_write_buf (spi_buses[spi_bus], bytes, length);
+}
+
+int spi_lsb_mode(int spi_bus, unsigned char lsb)
+{
+	return mraa_spi_lsbmode (spi_buses[spi_bus], lsb);	
+}
+
+int spi_bit_per_word(int spi_bus, unsigned int bits)
+{
+	return mraa_spi_bit_per_word (spi_buses[spi_bus], bits);
+}
+
+int spi_closeadapter (int spi_bus)
+{
+	mraa_spi_stop (spi_buses[spi_bus]);
+	spi_buses[spi_bus] = NULL;
+	return 0;
+}
+
 int i2c_getadapter(uint32_t i2c_bus_address)
 {
 	// error, function not implemented
@@ -240,6 +290,13 @@ int i2c_readbyte(int i2c_bus)
 int i2c_readbytes(int i2c_bus, uint8_t *buf, int length)
 {
 	return mraa_i2c_read (i2c_buses[i2c_bus], buf, length);
+}
+
+int i2c_closeadapter(int i2c_bus)
+{
+	mraa_i2c_stop (i2c_buses[i2c_bus]);
+	i2c_buses[i2c_bus] = NULL;
+	return 0;
 }
 
 int i2c_readwrite(int i2c_bus)

@@ -52,6 +52,9 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Stream.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Wire.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/WString.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/SPI.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_GFX.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_ST7735.cpp
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
