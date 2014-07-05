@@ -16,9 +16,6 @@ endif ()
 
 find_package (PkgConfig REQUIRED)
 
-pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
-message (INFO " found libmraa version: ${MRAA_VERSION}")
-
 find_package(Hiredis REQUIRED)
 include_directories(${HIREDIS_INCLUDE_DIR})
 
@@ -33,16 +30,19 @@ option (GALILEO "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi." OFF)
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
+  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
+  message (INFO " found libmraa version: ${MRAA_VERSION}")
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
+  find_package(Wiringpi REQUIRED)
+  include_directories(${WIRINGPI_INCLUDE_DIR})
+
 else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON or -DGALILEO=ON")
 endif ()
 
 set (wyliodrin_LIB_SRCS                                                                                   
   ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/math.c
   ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/libraries/lcd.c
@@ -57,6 +57,9 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_GFX.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_PCD8544.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_ST7735.cpp
+  ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/math.c
 )
 
 add_subdirectory (src)
