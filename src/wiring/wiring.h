@@ -8,6 +8,7 @@ typedef unsigned char uint8_t;
 // use wiring library
 #ifdef RASPBERRYPI
 #include <wiringPi.h>
+#define MAX_I2C_PINS	10
 #endif
 
 // Arduino Galileo
@@ -67,12 +68,12 @@ int digitalRead (int pin);
 void analogWrite (int pin, int value);
 int analogRead (int pin);
 
-#ifndef RASPBERRYPI 
+//#ifndef RASPBERRYPI 
 void delay (int milliseconds);
 void delayMicroseconds (int microseconds);
 unsigned long millis ();
 unsigned long micros ();
-#endif
+//#endif
 
 // Shift
 
