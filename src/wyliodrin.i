@@ -18,6 +18,9 @@
     #include "libraries/Adafruit_GFX.h"
     #include "libraries/Adafruit_PCD8544.h"
     #include "libraries/Adafruit_ST7735.h"
+
+    SPIClass SPI;
+    TwoWire Wire = TwoWire (NULL);
 %}
 
 %init %{
