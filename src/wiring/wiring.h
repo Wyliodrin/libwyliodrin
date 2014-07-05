@@ -25,8 +25,8 @@ typedef unsigned char uint8_t;
 #define MAX_GPIO_PINS 100
 #define MAX_AIO_PINS 40
 #define MAX_PWM_PINS 50
-#define MAX_I2C_PINS 10
-#define MAX_SPI_PINS 10
+#define MAX_I2C_BUSES 10
+#define MAX_SPI_BUSES 10
 
 #define	LSBFIRST	0
 #define	MSBFIRST	1
@@ -97,25 +97,25 @@ uint16_t makeWord( uint8_t h, uint8_t l ) ;
 // TODO
 int spi_getadapter(uint32_t spi_bus_address);
 int spi_openadapter(uint8_t spi_bus);
-int spi_setmode(int spi_bus, unsigned short mode);
-int spi_set_frequency(int spi_bus, int freq);
-uint8_t spi_writebyte(int spi_bus, uint8_t byte);
-unsigned char * spi_writebytes(int spi_bus, uint8_t *bytes, uint8_t length);
-int spi_lsb_mode(int spi_bus, unsigned char lsb);
-int spi_bit_per_word(int spi_bus, unsigned int bits);
-int spi_closeadapter (int spi_bus);
+int spi_setmode(int spiId, unsigned short mode);
+int spi_set_frequency(int spiId, int freq);
+uint8_t spi_writebyte(int spiId, uint8_t byte);
+unsigned char * spi_writebytes(int spiId, uint8_t *bytes, uint8_t length);
+int spi_lsb_mode(int spiId, unsigned char lsb);
+int spi_bit_per_word(int spiId, unsigned int bits);
+int spi_closeadapter (int spiId);
 
 // I2C
 
 // int i2c_getadapter(uint32_t i2c_bus_address);
 int i2c_openadapter(uint8_t i2c_bus);
-int i2c_setslave(int i2c_bus, uint8_t addr);
-int i2c_writebyte(int i2c_bus, uint8_t byte);
-int i2c_writebytes(int i2c_bus, uint8_t *bytes, uint8_t length);
-int i2c_readbyte(int i2c_bus);
-int i2c_closeadapter (int i2c_bus);
-int i2c_readbytes(int i2c_bus, uint8_t *buf, int length);
-int i2c_readwrite(int i2c_bus);
+int i2c_setslave(int i2cId, uint8_t addr);
+int i2c_writebyte(int i2cId, uint8_t byte);
+int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length);
+int i2c_readbyte(int i2cId);
+int i2c_closeadapter (int i2cId);
+int i2c_readbytes(int i2cId, uint8_t *buf, int length);
+int i2c_readwrite(int i2cId);
 // int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length);
 
 #ifdef __cplusplus
