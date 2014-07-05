@@ -8,7 +8,7 @@ static int spi_buses[MAX_SPI_BUSES];
 static int i2c_addresses[MAX_I2C_PINS];
 static int spi_freq[MAX_SPI_BUSES];
 static int spi_channels[MAX_SPI_BUSES];
-#define SPI_DEFAULT_FREQ	1000000
+#define SPI_DEFAULT_FREQ	4000000
 
 int wiringSetup ()
 {
@@ -226,7 +226,7 @@ uint8_t spi_writebyte(int spi_id, uint8_t byte)
 		return -1;
 	else if (spi_buses[spi_id] == -2)
 	{
-		fd = wiringSetup(spi_channels[spi_id], spi_freq[spi_id]);
+		fd = wiringPiSPISetup(spi_channels[spi_id], spi_freq[spi_id]);
 		spi_buses[spi_id] = fd;
 	}
 	wiringPiSPIDataRW (spi_channels[spi_id], &new_byte, 1);
@@ -242,7 +242,7 @@ unsigned char * spi_writebytes(int spi_id, uint8_t *bytes, uint8_t length)
 	memcpy(new_byte, bytes, length);
 	if (spi_buses[spi_id] == -2)
 	{
-		fd = wiringSetup(spi_channels[spi_id], spi_freq[spi_id]);
+		fd = wiringPiSPISetup(spi_channels[spi_id], spi_freq[spi_id]);
 		spi_buses[spi_id] = fd;
 	}
 	wiringPiSPIDataRW (spi_channels[spi_id], new_byte, length);
