@@ -1,12 +1,43 @@
-#ifdef  BEAGLEBONE_H
+#ifndef BEAGLEBONE_H
 #define BEAGLEBONE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-# define INPUT  0
-# define OUTPUT 1
+/******************************************************************************
+ * CONTENT
+ *
+ * 1.Defines
+ * 2.Pin Configuration
+ * 3.Helper functions
+ *****************************************************************************/
+
+
+/******************************************************************************
+ * 1.Defines
+ *****************************************************************************/
+
+#define INPUT  0
+#define OUTPUT 1
+
+#define SYSFS_GPIO_DIR "/sys/class/gpio"
+
+// If they'll like this macro, I'll move it in a more generic file
+#define DEBUG 1
+#define debug(...)                                                           \
+  do {                                                                       \
+    if (DEBUG) {                                                             \
+      fprintf(stderr, "Error in file %s at line %d:\n", __FILE__, __LINE__); \
+      fprintf(stderr, __VA_ARGS__);                                          \
+      fprintf(stderr, "\n");                                                 \
+    }                                                                        \
+  } while (0)                                                                \
+
+
+/******************************************************************************
+ * 2.Pin Configuration
+ *****************************************************************************/
 
 /**
  * Pin Structure
@@ -21,7 +52,8 @@ typedef struct pin_t {
 } pin_t;
 
 /**
- * Pins configuration
+ * Pins configuration for the BeagleBone Black
+ * Note that BeagleBone White pinouts are different from the BeagleBone Black.
  *
  * Table generated based on:
  * http://mkaczanowski.com/beaglebone-black-cpp-gpio-library-for-beginners/
@@ -124,7 +156,52 @@ pin_t pinTable[] = {
   {"DGND"      , "P9_43", 0  , -1, -1, -1 },
   {"DGND"      , "P9_44", 0  , -1, -1, -1 },
   {"DGND"      , "P9_45", 0  , -1, -1, -1 },
-  {"DGND"      , "P9_46", 0  , -1, -1, -1 }};
+  {"DGND"      , "P9_46", 0  , -1, -1, -1 },
+  NULL }; // Used for stop conditions
+
+
+/******************************************************************************
+ * 3.Helper functions. 
+ * I should find a smarter name for this block.
+ *****************************************************************************/
+
+/**
+ * Returns the gpio pin number by name or -1 in case of failure
+ */
+int getGpioByName(const char *name) {
+  pin_t *aux;
+
+  aux = pinTable;
+  while(aux != NULL) {
+    if(strcmp(aux->name, name) == 0) {
+      return aux->gpio;
+    }
+
+    aux++;
+  }
+
+  debug("There is no pin named %s", name);
+  return -1;
+}
+
+/**
+ * Returns the gpio pin number by key or -1 in case of failure
+ */
+int getGpioByKey(const char *key) {
+  pin_t *aux;
+
+  aux = pinTable;
+  while(aux != NULL) {
+    if(strcmp(aux->key, key) == 0) {
+      return aux->gpio;
+    }
+
+    aux++;
+  }
+
+  debug("There is no pin with the key %s", key);
+  return -1;
+}
 
 #ifdef __cplusplus
 }

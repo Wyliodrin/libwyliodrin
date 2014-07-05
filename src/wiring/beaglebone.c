@@ -1,5 +1,7 @@
 #ifdef BEAGLEBONE
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "beaglebone.h"
 
 #ifdef __cplusplus
@@ -7,20 +9,27 @@ extern "C" {
 #endif
 
 /******************************************************************************
- * Digital I/O
+ * CONTENT
+ *
+ * 1.Digital I/O
+ * 2.Analog I/O
+ *****************************************************************************/
+
+
+/******************************************************************************
+ * 1.Digital I/O
  *****************************************************************************/
 
 /**
- * DESCRIPTION:
  * Configures the specified pin to behave either as an input or an output.
- * See pinTable in beaglebone.h for details on the functionality of the pins.
+ *
+ * See 2.Pin Configuration and 3.Helper Functions in beaglebone.h for details
+ * on the functionality of the pins.
  *
  * PARAMETERS:
  * pin  - the number of the pin whose pin you wish to set 
- *        (gpio in pins_t struct from beaglebone.h)
  * mode - INPUT or OUTPUT
  */
-
 void pinMode (int pin, int mode) {
   // TODO
 }
@@ -36,7 +45,7 @@ int digitalRead (int pin) {
 }
 
 /******************************************************************************
- * Analog I/O
+ * 2.Analog I/O
  *****************************************************************************/
 
 void analogWrite (int pin, int value) {
@@ -45,6 +54,8 @@ void analogWrite (int pin, int value) {
 
 int analogRead (int pin) {
   // TODO
+
+  return 0;
 }
 
 #ifdef __cplusplus
