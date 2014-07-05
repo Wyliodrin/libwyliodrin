@@ -53,6 +53,9 @@ private:
   uint8_t clkDiv;
 };
 
-SPIClass SPI;
+namespace
+{
+  SPIClass SPI;
+}
 
 #endif
