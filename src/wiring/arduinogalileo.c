@@ -36,7 +36,11 @@ int getSPIId ()
 	pthread_mutex_lock(&lockspi);
 	for (i=0; i < MAX_SPI_BUSES && id == -1; i++)
 	{
-		if (spi_buses[i] == NULL) id = i;
+		if (spi_buses[i] == NULL)
+		{
+			id = i;
+			spi_buses[id] = (void*)1;
+		}
 	}
 	pthread_mutex_unlock(&lockspi);
 	return id;
@@ -56,7 +60,11 @@ int getI2CId ()
 	pthread_mutex_lock(&locki2c);
 	for (i=0; i < MAX_I2C_BUSES && id == -1; i++)
 	{
-		if (i2c_buses[i] == NULL) id = i;
+		if (i2c_buses[i] == NULL)
+		{
+			id = i;
+			i2c_buses[id] = (void*)1;
+		}
 	}
 	pthread_mutex_unlock(&locki2c);
 	return id;
