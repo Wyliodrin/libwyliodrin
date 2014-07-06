@@ -42,6 +42,7 @@
 
 class LinkSPI
 {
+
   public:
     void init()
     {
@@ -101,6 +102,7 @@ class LinkSPI
     }
 
   private:
+    SPIClass SPI;
     uint8_t outBuf[PIXY_OUTBUF_SIZE];
     uint8_t outLen;
     uint8_t outIndex;

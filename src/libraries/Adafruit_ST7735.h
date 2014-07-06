@@ -20,6 +20,7 @@
 #define _ADAFRUIT_ST7735H_
 
 #include "Adafruit_GFX.h"
+#include "SPI.h"
 
   #define PROGMEM
   #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
@@ -122,6 +123,8 @@ class Adafruit_ST7735 : public Adafruit_GFX {
   */
 
  private:
+
+  SPIClass SPI;
   uint8_t  tabcolor;
 
   void     spiwrite(uint8_t),

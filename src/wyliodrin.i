@@ -9,6 +9,7 @@
     #include "wiring/wiring.h"
     #include "libraries/lcd.h"
     #include "libraries/Print.h"
+    #include "libraries/SPI.h"
     #include "libraries/Wire.h"
     #include "libraries/Servo.h"
     #include "libraries/Stepper.h"
@@ -18,9 +19,6 @@
     #include "libraries/Adafruit_GFX.h"
     #include "libraries/Adafruit_PCD8544.h"
     #include "libraries/Adafruit_ST7735.h"
-
-    SPIClass SPI;
-    TwoWire Wire = TwoWire (NULL);
 %}
 
 %init %{
@@ -35,6 +33,7 @@
 %include "libraries/lcd.h"
 %include "libraries/Print.h"
 %include "libraries/Stream.h"
+%include "libraries/SPI.h"
 %include "libraries/Wire.h"
 %include "libraries/Servo.h"
 %include "libraries/Stepper.h"
