@@ -1,12 +1,57 @@
 #ifdef RASPBERRYPI
 #include "wiring.h"
+#include <pthread.h>
 int wiringSetup ()
 {
 	wiringPiSetup();
 }
 
 static int i2c_buses[MAX_I2C_PINS];
+static int spi_buses[MAX_SPI_BUSES];
 static int i2c_addresses[MAX_I2C_PINS];
+
+pthread_mutex_t lockspi;
+pthread_mutex_t locki2c;
+
+int getSPIId ()
+{
+	int i;
+	int id = -1;
+	pthread_mutex_lock(&lockspi);
+	for (i=0; i < MAX_SPI_BUSES && id == -1; i++)
+	{
+		if (spi_buses[i] == NULL) id = i;
+	}
+	pthread_mutex_unlock(&lockspi);
+	return id;
+}
+
+void releaseSPIId (int id)
+{
+	pthread_mutex_lock(&lockspi);
+	spi_buses[id] = NULL;
+	pthread_mutex_unlock(&lockspi);
+}
+
+int getI2CId ()
+{
+	int i;
+	int id = -1;
+	pthread_mutex_lock(&locki2c);
+	for (i=0; i < MAX_I2C_BUSES && id == -1; i++)
+	{
+		if (i2c_buses[i] == NULL) id = i;
+	}
+	pthread_mutex_unlock(&locki2c);
+	return id;
+}
+
+void releaseI2CId (int id)
+{
+	pthread_mutex_lock(&locki2c);
+	i2c_buses[id] = NULL;
+	pthread_mutex_unlock(&locki2c);
+}
 
 
 int i2c_getadapter(uint32_t i2c_bus_address)
@@ -17,27 +62,28 @@ int i2c_getadapter(uint32_t i2c_bus_address)
 
 int i2c_openadapter(uint8_t i2c_bus)
 {
-	i2c_buses[i2c_bus] = wiringPiI2CSetup (i2c_bus) ;
-	return i2c_bus;
+	int id = getI2CId();
+	i2c_buses[id] = wiringPiI2CSetup (i2c_bus) ;
+	return id;
 }
 
-int i2c_setslave(int i2c_bus, uint8_t addr)
+int i2c_setslave(int i2c_id, uint8_t addr)
 {
-	i2c_addresses[i2c_bus] = addr;
+	i2c_addresses[i2c_id] = addr;
 	return 0;
 }
 
-int i2c_writebyte(int i2c_bus, uint8_t byte)
+int i2c_writebyte(int i2c_id, uint8_t byte)
 {
-	return wiringPiI2CWriteReg8 (i2c_buses[i2c_bus], i2c_addresses[i2c_bus], byte) ;
+	return wiringPiI2CWriteReg8 (i2c_buses[i2c_id], i2c_addresses[i2c_id], byte) ;
 }
 
-int i2c_writebytes(int i2c_bus, uint8_t *bytes, uint8_t length)
+int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
 {
 	int rc = 0;
 	int i;
-	int fd = i2c_buses[i2c_bus];
-	int addr = i2c_addresses[i2c_bus];
+	int fd = i2c_buses[i2c_id];
+	int addr = i2c_addresses[i2c_id];
 
 	for (i=0; i<length; i++)
 	{
@@ -50,18 +96,18 @@ int i2c_writebytes(int i2c_bus, uint8_t *bytes, uint8_t length)
 	//return mraa_i2c_write (i2c_buses[i2c_bus], bytes, length);
 }
 
-int i2c_readbyte(int i2c_bus)
+int i2c_readbyte(int i2c_id)
 {
-	return wiringPiI2CReadReg8 (i2c_buses[i2c_bus], i2c_addresses[i2c_bus]);
+	return wiringPiI2CReadReg8 (i2c_buses[i2c_id], i2c_addresses[i2c_id]);
 	//return mraa_i2c_read_byte (i2c_buses[i2c_bus]);	
 }
 
-int i2c_readbytes(int i2c_bus, uint8_t *buf, int length)
+int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
 {
 	int rc = 0;
 	int i;
-	int fd = i2c_buses[i2c_bus];
-	int addr = i2c_addresses[i2c_bus];
+	int fd = i2c_buses[i2c_id];
+	int addr = i2c_addresses[i2c_id];
 
 	for (i=0; i<length; i++)
 	{
@@ -74,16 +120,16 @@ int i2c_readbytes(int i2c_bus, uint8_t *buf, int length)
 	//return mraa_i2c_read (i2c_buses[i2c_bus], buf, length);
 }
 
-int i2c_closeadapter(int i2c_bus)
+int i2c_closeadapter(int i2c_id)
 {
 	// mraa_i2c_stop (i2c_buses[i2c_bus]);
-	int rc = close(i2c_buses[i2c_bus]);
-	i2c_buses[i2c_bus] = -1;
-	i2c_addresses[i2c_bus] = -1;
+	int rc = close(i2c_buses[i2c_id]);
+	i2c_addresses[i2c_id] = -1;
+	releaseI2CId (i2c_id);
 	return rc;
 }
 
-int i2c_readwrite(int i2c_bus)
+int i2c_readwrite(int i2c_id)
 {
 	// struct i2c_rdwr_ioctl_data packets;
 	// packets.msgs = i2c_buf;

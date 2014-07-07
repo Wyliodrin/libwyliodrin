@@ -2,12 +2,13 @@
 #ifdef ARDUINOGALILEO
 
 #include "wiring.h"
+#include <pthread.h>
 
 static mraa_gpio_context gpio_pins[MAX_GPIO_PINS];
 static mraa_aio_context aio_pins[MAX_AIO_PINS];
 static mraa_pwm_context pwm_pins[MAX_PWM_PINS];
-static mraa_spi_context spi_buses[MAX_SPI_PINS];
-static mraa_i2c_context i2c_buses[MAX_I2C_PINS];
+static mraa_spi_context spi_buses[MAX_SPI_BUSES];
+static mraa_i2c_context i2c_buses[MAX_I2C_BUSES];
 
 // struct i2c_msg {
 // 	__u16 addr;	/* slave address			*/
@@ -25,12 +26,57 @@ static mraa_i2c_context i2c_buses[MAX_I2C_PINS];
 // struct i2c_msg i2c_buf[2];
 // unsigned int i2c_buf_count = 0;
 
+pthread_mutex_t lockspi;
+pthread_mutex_t locki2c;
+
+int getSPIId ()
+{
+	int i;
+	int id = -1;
+	pthread_mutex_lock(&lockspi);
+	for (i=0; i < MAX_SPI_BUSES && id == -1; i++)
+	{
+		if (spi_buses[i] == NULL) id = i;
+	}
+	pthread_mutex_unlock(&lockspi);
+	return id;
+}
+
+void releaseSPIId (int id)
+{
+	pthread_mutex_lock(&lockspi);
+	spi_buses[id] = NULL;
+	pthread_mutex_unlock(&lockspi);
+}
+
+int getI2CId ()
+{
+	int i;
+	int id = -1;
+	pthread_mutex_lock(&locki2c);
+	for (i=0; i < MAX_I2C_BUSES && id == -1; i++)
+	{
+		if (i2c_buses[i] == NULL) id = i;
+	}
+	pthread_mutex_unlock(&locki2c);
+	return id;
+}
+
+void releaseI2CId (int id)
+{
+	pthread_mutex_lock(&locki2c);
+	i2c_buses[id] = NULL;
+	pthread_mutex_unlock(&locki2c);
+}
+
 void resetPin (int pin);
 void pwmReset (int pin);
 
 int wiringSetup ()
 {
 	mraa_init ();
+	pthread_mutex_init(&lockspi, NULL);
+	pthread_mutex_init(&locki2c, NULL);
 }
 
 void pinReset (int pin)
@@ -214,44 +260,48 @@ int spi_getadapter(uint32_t spi_bus_address)
 
 int spi_openadapter(uint8_t spi_bus)
 {
-	spi_buses[spi_bus] = mraa_spi_init (spi_bus);
-	return spi_bus;
+	int spiId = getSPIId ();
+	if (spiId >= 0)
+	{
+		spi_buses[spiId] = mraa_spi_init (spi_bus);
+	}
+	return spiId;
 }
 
-int spi_setmode(int spi_bus, unsigned short mode)
+int spi_setmode(int spiId, unsigned short mode)
 {
-	return mraa_spi_mode (spi_buses[spi_bus], mode);
+	return mraa_spi_mode (spi_buses[spiId], mode);
 }
 
-int spi_set_frequency(int spi_bus, int freq)
+int spi_set_frequency(int spiId, int freq)
 {
-	return mraa_spi_frequency (spi_buses[spi_bus], freq);
+	return mraa_spi_frequency (spi_buses[spiId], freq);
 }
 
-uint8_t spi_writebyte(int spi_bus, uint8_t byte)
+uint8_t spi_writebyte(int spiId, uint8_t byte)
 {
-	return mraa_spi_write (spi_buses[spi_bus], byte);
+	return mraa_spi_write (spi_buses[spiId], byte);
 }
 
-unsigned char * spi_writebytes(int spi_bus, uint8_t *bytes, uint8_t length)
+unsigned char * spi_writebytes(int spiId, uint8_t *bytes, uint8_t length)
 {
-	return mraa_spi_write_buf (spi_buses[spi_bus], bytes, length);
+	return mraa_spi_write_buf (spi_buses[spiId], bytes, length);
 }
 
-int spi_lsb_mode(int spi_bus, unsigned char lsb)
+int spi_lsb_mode(int spiId, unsigned char lsb)
 {
-	return mraa_spi_lsbmode (spi_buses[spi_bus], lsb);	
+	return mraa_spi_lsbmode (spi_buses[spiId], lsb);	
 }
 
-int spi_bit_per_word(int spi_bus, unsigned int bits)
+int spi_bit_per_word(int spiId, unsigned int bits)
 {
-	return mraa_spi_bit_per_word (spi_buses[spi_bus], bits);
+	return mraa_spi_bit_per_word (spi_buses[spiId], bits);
 }
 
-int spi_closeadapter (int spi_bus)
+int spi_closeadapter (int spiId)
 {
-	mraa_spi_stop (spi_buses[spi_bus]);
-	spi_buses[spi_bus] = NULL;
+	mraa_spi_stop (spi_buses[spiId]);
+	releaseSPIId (spiId);
 	return 0;
 }
 
@@ -263,43 +313,47 @@ int i2c_getadapter(uint32_t i2c_bus_address)
 
 int i2c_openadapter(uint8_t i2c_bus)
 {
-	i2c_buses[i2c_bus] = mraa_i2c_init (i2c_bus);
-	return i2c_bus;
+	int i2cId = getI2CId ();
+	if (i2cId >= 0)
+	{
+		i2c_buses[i2cId] = mraa_i2c_init (i2c_bus);
+	}
+	return i2cId;
 }
 
-int i2c_setslave(int i2c_bus, uint8_t addr)
+int i2c_setslave(int i2cId, uint8_t addr)
 {
-	return mraa_i2c_address (i2c_buses[i2c_bus], addr);
+	return mraa_i2c_address (i2c_buses[i2cId], addr);
 }
 
-int i2c_writebyte(int i2c_bus, uint8_t byte)
+int i2c_writebyte(int i2cId, uint8_t byte)
 {
-	return mraa_i2c_write_byte (i2c_buses[i2c_bus], byte);
+	return mraa_i2c_write_byte (i2c_buses[i2cId], byte);
 }
 
-int i2c_writebytes(int i2c_bus, uint8_t *bytes, uint8_t length)
+int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length)
 {
-	return mraa_i2c_write (i2c_buses[i2c_bus], bytes, length);
+	return mraa_i2c_write (i2c_buses[i2cId], bytes, length);
 }
 
-int i2c_readbyte(int i2c_bus)
+int i2c_readbyte(int i2cId)
 {
-	return mraa_i2c_read_byte (i2c_buses[i2c_bus]);	
+	return mraa_i2c_read_byte (i2c_buses[i2cId]);	
 }
 
-int i2c_readbytes(int i2c_bus, uint8_t *buf, int length)
+int i2c_readbytes(int i2cId, uint8_t *buf, int length)
 {
-	return mraa_i2c_read (i2c_buses[i2c_bus], buf, length);
+	return mraa_i2c_read (i2c_buses[i2cId], buf, length);
 }
 
-int i2c_closeadapter(int i2c_bus)
+int i2c_closeadapter(int i2cId)
 {
-	mraa_i2c_stop (i2c_buses[i2c_bus]);
-	i2c_buses[i2c_bus] = NULL;
+	mraa_i2c_stop (i2c_buses[i2cId]);
+	releaseI2CId (i2cId);
 	return 0;
 }
 
-int i2c_readwrite(int i2c_bus)
+int i2c_readwrite(int i2cId)
 {
 	// struct i2c_rdwr_ioctl_data packets;
 	// packets.msgs = i2c_buf;
@@ -310,7 +364,6 @@ int i2c_readwrite(int i2c_bus)
 	// 	return -1;
 	// }
 	// i2c_buf_count = 0;
-	// return 0;
 	return -1;
 }
 
@@ -323,7 +376,6 @@ int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 	// 	i2c_buf[i2c_buf_count].buf = (char *)value;
 	// 	return ++i2c_buf_count;
 	// } else
-	// 	return -1;
 	return -1;
 }
 
