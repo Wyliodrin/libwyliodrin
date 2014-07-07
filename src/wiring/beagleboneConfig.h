@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BEAGLEBONE_CONFIG_H
+#define BEAGLEBONE_CONFIG_H
 
 #ifdef BEAGLEBONE
 
@@ -7,24 +8,22 @@ extern "C" {
 #endif
 
 /******************************************************************************
- * This file contains the declarations of the configuration functions for the
- * BeagleBone Black.
+ * This file contains the declarations of the GPIO configuration functions for 
+ * the BeagleBone Black.
  *
  * CONTENT:
- * 1.Defines
- * 2.Pin Configuration
- * 3.Helper functions
+ * 1.Constants
+ * 2.Pins Configuration
+ * 3.GPIO
  *****************************************************************************/
 
 
 
 /******************************************************************************
- * 1.Defines
+ * 1.Constants
  *****************************************************************************/
 
-#define INPUT  0
-#define OUTPUT 1
-
+#define MAX_BUF        64
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 
 // If they'll like this macro, I'll move it in a more generic file
@@ -38,10 +37,22 @@ extern "C" {
     }                                                                        \
   } while (0)                                                                \
 
+typedef unsigned int uint;
+
+typedef enum {
+  INPUT  = 0,
+  OUTPUT = 1
+} PIN_DIRECTION;
+
+typedef enum {
+  LOW  = 0,
+  HIGH = 1
+} PIN_VALUE;
+
 
 
 /******************************************************************************
- * 2.Pin Configuration
+ * 2.Pins Configuration
  *****************************************************************************/
 
 /**
@@ -166,13 +177,26 @@ pin_t pinTable[] = {
 
 
 /******************************************************************************
- * 3.Helper functions
- * I should find a smarter name for this block.
+ * 3.GPIO
+ *
+ * Implementations from Derek Molloy and mkaczanowski.
  *****************************************************************************/
 
-void beagleTest    ();
+void beagleTest();
+
 int  getGpioByName (const char *name);
 int  getGpioByKey  (const char *key);
+void gpioExport    (uint gpio);
+void gpioUnexport  (uint gpio);
+void gpioSetDir    (uint gpio, PIN_DIRECTION dir);
+int  gpioGetDir    (uint gpio);
+int  gpioSetValue  (uint gpio, PIN_VALUE value);
+int  gpioGetValue  (uint gpio);
+int  gpioSetEdge   (uint gpio, char *edge);
+int  gpioFdOpen    (uint gpio);
+int  gpioFdClose   (int fd);
+
+int  gpioOmapMuxSetup (const char *omap_pin0_name, const char *mode);
 
 
 
@@ -181,3 +205,5 @@ int  getGpioByKey  (const char *key);
 #endif
 
 #endif // BEAGLEBONE
+
+#endif // BEAGLEBONE_CONFIG_H
