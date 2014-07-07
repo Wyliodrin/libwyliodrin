@@ -25,7 +25,7 @@ extern "C" {
  * Test function
  */
 void beagleTest() {
-  printf("Hello from beagleboneConfig.c! Magic number: 3\n");
+  printf("Hello from beagleboneConfig.c! Magic number: 7\n");
 }
 
 /**

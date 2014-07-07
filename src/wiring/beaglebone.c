@@ -136,7 +136,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) 
  * PARAMETERS:
  * milliseconds: the number of milliseconds to pause
  */
-void delay(int milliseconds) {
+void delay(unsigned int milliseconds) {
   // TODO
 }
 
@@ -148,7 +148,7 @@ void delay(int milliseconds) {
  * PARAMETERS:
  * microseconds: the number of microseconds to pause
  */
-void delayMicroseconds(int microseconds) {
+void delayMicroseconds(unsigned int microseconds) {
   // TODO
 }
 
@@ -158,7 +158,7 @@ void delayMicroseconds(int microseconds) {
  *
  * This number will overflow (go back to zero), after approximately 50 days.
  */
-unsigned long millis() {
+unsigned int millis() {
   // TODO
 
   return 0;
@@ -170,7 +170,7 @@ unsigned long millis() {
  *
  * This number will overflow (go back to zero), after approximately 70 minutes.
  */
-unsigned long micros() {
+unsigned int micros() {
   // TODO
 
   return  0;
