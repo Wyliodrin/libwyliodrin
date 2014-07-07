@@ -3,6 +3,13 @@
 #define ARDUINO__H
 
 #include <Wyliodrin.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define PROGMEM
+
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
 
 // main fucntion for Arduino
 

@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.12)                                                                                                                           
+cmake_minimum_required (VERSION 2.8.8)                                                                                                                           
 project (libwyliodrin)
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
@@ -16,9 +16,6 @@ endif ()
 
 find_package (PkgConfig REQUIRED)
 
-pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
-message (INFO " found libmraa version: ${MRAA_VERSION}")
-
 find_package(Hiredis REQUIRED)
 include_directories(${HIREDIS_INCLUDE_DIR})
 
@@ -35,8 +32,12 @@ option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
 
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
+  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
+  message (INFO " found libmraa version: ${MRAA_VERSION}")
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
+  find_package(Wiringpi REQUIRED)
+  include_directories(${WIRINGPI_INCLUDE_DIR})
 elseif (BEAGLEBONE)
   add_definitions(-DBEAGLEBONE)
 else ()
@@ -45,6 +46,7 @@ endif ()
 
 set (wyliodrin_LIB_SRCS                                                                                   
   ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/libraries/lcd.c
   ${PROJECT_SOURCE_DIR}/src/libraries/Print.cpp
@@ -54,7 +56,12 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Stream.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Wire.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/WString.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/SPI.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_GFX.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_PCD8544.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_ST7735.cpp
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
