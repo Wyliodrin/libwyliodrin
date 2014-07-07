@@ -9,7 +9,7 @@ extern "C" {
 #include "wiring.h"
 
 /******************************************************************************
- * This file contains all wiring functions.
+ * This file contains the implementation of all wiring functions.
  *
  * CONTENT
  * 1.General
