@@ -18,6 +18,8 @@ All text above, and the splash screen must be included in any redistribution
 #ifndef _ADAFRUIT_PCD8544_H
 #define _ADAFRUIT_PCD8544_H
 
+#include "SPI.h"
+
 #define BLACK 1
 #define WHITE 0
 
@@ -71,6 +73,7 @@ class Adafruit_PCD8544 : public Adafruit_GFX {
   uint8_t getPixel(int8_t x, int8_t y);
 
  private:
+  SPIClass SPI;
   int8_t _din, _sclk, _dc, _rst, _cs;
   volatile uint8_t *mosiport, *clkport;
   uint8_t mosipinmask, clkpinmask;
