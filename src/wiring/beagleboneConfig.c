@@ -1,63 +1,34 @@
-#ifndef BEAGLEBONE
+#ifdef BEAGLEBONE
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "beagleboneConfig.h"
+
 /******************************************************************************
  * CONTENT
  *
- * 1.Defines
- * 2.Pin Configuration
- * 3.Helper functions
+ * 1.Pin Configuration
+ * 2.Helper functions
  *****************************************************************************/
+
 
 
 /******************************************************************************
- * 1.Defines
- *****************************************************************************/
-
-#define INPUT  0
-#define OUTPUT 1
-
-#define SYSFS_GPIO_DIR "/sys/class/gpio"
-
-// If they'll like this macro, I'll move it in a more generic file
-#define DEBUG 1
-#define debug(...)                                                           \
-  do {                                                                       \
-    if (DEBUG) {                                                             \
-      fprintf(stderr, "Error in file %s at line %d:\n", __FILE__, __LINE__); \
-      fprintf(stderr, __VA_ARGS__);                                          \
-      fprintf(stderr, "\n");                                                 \
-    }                                                                        \
-  } while (0)                                                                \
-
-
-/******************************************************************************
- * 2.Pin Configuration
+ * 1.Pin Configuration
  *****************************************************************************/
 
 /**
- * Pin Structure
- */
-typedef struct pin_t {
-  const char *name;
-  const char *key;
-  unsigned int gpio;
-  int pwm_mux_mode;
-  int ain;
-  int isAllocatedByDefault;
-} pin_t;
-
-/**
- * Pins configuration for the BeagleBone Black
+ * Pins configuration table for the BeagleBone Black
  * Note that BeagleBone White pinouts are different from the BeagleBone Black.
  *
  * Table generated based on:
  * http://mkaczanowski.com/beaglebone-black-cpp-gpio-library-for-beginners/
  */
-pin_t pinTable[] = {
+pinTable[] = {
   {"USR0"      , "USR0" , 53 , -1, -1,  1 },
   {"USR1"      , "USR1" , 54 , -1, -1,  1 },
   {"USR2"      , "USR2" , 55 , -1, -1,  1 },
@@ -159,9 +130,9 @@ pin_t pinTable[] = {
   NULL }; // Used for stop conditions
 
 
+
 /******************************************************************************
- * 3.Helper functions. 
- * I should find a smarter name for this block.
+ * 3.Helper functions
  *****************************************************************************/
 
 /**
