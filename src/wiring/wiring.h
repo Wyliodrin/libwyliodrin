@@ -28,9 +28,6 @@ typedef unsigned char uint8_t;
 #define MAX_I2C_PINS 10
 #define MAX_SPI_PINS 10
 
-#define	LSBFIRST	0
-#define	MSBFIRST	1
-
 #define A0	14
 #define A1	15
 #define A2	16
@@ -40,6 +37,9 @@ typedef unsigned char uint8_t;
 #define A6	20
 
 #endif
+
+#define LSBFIRST  0
+#define MSBFIRST  1
 
 #define HIGH 1
 #define LOW 0
