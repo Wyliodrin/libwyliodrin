@@ -47,15 +47,11 @@ public:
 
 private:
   int fd;
-  int id;
   uint8_t mode;
   uint8_t bitOrder;
   uint8_t clkDiv;
 };
 
-namespace
-{
-  SPIClass SPI;
-}
+extern SPIClass SPI;
 
 #endif

@@ -32,14 +32,11 @@
 
 #define SPI_SS_GPIO_PIN   10
 
-// SPIClass SPI;
+SPIClass SPI;
 
 /* Constructor - establish defaults */
 SPIClass::SPIClass()
 {
-  static int i;
-  i++;
-  this->id = i;
   /* reflect Arduino's default behaviour where possible */
   this->mode = SPI_MODE0;
   this->bitOrder = MSBFIRST;
@@ -149,7 +146,6 @@ void SPIClass::setClockDivider(uint8_t clkDiv)
 
 uint8_t SPIClass::transfer(uint8_t txData)
 {
-  printf ("id: %d\n", this->id);
   char s = spi_writebyte (this->fd, txData);
   return s;
 }

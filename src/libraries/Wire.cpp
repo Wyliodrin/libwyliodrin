@@ -243,7 +243,7 @@ static void Wire_Init(void)
 {
 }
 
-// TwoWire Wire = TwoWire(Wire_Init);
+TwoWire Wire = TwoWire(Wire_Init);
 
 void WIRE_ISR_HANDLER(void) {
 	Wire.onService();
