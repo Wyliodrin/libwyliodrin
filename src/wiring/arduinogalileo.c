@@ -311,6 +311,7 @@ int i2c_readwrite(int i2c_bus)
 	// }
 	// i2c_buf_count = 0;
 	// return 0;
+	return -1;
 }
 
 int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
@@ -323,6 +324,7 @@ int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 	// 	return ++i2c_buf_count;
 	// } else
 	// 	return -1;
+	return -1;
 }
 
 #endif

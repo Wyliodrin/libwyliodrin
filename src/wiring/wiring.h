@@ -2,7 +2,15 @@
 #ifndef WIRING__H
 #define WIRING__H
 
+#define	LSBFIRST	0
+#define	MSBFIRST	1
+
+
 typedef unsigned char uint8_t;
+
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
 
 // Raspberry Pi
 // use wiring library
@@ -20,7 +28,6 @@ typedef unsigned char uint8_t;
 #include <mraa/pwm.h>
 #include <mraa/i2c.h>
 #include <mraa/spi.h>
-#include <unistd.h>
 
 #define MAX_GPIO_PINS 100
 #define MAX_AIO_PINS 40
@@ -28,8 +35,6 @@ typedef unsigned char uint8_t;
 #define MAX_I2C_PINS 10
 #define MAX_SPI_PINS 10
 
-#define	LSBFIRST	0
-#define	MSBFIRST	1
 
 #define A0	14
 #define A1	15
@@ -69,10 +74,10 @@ void analogWrite (int pin, int value);
 int analogRead (int pin);
 
 //#ifndef RASPBERRYPI 
-void delay (int milliseconds);
-void delayMicroseconds (int microseconds);
-unsigned long millis ();
-unsigned long micros ();
+void delay (unsigned int milliseconds);
+void delayMicroseconds (unsigned int microseconds);
+unsigned int millis (void);
+unsigned int micros (void);
 //#endif
 
 // Shift
