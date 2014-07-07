@@ -9,7 +9,7 @@
 #SET(HIREDIS_DEFINITIONS ${PC_HIREDIS_CFLAGS_OTHER})
 
 FIND_PATH(WIRINGPI_INCLUDE_DIR NAMES wiringPi.h
-   HINTS
+   PATHS
    /usr
    /usr/local
    /opt
@@ -17,11 +17,13 @@ FIND_PATH(WIRINGPI_INCLUDE_DIR NAMES wiringPi.h
    )
 
 FIND_LIBRARY(WIRINGPI_LIBRARIES NAMES wiringPi
-   HINTS
+   PATHS
    /usr
    /usr/local
    /opt
    )
+
+#set(${WIRINGPI_LIBRARIES})
 
 
 INCLUDE(FindPackageHandleStandardArgs)

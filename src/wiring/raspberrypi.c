@@ -1,17 +1,30 @@
 #ifdef RASPBERRYPI
 #include "wiring.h"
 #include <pthread.h>
-int wiringSetup ()
-{
-	wiringPiSetup();
-}
+#include <string.h>
 
 static int i2c_buses[MAX_I2C_PINS];
 static int spi_buses[MAX_SPI_BUSES];
 static int i2c_addresses[MAX_I2C_PINS];
+static int spi_freq[MAX_SPI_BUSES];
+static int spi_channels[MAX_SPI_BUSES];
+#define SPI_DEFAULT_FREQ	1000000
+
+int wiringSetup ()
+{
+	int i=0;
+	wiringPiSetup();
+	for (i=0; i<MAX_SPI_BUSES; i++) spi_buses[i]=-1;
+	for (i=0; i<MAX_I2C_BUSES; i++) i2c_buses[i]=-1;
+}
 
 pthread_mutex_t lockspi;
 pthread_mutex_t locki2c;
+
+void pinReset (int pin)
+{
+
+}
 
 int getSPIId ()
 {
@@ -20,7 +33,11 @@ int getSPIId ()
 	pthread_mutex_lock(&lockspi);
 	for (i=0; i < MAX_SPI_BUSES && id == -1; i++)
 	{
-		if (spi_buses[i] == NULL) id = i;
+		if (spi_buses[i] == -1)
+		{
+			id = i;
+			spi_buses[id] = 0;
+		}
 	}
 	pthread_mutex_unlock(&lockspi);
 	return id;
@@ -29,7 +46,7 @@ int getSPIId ()
 void releaseSPIId (int id)
 {
 	pthread_mutex_lock(&lockspi);
-	spi_buses[id] = NULL;
+	spi_buses[id] = -1;
 	pthread_mutex_unlock(&lockspi);
 }
 
@@ -40,7 +57,11 @@ int getI2CId ()
 	pthread_mutex_lock(&locki2c);
 	for (i=0; i < MAX_I2C_BUSES && id == -1; i++)
 	{
-		if (i2c_buses[i] == NULL) id = i;
+		if (i2c_buses[i] == -1)
+		{
+			id = i;
+			i2c_buses[id] = 0;
+		}
 	}
 	pthread_mutex_unlock(&locki2c);
 	return id;
@@ -49,7 +70,7 @@ int getI2CId ()
 void releaseI2CId (int id)
 {
 	pthread_mutex_lock(&locki2c);
-	i2c_buses[id] = NULL;
+	i2c_buses[id] = -1;
 	pthread_mutex_unlock(&locki2c);
 }
 
@@ -167,49 +188,84 @@ int spi_openadapter(uint8_t spi_bus)
 {
 	// spi_buses[spi_bus] = mraa_spi_init (spi_bus);
 	// return spi_bus;
-	return 0;
+	int fd;
+	int id = getSPIId();
+	spi_freq[id] = SPI_DEFAULT_FREQ;
+	spi_channels[id] = spi_bus;
+	fd = wiringPiSPISetup (spi_bus, SPI_DEFAULT_FREQ);
+	spi_buses[id] = fd;
+	return id;
 }
 
-int spi_setmode(int spi_bus, unsigned short mode)
+int spi_setmode(int spi_id, unsigned short mode)
 {
 	//return mraa_spi_mode (spi_buses[spi_bus], mode);
-	return 0;
+	return -1;
 }
 
-int spi_set_frequency(int spi_bus, int freq)
+int spi_set_frequency(int spi_id, int freq)
 {
 //	return mraa_spi_frequency (spi_buses[spi_bus], freq);
-	return 0;
+	if(spi_buses[spi_id] != -1)
+	{
+		close(spi_buses[spi_id]);
+		spi_buses[spi_id] = -2;
+		spi_freq[spi_id] = freq;		
+		return 0;
+	}
+	return -1;
 }
 
-uint8_t spi_writebyte(int spi_bus, uint8_t byte)
+uint8_t spi_writebyte(int spi_id, uint8_t byte)
 {
 	//return mraa_spi_write (spi_buses[spi_bus], byte);
-	return 0;
+	//int fd = wiringPiSPISetup (int channel, int speed);
+	int fd;
+	uint8_t new_byte = byte;
+	if(spi_buses[spi_id] == -1)
+		return -1;
+	else if (spi_buses[spi_id] == -2)
+	{
+		fd = wiringSetup(spi_channels[spi_id], spi_freq[spi_id]);
+		spi_buses[spi_id] = fd;
+	}
+	wiringPiSPIDataRW (spi_channels[spi_id], &new_byte, 1);
+	return new_byte;
 }
 
-unsigned char * spi_writebytes(int spi_bus, uint8_t *bytes, uint8_t length)
+unsigned char * spi_writebytes(int spi_id, uint8_t *bytes, uint8_t length)
 {
 	//return mraa_spi_write_buf (spi_buses[spi_bus], bytes, length);
-	return 0;
+	//return 0;
+	int fd;
+	unsigned char *new_byte = malloc(length * sizeof(unsigned char));
+	memcpy(new_byte, bytes, length);
+	if (spi_buses[spi_id] == -2)
+	{
+		fd = wiringSetup(spi_channels[spi_id], spi_freq[spi_id]);
+		spi_buses[spi_id] = fd;
+	}
+	wiringPiSPIDataRW (spi_channels[spi_id], new_byte, length);
+	return new_byte;
 }
 
 int spi_lsb_mode(int spi_bus, unsigned char lsb)
 {
 	//return mraa_spi_lsbmode (spi_buses[spi_bus], lsb);	
-	return 0;
+	return -1;
 }
 
 int spi_bit_per_word(int spi_bus, unsigned int bits)
 {
 	//return mraa_spi_bit_per_word (spi_buses[spi_bus], bits);
-	return 0;
+	return -1;
 }
 
-int spi_closeadapter (int spi_bus)
+int spi_closeadapter (int spi_id)
 {
 // 	mraa_spi_stop (spi_buses[spi_bus]);
 // 	spi_buses[spi_bus] = NULL;
+	releaseSPIId(spi_id);
 	return 0;
 }
 #endif
