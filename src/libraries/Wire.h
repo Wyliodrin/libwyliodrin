@@ -93,7 +93,10 @@ private:
 };
 
 //#if WIRE_INTERFACES_COUNT > 0
-extern TwoWire Wire;
+namespace
+{
+	TwoWire Wire = TwoWire(NULL);
+}
 //#endif
 #if WIRE_INTERFACES_COUNT > 1
 extern TwoWire Wire1;
