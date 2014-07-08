@@ -187,10 +187,10 @@ pin_t pinTable[] = {
 /******************************************************************************
  * 3.GPIO
  *
- * Implementations from Derek Molloy and mkaczanowski.
+ * ImplementationsX from Derek Molloy and mkaczanowski.
  *****************************************************************************/
 
-void   beagleTest();
+void   beagleTest    ();
 
 int    getGpioByName (const char *name);
 int    getGpioByKey  (const char *key);
