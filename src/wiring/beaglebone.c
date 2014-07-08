@@ -8,9 +8,8 @@ extern "C" {
 #include <stdlib.h>
 #include "wiring.h"
 
-/******************************************************************************
- * This file contains the definitions of all wiring functions for the 
- * BeagleBone Black
+/**************************************************************************************************
+ * This file contains the definitions of all wiring functions for the BeagleBone Black
  *
  * CONTENT
  * 1.General
@@ -20,13 +19,13 @@ extern "C" {
  * 5.Time
  * 6.SPI
  * 7.I2C
- *****************************************************************************/
+ *************************************************************************************************/
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 1.General
- *****************************************************************************/
+ *************************************************************************************************/
 
 /**
  * TODO
@@ -46,9 +45,9 @@ void pinReset(int pin) {
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 2.Digital I/O
- *****************************************************************************/
+ *************************************************************************************************/
 
 /**
  * Configures the specified pin to behave either as an input or an output.
@@ -79,9 +78,9 @@ int digitalRead(int pin) {
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 3.Analog I/O
- *****************************************************************************/
+ *************************************************************************************************/
 
 /**
  * TODO
@@ -101,9 +100,9 @@ int analogRead(int pin) {
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 4.Advanced I/O
- *****************************************************************************/
+ *************************************************************************************************/
 
 /**
  * TODO
@@ -123,13 +122,13 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) 
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 5.Time
- *****************************************************************************/
+ *************************************************************************************************/
 
 /**
- * Pauses the program for the amount of time (in miliseconds) specified as 
- * parameter. There are 1000 milliseconds in a second.
+ * Pauses the program for the amount of time (in miliseconds) specified as parameter. 
+ * There are 1000 milliseconds in a second.
  *
  * PARAMETERS:
  * milliseconds: the number of milliseconds to pause
@@ -139,9 +138,8 @@ void delay(unsigned int milliseconds) {
 }
 
 /**
- * Pauses the program for the amount of time (in microseconds) specified as 
- * parameter. There are a thousand microseconds in a millisecond, and a million
- * microseconds in a second.
+ * Pauses the program for the amount of time (in microseconds) specified as parameter. 
+ * There are a thousand microseconds in a millisecond, and a million microseconds in a second.
  *
  * PARAMETERS:
  * microseconds: the number of microseconds to pause
@@ -151,8 +149,7 @@ void delayMicroseconds(unsigned int microseconds) {
 }
 
 /**
- * Returns the number of milliseconds since the Beaglebone board began running 
- * the current program.
+ * Returns the number of milliseconds since the Beaglebone board began running the current program.
  *
  * This number will overflow (go back to zero), after approximately 50 days.
  */
@@ -163,8 +160,7 @@ unsigned int millis() {
 }
 
 /**
- * Returns the number of microseconds since the Beaglebone board began running
- * the current program. 
+ * Returns the number of microseconds since the Beaglebone board began running the current program.
  *
  * This number will overflow (go back to zero), after approximately 70 minutes.
  */
@@ -176,9 +172,9 @@ unsigned int micros() {
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 6.SPI
- *****************************************************************************/
+ *************************************************************************************************/
 int spi_getadapter(uint32_t spi_bus_address) {}
 int spi_openadapter(uint8_t spi_bus) {}
 int spi_setmode(int spi_bus, unsigned short mode) {}
@@ -191,9 +187,9 @@ int spi_closeadapter (int spi_bus) {}
 
 
 
-/******************************************************************************
+/**************************************************************************************************
  * 7.I2C
- *****************************************************************************/
+ *************************************************************************************************/
 // int i2c_getadapter(uint32_t i2c_bus_address) {}
 int i2c_openadapter(uint8_t i2c_bus) {}
 int i2c_setslave(int i2c_bus, uint8_t addr) {}
