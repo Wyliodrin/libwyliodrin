@@ -305,8 +305,8 @@ int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, 
 	int rc;
 	char *lon = malloc(100 *sizeof(char));
 	char *lat = malloc(100 *sizeof(char));
-	sprintf(lat, "%s_latitude",name);
-	sprintf(lon, "%s_longitude",name);
+	sprintf(lat, 99, "%s_latitude",name);
+	sprintf(lon, 99, "%s_longitude",name);
 	if(flag != NULL)
 		rc = sendSignalsAndFlag(flag,lat,latitude,lon,longitude,NULL);
 	else
