@@ -42,12 +42,20 @@ typedef unsigned int uint;
 typedef enum {
   INPUT  = 0,
   OUTPUT = 1
-} PIN_DIRECTION;
+} pin_direction_t;
 
 typedef enum {
   LOW  = 0,
   HIGH = 1
-} PIN_VALUE;
+} pin_value_t;
+
+typedef enum {
+  NONE,
+  RISING,
+  FALLING,
+  BOTH,
+  UNKNOWN
+} edge_t;
 
 
 
@@ -182,21 +190,22 @@ pin_t pinTable[] = {
  * Implementations from Derek Molloy and mkaczanowski.
  *****************************************************************************/
 
-void beagleTest();
+void   beagleTest();
 
-int  getGpioByName (const char *name);
-int  getGpioByKey  (const char *key);
-void gpioExport    (uint gpio);
-void gpioUnexport  (uint gpio);
-void gpioSetDir    (uint gpio, PIN_DIRECTION dir);
-int  gpioGetDir    (uint gpio);
-int  gpioSetValue  (uint gpio, PIN_VALUE value);
-int  gpioGetValue  (uint gpio);
-int  gpioSetEdge   (uint gpio, char *edge);
-int  gpioFdOpen    (uint gpio);
-int  gpioFdClose   (int fd);
+int    getGpioByName (const char *name);
+int    getGpioByKey  (const char *key);
 
-int  gpioOmapMuxSetup (const char *omap_pin0_name, const char *mode);
+void   gpioExport    (uint gpio);
+void   gpioUnexport  (uint gpio);
+
+void   gpioSetDir    (uint gpio, pin_direction_t dir);
+int    gpioGetDir    (uint gpio);
+
+void   gpioSetValue  (uint gpio, pin_value_t value);
+int    gpioGetValue  (uint gpio);
+
+void   gpioSetEdge   (uint gpio, edge_t edge);
+edge_t gpioGetEdge   (uint gpio);
 
 
 

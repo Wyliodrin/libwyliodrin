@@ -6,12 +6,15 @@ extern "C" {
 
 #include <stdio.h>
 #include <fcntl.h>
+#include <string.h>
 #include <stdlib.h>
 #include "beagleboneConfig.h"
 
 /******************************************************************************
- * CONTENT
+ * This file contains the definitions of the GPIO configuration functions for 
+ * the BeagleBone Black.
  *
+ * CONTENT
  * 1.GPIO
  *****************************************************************************/
 
@@ -107,7 +110,7 @@ void gpioUnexport(uint gpio) {
 /**
  * Sets direction of pin
  */
-void gpioSetDir(uint gpio, PIN_DIRECTION dir) {
+void gpioSetDir(uint gpio, pin_direction_t dir) {
   int fd;
   char buf[MAX_BUF];
 
@@ -128,15 +131,149 @@ void gpioSetDir(uint gpio, PIN_DIRECTION dir) {
   close(fd);
 }
 
-// TODO
-int  gpioGetDir    (uint gpio) {}
-int  gpioSetValue  (uint gpio, PIN_VALUE value) {}
-int  gpioGetValue  (uint gpio) {}
-int  gpioSetEdge   (uint gpio, char *edge) {}
-int  gpioFdOpen    (uint gpio) {}
-int  gpioFdClose   (int fd) {}
+/**
+ * Returns direction of pin
+ *
+ * 0 INPUT
+ * 1 OUTPUT
+ */
+int gpioGetDir(uint gpio) {
+  int fd;
+  char buf[MAX_BUF];
+  char ch;
 
-int  gpioOmapMuxSetup (const char *omap_pin0_name, const char *mode) {}
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
+
+  fd = open(buf, O_RDONLY);
+  if (fd < 0) {
+    perror("gpioGetDir");
+    return -1;
+  }
+
+  read(fd, &ch, 1);
+  close(fd);
+
+  if (ch == '0') {
+    return 1; // INPUT
+  } else {
+    return 0; // OUTPUT
+  }
+}
+
+/**
+ * Sets value of pin
+ */
+void gpioSetValue(uint gpio, pin_value_t value) {
+  int fd;
+  char buf[MAX_BUF];
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+
+  fd = open(buf, O_WRONLY);
+  if (fd < 0) {
+    perror("gpioSetValue");
+    return;
+  }
+
+  if (value == LOW)
+    write(fd, "0", 2);
+  else
+    write(fd, "1", 2);
+
+  close(fd);
+}
+
+/**
+ * Returns value of pin
+ * 
+ * 0 LOW
+ * 1 HIGH
+ */
+int gpioGetValue(uint gpio) {
+  int fd;
+  char buf[MAX_BUF];
+  char ch;
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+
+  fd = open(buf, O_RDONLY);
+  if (fd < 0) {
+    perror("gpioGetValue");
+    return;
+  }
+
+  read(fd, &ch, 1);
+  close(fd);
+
+  if (ch == '0') {
+    return 0; // LOW
+  } else {
+    return 1; // HIGH
+  }
+}
+
+/**
+ * Sets edge of pin
+ */
+void gpioSetEdge(uint gpio, edge_t edge) {
+  int fd;
+  char buf[MAX_BUF];
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
+
+  fd = open(buf, O_WRONLY);
+  if (fd < 0) {
+    perror("gpioSetEdge");
+    return;
+  }
+
+  if(edge == NONE) {
+    write(fd, "none", 5);
+  } else if(edge == RISING) {
+    write(fd, "rising", 7);
+  } else if(edge == FALLING) {
+    write(fd, "falling", 8);
+  } else if(edge == BOTH) {
+    write(fd, "both", 5);
+  } else {
+    debug("This should not have happened!");
+  }
+
+  close(fd);
+}
+
+/**
+ * Returns edge of pin
+ */
+edge_t gpioGetEdge(uint gpio) {
+  int fd;
+  char buf[MAX_BUF];
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
+
+  fd = open(buf, O_RDONLY);
+  if (fd < 0) {
+    perror("gpioGetEdge");
+    return;
+  }
+
+  memset(buf, 0, MAX_BUF);
+  read(fd, buf, MAX_BUF);
+  close(fd);
+
+  if(strcmp(buf, "none") == 0) {
+    return NONE;
+  } else if(strcmp(buf, "rising") == 0) {
+    return RISING;
+  } else if(strcmp(buf, "falling") == 0) {
+    return FALLING;
+  } else if(strcmp(buf, "both") == 0) {
+    return BOTH;
+  } else {
+    debug("Unknown edge %s", buf);
+    return UNKNOWN;
+  }
+}
 
 
 
