@@ -1,8 +1,6 @@
 #ifndef Servo_h
 #define Servo_h
 
-#include "Wire.h"
-
 #define MIN_ANGLE              0      // min angle
 #define MAX_ANGLE            180      // max angle
 
@@ -15,26 +13,19 @@
 
 /* How the pins are connected to cypress in FabD */
 
-#define GPORT0_BIT4_PWM7   0x10   // pin 3
-#define GPORT0_BIT1_PWM5   0x02   // pin 5
-#define GPORT1_BIT0_PWM6   0xff   // pin 6   
-#define GPORT0_BIT3_PWM1   0x08   // pin 9
-#define GPORT0_BIT0_PWM7   0x01   // pin 10  
-#define GPORT1_BIT1_PWM4   0xff   // pin 11 
-
-#define CYPRESS_I2C_ADDRESS 0x20  // I2C address
-
 #define MAX_NUMBER_OF_SERVOS  6   // same number of pins in PWM
 
 #define MY_TRACE_PREFIX "ServoX86Lib"
 
-typedef uint8_t byte;
+#include <stdint.h>
 
-typedef struct  {
-  uint8_t pin;
-  uint8_t reg28_data;
-  bool isActive;             // true if this channel is enabled, pin not pulsed if false 
-} servoPinData_t;  
+#ifdef ARDUINOGALILEO
+#include <mraa/pwm.h>
+
+#define MAX_PERIOD    7968
+#endif
+
+typedef uint8_t byte;
 
 class Servo
 {
@@ -58,18 +49,19 @@ private:
 
    uint8_t index;                 // servo index
 
-   // this compiler does not accept [] should use [6]
-   static servoPinData_t pinData[6];
 
    static uint8_t counter;   // only for counting 
 
-   void prepare_pin(uint8_t pin);
-   byte transform_cypress_duty_cycle_byte(int microsecs);
    int usecs;
    bool isAttached;
    byte pin;
    bool is188hz;
    int lastByteInDuty;          // to avoid jitter caused by analogWrite()
+   int calcPulseTraveling (int value);
+   #ifdef ARDUINOGALILEO
+   int m_currentAngle;
+   mraa_pwm_context m_pwmServoContext;
+   #endif
 };
 
 #endif

@@ -294,3 +294,25 @@ int putFlag (const char *signal, const char *flag)
 	snprintf(newsig, 199, "debug_%s",signal);
 	sendSignalAndFlag(flag,newsig, 0.0);
 }
+
+int sendCoordinates(const char *name, double latitude, double longitude)
+{
+	return sendCoordinatesAndFlag(name, latitude, longitude, NULL);
+}
+
+int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, const char *flag)
+{
+	int rc;
+	char *lon = malloc(100 *sizeof(char));
+	char *lat = malloc(100 *sizeof(char));
+	snprintf(lat, 99, "%s_latitude",name);
+	snprintf(lon, 99, "%s_longitude",name);
+	if(flag != NULL)
+		rc = sendSignalsAndFlag(flag,lat,latitude,lon,longitude,NULL);
+	else
+		rc = sendSignals(lat,latitude,lon,longitude,NULL);
+	free(lon);
+	free(lat);
+	return rc;
+
+}

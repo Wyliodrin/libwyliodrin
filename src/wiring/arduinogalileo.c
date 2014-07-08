@@ -36,7 +36,11 @@ int getSPIId ()
 	pthread_mutex_lock(&lockspi);
 	for (i=0; i < MAX_SPI_BUSES && id == -1; i++)
 	{
-		if (spi_buses[i] == NULL) id = i;
+		if (spi_buses[i] == NULL)
+		{
+			id = i;
+			spi_buses[id] = (void*)1;
+		}
 	}
 	pthread_mutex_unlock(&lockspi);
 	return id;
@@ -56,7 +60,11 @@ int getI2CId ()
 	pthread_mutex_lock(&locki2c);
 	for (i=0; i < MAX_I2C_BUSES && id == -1; i++)
 	{
-		if (i2c_buses[i] == NULL) id = i;
+		if (i2c_buses[i] == NULL)
+		{
+			id = i;
+			i2c_buses[id] = (void*)1;
+		}
 	}
 	pthread_mutex_unlock(&locki2c);
 	return id;
@@ -182,23 +190,23 @@ int analogRead (int pin)
 	return mraa_aio_read (aio_pins[pin]);
 }
 
-void delay (int milliseconds)
+void delay (unsigned int milliseconds)
 {
 	usleep (milliseconds*1000);
 }
 
-void delayMicroseconds (int microseconds)
+void delayMicroseconds (unsigned int microseconds)
 {
 	usleep (microseconds);
 }
 
-unsigned long millis()
+unsigned int millis()
 {
    return micros() / 1000;
 }
 
 
-unsigned long micros()
+unsigned int micros()
 {
 
   struct timespec t;
