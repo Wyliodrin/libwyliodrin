@@ -25,7 +25,7 @@ extern "C" {
  *****************************************************************************/
 
 /**
- * Test function
+ * Function used for testing the correctness of the install
  */
 void beagleTest() {
   printf("Hello from beagleboneConfig.c! Magic number: 7\n");

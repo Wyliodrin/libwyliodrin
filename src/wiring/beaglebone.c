@@ -9,7 +9,8 @@ extern "C" {
 #include "wiring.h"
 
 /******************************************************************************
- * This file contains the implementation of all wiring functions.
+ * This file contains the definitions of all wiring functions for the 
+ * BeagleBone Black
  *
  * CONTENT
  * 1.General
@@ -51,9 +52,6 @@ void pinReset(int pin) {
 
 /**
  * Configures the specified pin to behave either as an input or an output.
- *
- * See 2.Pin Configuration and 3.Helper Functions in beaglebone.h for details
- * on the functionality of the pins.
  *
  * PARAMETERS:
  * pin  - the number of the pin whose pin you wish to set 
@@ -131,7 +129,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) 
 
 /**
  * Pauses the program for the amount of time (in miliseconds) specified as 
- * parameter. (There are 1000 milliseconds in a second.)
+ * parameter. There are 1000 milliseconds in a second.
  *
  * PARAMETERS:
  * milliseconds: the number of milliseconds to pause
