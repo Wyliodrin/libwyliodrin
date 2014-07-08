@@ -190,23 +190,23 @@ int analogRead (int pin)
 	return mraa_aio_read (aio_pins[pin]);
 }
 
-void delay (int milliseconds)
+void delay (unsigned int milliseconds)
 {
 	usleep (milliseconds*1000);
 }
 
-void delayMicroseconds (int microseconds)
+void delayMicroseconds (unsigned int microseconds)
 {
 	usleep (microseconds);
 }
 
-unsigned long millis()
+unsigned int millis()
 {
    return micros() / 1000;
 }
 
 
-unsigned long micros()
+unsigned int micros()
 {
 
   struct timespec t;
