@@ -18,6 +18,16 @@ string (REPLACE "." ";" PYTHON_VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
 list (GET PYTHON_VERSION_LIST 0 PYTHON_VERSION_MAJOR)
 list (GET PYTHON_VERSION_LIST 1 PYTHON_VERSION_MINOR)
 
+if (ARDUINOGALILEO)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/_wyliodrin.so
+         ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.py
+         DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/)
+elseif (RASPBERRYPI)
 install (FILES ${CMAKE_CURRENT_BINARY_DIR}/_wyliodrin.so
          ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.py
          DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages/)
+else ()
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/_wyliodrin.so
+         ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.py
+         DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/)
+endif ()

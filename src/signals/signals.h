@@ -15,6 +15,8 @@ int sendSignals  (const char *name, double value, ...);
 int putFlag (const char *sigal, const char *flag);
 int sendSignalsList (const char **names, double *values, int elements);
 int sendSignalsListAndFlag  (const char *flag, const char **names, double *values, int elements);
+int sendCoordinates(const char *name, double longitude, double latitude);
+int sendCoordinatesAndFlag(const char *name, double longitude, double latitude, const char *flag);
 
 
 #ifdef __cplusplus
