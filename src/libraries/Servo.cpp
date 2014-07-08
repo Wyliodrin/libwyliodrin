@@ -1,5 +1,6 @@
 #include "Servo.h"
 #include "../wiring/wiring.h"
+#include <stdio.h>
 
 #define trace_debug printf
 #define trace_error printf
@@ -21,7 +22,9 @@ Servo::Servo()
   } else {
     this->index = INVALID_SERVO;  // too many servos
   }
+  #ifdef ARDUINOGALILEO
   m_currentAngle = 180;
+  #endif
 
 }
 
@@ -141,7 +144,11 @@ void Servo::write(int val)
 
 int Servo::read()
 {
+  #ifdef ARDUINOGALILEO
   return this->m_currentAngle;
+  #else
+  return 0;
+  #endif
 }
 
 int Servo::readMicroseconds()
