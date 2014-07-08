@@ -302,13 +302,17 @@ int sendCoordinates(const char *name, double latitude, double longitude)
 
 int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, const char *flag)
 {
+	int rc;
 	char *lon = malloc(100 *sizeof(char));
 	char *lat = malloc(100 *sizeof(char));
 	sprintf(lat, "%s_latitude",name);
 	sprintf(lon, "%s_longitude",name);
 	if(flag != NULL)
-		return sendSignalsAndFlag(flag,lat,latitude,lon,longitude,NULL);
+		rc = sendSignalsAndFlag(flag,lat,latitude,lon,longitude,NULL);
 	else
-		return sendSignals(lat,latitude,lon,longitude,NULL);
+		rc = sendSignals(lat,latitude,lon,longitude,NULL);
+	free(lon);
+	free(lat);
+	return rc;
 
 }
