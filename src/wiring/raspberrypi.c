@@ -3,12 +3,21 @@
 #include <pthread.h>
 #include <string.h>
 
+struct serial_bus
+{
+	char *bus;
+	int speed;
+	int fd;
+};
+
 static int i2c_buses[MAX_I2C_PINS];
 static int spi_buses[MAX_SPI_BUSES];
 static int i2c_addresses[MAX_I2C_PINS];
 static int spi_freq[MAX_SPI_BUSES];
 static int spi_channels[MAX_SPI_BUSES];
+static struct serial_bus *serial_buses[MAX_SERIAL_BUSES];
 #define SPI_DEFAULT_FREQ	4000000
+#define SERIAL_DEFAULT_SPEED	9600
 
 int wiringSetup ()
 {
@@ -16,14 +25,43 @@ int wiringSetup ()
 	wiringPiSetup();
 	for (i=0; i<MAX_SPI_BUSES; i++) spi_buses[i]=-1;
 	for (i=0; i<MAX_I2C_BUSES; i++) i2c_buses[i]=-1;
+	for (i=0; i<MAX_SERIAL_BUSES; i++) serial_buses[i]=NULL;
 }
 
 pthread_mutex_t lockspi;
 pthread_mutex_t locki2c;
+pthread_mutex_t lockserial;
 
 void pinReset (int pin)
 {
 
+}
+
+int getSerialId()
+{
+	int i;
+	int id = -1;
+	struct serial_bus sb;
+	pthread_mutex_lock(&lockserial);
+	for(i=0; i < MAX_SERIAL_BUSES && id == -1; i++)
+	{
+		if(serial_buses[i] == NULL)
+		{
+			id = i;
+			struct serial_bus *sb = malloc(sizeof(struct serial_bus));
+			serial_buses[id] = sb;
+		}
+	}
+	pthread_mutex_unlock(&lockserial);
+	return id;
+}
+
+void releaseSerial(int id)
+{
+	pthread_mutex_lock(&lockserial);
+	free(serial_buses[id]);
+	serial_buses[id] = NULL;
+	pthread_mutex_unlock(&lockserial);
 }
 
 int getSPIId ()
@@ -266,6 +304,121 @@ int spi_closeadapter (int spi_id)
 // 	mraa_spi_stop (spi_buses[spi_bus]);
 // 	spi_buses[spi_bus] = NULL;
 	releaseSPIId(spi_id);
+	return 0;
+}
+
+int serial_openadapter(char *serial_bus)
+{
+	int id = getSerialId();
+	struct serial_bus *sb = serial_buses[id];
+	sb->bus = serial_bus;
+	sb->speed = SERIAL_DEFAULT_SPEED;
+	int fd = serialOpen(sb->bus, sb->speed);
+	sb->fd = fd;
+	return id;
+
+}
+int serial_set_speed(int serial_id, int baud)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	serialClose(sb->fd);
+	sb->speed = baud;
+	sb->fd = -1;
+	return 0;
+}
+int serial_bytes_available(int serial_id)
+{
+	//TODO verific sau las sa dea segfault?
+	struct serial_bus *sb = serial_buses[serial_id];
+	if(!sb)
+		return -1;
+	if(sb->fd < 0)
+	{
+		sb->fd = serialOpen(sb->bus, sb->speed);
+	}
+	return serialDataAvail(sb->fd);
+}
+int serial_closeadapter(int serial_id)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	if(!sb)
+		return -1;
+	if(sb->fd > 0)
+	{
+		serialClose(sb->fd);
+	}	
+	return 0;
+}
+int serial_writebyte(int serial_id, uint8_t byte)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	if(!sb)
+		return -1;
+	if(sb->fd < 0)
+	{
+		sb->fd = serialOpen(sb->bus, sb->speed);
+	}
+	serialPutchar (sb->fd, byte) ;
+	return 0;
+}
+int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	int i;
+	if(!sb)
+		return -1;
+	if(sb->fd < 0)
+	{
+		sb->fd = serialOpen(sb->bus, sb->speed);
+	}
+	for (i=0; i<length; i++)
+	{
+		serialPutchar (sb->fd, bytes[i]);
+	}
+	return 0;
+}
+uint8_t serial_readbyte(int serial_id)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	if(!sb)
+		return -1;
+	if(sb->fd < 0)
+	{
+		sb->fd = serialOpen(sb->bus, sb->speed);
+	}
+	return serialGetchar (sb->fd);
+}
+int serial_readbytes(int serial_id, uint8_t *buf, int length)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	int i;
+	uint8_t c;
+	if(!sb)
+		return -1;
+	if(sb->fd < 0)
+	{
+		sb->fd = serialOpen(sb->bus, sb->speed);
+	}
+	for (i=0; i<length; i++)
+	{
+		c = serialGetchar(sb->fd);
+		if(c != -1)
+			buf[i] = c;
+		else
+			return i;
+	}
+	return length;
+}
+int serial_flush(int serial_id)
+{
+	struct serial_bus *sb = serial_buses[serial_id];
+	if(!sb)
+		return -1;
+	if(sb->fd < 0)
+	{
+		sb->fd = serialOpen(sb->bus, sb->speed);
+	}
+	serialFlush (sb->fd);
 	return 0;
 }
 #endif

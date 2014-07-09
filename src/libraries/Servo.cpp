@@ -22,7 +22,7 @@ Servo::Servo()
   } else {
     this->index = INVALID_SERVO;  // too many servos
   }
-
+  
   #ifdef ARDUINOGALILEO
   m_currentAngle = 180;
   #endif
@@ -147,8 +147,14 @@ int Servo::read()
 {
   #ifdef ARDUINOGALILEO
   return this->m_currentAngle;
+<<<<<<< HEAD
   #endif
   return -1;
+=======
+  #else
+  return 0;
+  #endif
+>>>>>>> master
 }
 
 int Servo::readMicroseconds()
