@@ -38,7 +38,7 @@ uint getGpioByName(const char *name) {
   pin_t *aux;
 
   aux = pinTable;
-  for (i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
     if(strcmp(aux->name, name) == 0) {
       return aux->gpio;
     }
@@ -58,7 +58,7 @@ uint getGpioByKey(const char *key) {
   pin_t *aux;
 
   aux = pinTable;
-  for (i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
     if(strcmp(aux->key, key) == 0) {
       return aux->gpio;
     }
@@ -78,7 +78,7 @@ void gpioExport(uint gpio) {
   char buf[MAX_BUF];
 
   fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
-  if (fd < 0) {
+  if(fd < 0) {
     perror("gpioExport");
     return;
   }
@@ -96,7 +96,7 @@ void gpioUnexport(uint gpio) {
   char buf[MAX_BUF];
 
   fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
-  if (fd < 0) {
+  if(fd < 0) {
     perror("gpioUnexport");
     return;
   }
@@ -116,12 +116,12 @@ void gpioSetDir(uint gpio, pin_direction_t dir) {
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
 
   fd = open(buf, O_WRONLY);
-  if (fd < 0) {
+  if(fd < 0) {
     perror("gpioSetDir");
     return;
   }
 
-  if (dir == OUTPUT) {
+  if(dir == OUTPUT) {
     write(fd, "out", 4);
   } else {
     write(fd, "in", 3);
@@ -144,18 +144,22 @@ int gpioGetDir(uint gpio) {
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
 
   fd = open(buf, O_RDONLY);
-  if (fd < 0) {
+  if(fd < 0) {
     perror("gpioGetDir");
     return -1;
   }
 
-  read(fd, &ch, 1);
+  memset(buf, 0, MAX_BUF);
+  read(fd, buf, MAX_BUF);
   close(fd);
 
-  if (ch == '0') {
+  if(strcmp(buf, "in") == 0) {
     return 1; // INPUT
-  } else {
+  } else if(strcmp(buf, "out") == 0) {
     return 0; // OUTPUT
+  } else {
+    debug("Unknown direction %s", buf);
+    return -1;
   }
 }
 
@@ -169,7 +173,7 @@ void gpioSetValue(uint gpio, pin_value_t value) {
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
   fd = open(buf, O_WRONLY);
-  if (fd < 0) {
+  if(fd < 0) {
     perror("gpioSetValue");
     return;
   }
@@ -196,7 +200,7 @@ int gpioGetValue(uint gpio) {
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
   fd = open(buf, O_RDONLY);
-  if (fd < 0) {
+  if(fd < 0) {
     perror("gpioGetValue");
     return;
   }
@@ -204,10 +208,12 @@ int gpioGetValue(uint gpio) {
   read(fd, &ch, 1);
   close(fd);
 
-  if (ch == '0') {
+  if(ch == '0') {
     return 0; // LOW
-  } else {
+  } else if(ch == '1') {
     return 1; // HIGH
+  } else {
+    debug("Unknown value %c", ch);
   }
 }
 
@@ -235,7 +241,7 @@ void gpioSetEdge(uint gpio, edge_t edge) {
   } else if(edge == BOTH) {
     write(fd, "both", 5);
   } else {
-    debug("This should not have happened!");
+    debug("Edge can be NONE, RISING, FALLING or BOTH");
   }
 
   close(fd);
