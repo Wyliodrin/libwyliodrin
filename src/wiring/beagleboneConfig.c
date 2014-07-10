@@ -153,9 +153,9 @@ int gpioGetDir(uint gpio) {
   read(fd, buf, MAX_BUF);
   close(fd);
 
-  if(strcmp(buf, "in") == 0) {
+  if(strncmp(buf, "in", 2) == 0) {
     return 1; // INPUT
-  } else if(strcmp(buf, "out") == 0) {
+  } else if(strncmp(buf, "out", 3) == 0) {
     return 0; // OUTPUT
   } else {
     debug("Unknown direction %s", buf);
@@ -266,13 +266,13 @@ edge_t gpioGetEdge(uint gpio) {
   read(fd, buf, MAX_BUF);
   close(fd);
 
-  if(strcmp(buf, "none") == 0) {
+  if(strncmp(buf, "none", 4) == 0) {
     return NONE;
-  } else if(strcmp(buf, "rising") == 0) {
+  } else if(strncmp(buf, "rising", 6) == 0) {
     return RISING;
-  } else if(strcmp(buf, "falling") == 0) {
+  } else if(strncmp(buf, "falling", 7) == 0) {
     return FALLING;
-  } else if(strcmp(buf, "both") == 0) {
+  } else if(strncmp(buf, "both", 4) == 0) {
     return BOTH;
   } else {
     debug("Unknown edge %s", buf);
