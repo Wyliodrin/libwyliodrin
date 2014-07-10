@@ -147,14 +147,9 @@ int Servo::read()
 {
   #ifdef ARDUINOGALILEO
   return this->m_currentAngle;
-<<<<<<< HEAD
-  #endif
-  return -1;
-=======
   #else
   return 0;
   #endif
->>>>>>> master
 }
 
 int Servo::readMicroseconds()
