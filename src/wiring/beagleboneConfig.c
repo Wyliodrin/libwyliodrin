@@ -33,7 +33,7 @@ void beagleTest() {
 /**
  * Returns the gpio pin number by name or -1 in case of failure
  */
-int getGpioByName(const char *name) {
+uint getGpioByName(const char *name) {
   int i;
   pin_t *aux;
 
@@ -47,13 +47,13 @@ int getGpioByName(const char *name) {
   }
 
   debug("There is no pin named %s", name);
-  return -1;
+  return 0;
 }
 
 /**
  * Returns the gpio pin number by key or -1 in case of failure
  */
-int getGpioByKey(const char *key) {
+uint getGpioByKey(const char *key) {
   int i;
   pin_t *aux;
 
@@ -67,7 +67,7 @@ int getGpioByKey(const char *key) {
   }
 
   debug("There is no pin with the key %s", key);
-  return -1;
+  return 0;
 }
 
 /**

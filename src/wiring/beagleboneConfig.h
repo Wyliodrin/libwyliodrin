@@ -68,7 +68,7 @@ typedef enum {
 typedef struct pin_t {
   const char *name;
   const char *key;
-  unsigned int gpio;
+  uint gpio;
   int pwm_mux_mode;
   int ain;
   int isAllocatedByDefault;
@@ -189,8 +189,8 @@ pin_t pinTable[] = {
 
 void   beagleTest    ();
 
-int    getGpioByName (const char *name);
-int    getGpioByKey  (const char *key);
+uint   getGpioByName (const char *name);
+uint   getGpioByKey  (const char *key);
 
 void   gpioExport    (uint gpio);
 void   gpioUnexport  (uint gpio);
