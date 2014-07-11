@@ -47,11 +47,11 @@ typedef enum {
 } pin_value_t;
 
 typedef enum {
-  NONE,
-  RISING,
-  FALLING,
-  BOTH,
-  UNKNOWN
+  NONE    = 0,
+  RISING  = 1,
+  FALLING = 2,
+  BOTH    = 3,
+  UNKNOWN = 4
 } edge_t;
 
 
