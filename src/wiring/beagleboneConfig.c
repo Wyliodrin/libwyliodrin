@@ -154,9 +154,9 @@ int gpioGetDir(uint gpio) {
   close(fd);
 
   if(strncmp(buf, "in", 2) == 0) {
-    return 1; // INPUT
+    return 0; // INPUT
   } else if(strncmp(buf, "out", 3) == 0) {
-    return 0; // OUTPUT
+    return 1; // OUTPUT
   } else {
     debug("Unknown direction %s", buf);
     return -1;
