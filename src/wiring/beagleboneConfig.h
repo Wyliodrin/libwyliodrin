@@ -1,8 +1,6 @@
 #ifndef BEAGLEBONE_CONFIG_H
 #define BEAGLEBONE_CONFIG_H
 
-#ifdef BEAGLEBONE
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -209,7 +207,5 @@ edge_t gpioGetEdge   (uint gpio);
 #ifdef __cplusplus
 }
 #endif
-
-#endif // BEAGLEBONE
 
 #endif // BEAGLEBONE_CONFIG_H
