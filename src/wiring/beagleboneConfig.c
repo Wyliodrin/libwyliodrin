@@ -276,7 +276,7 @@ edge_t gpioGetEdge(uint gpio) {
     return BOTH;
   } else {
     debug("Unknown edge %s", buf);
-    return UNKNOWN;
+    return NONE;
   }
 }
 

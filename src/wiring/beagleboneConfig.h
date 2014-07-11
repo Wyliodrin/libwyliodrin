@@ -51,7 +51,6 @@ typedef enum {
   RISING  = 1,
   FALLING = 2,
   BOTH    = 3,
-  UNKNOWN = 4
 } edge_t;
 
 
