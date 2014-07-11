@@ -6,6 +6,7 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "beagleboneConfig.h"
 #include "wiring.h"
 
@@ -177,7 +178,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) 
  * milliseconds: the number of milliseconds to pause
  */
 void delay(unsigned int milliseconds) {
-  // TODO
+  usleep(milliseconds * 1000);
 }
 
 /**
@@ -188,7 +189,7 @@ void delay(unsigned int milliseconds) {
  * microseconds: the number of microseconds to pause
  */
 void delayMicroseconds(unsigned int microseconds) {
-  // TODO
+  usleep(microseconds);
 }
 
 /**
@@ -197,9 +198,7 @@ void delayMicroseconds(unsigned int microseconds) {
  * This number will overflow (go back to zero), after approximately 50 days.
  */
 unsigned int millis() {
-  // TODO
-
-  return 0;
+  return micros() / 1000;
 }
 
 /**
@@ -208,9 +207,14 @@ unsigned int millis() {
  * This number will overflow (go back to zero), after approximately 70 minutes.
  */
 unsigned int micros() {
-  // TODO
+  struct timespec t;
 
-  return  0;
+  t.tv_sec  = 0;
+  t.tv_nsec = 0;
+
+  clock_gettime(CLOCK_REALTIME, &t);
+
+  return (unsigned long)(t.tv_sec) * 1000000L + t.tv_nsec / 1000L ;
 }
 
 
