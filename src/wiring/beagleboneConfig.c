@@ -24,7 +24,7 @@ extern "C" {
 /**************************************************************************************************
  * 1.Pins configuration table
  *************************************************************************************************/
- 
+
 pin_t pinTable[] = {
   {"USR0"      , "USR0" , 53 , -1, -1,  1 },
   {"USR1"      , "USR1" , 54 , -1, -1,  1 },
@@ -229,10 +229,12 @@ void gpioSetDir(uint gpio, pin_direction_t dir) {
     return;
   }
 
-  if(dir == OUTPUT) {
+  if(dir == INPUT) {
+    write(fd, "in", 3);
+  } else if(dir == OUTPUT) {
     write(fd, "out", 4);
   } else {
-    write(fd, "in", 3);
+    debug("Direction can be either INPUT or OUTPUT");
   }
 
   close(fd);
@@ -286,10 +288,13 @@ void gpioSetValue(uint gpio, pin_value_t value) {
     return;
   }
 
-  if (value == LOW)
+  if(value == LOW) {
     write(fd, "0", 2);
-  else
+  } else if(value == HIGH) {
     write(fd, "1", 2);
+  } else {
+    debug("Value can be either LOW or HIGH");
+  }
 
   close(fd);
 }
@@ -322,6 +327,7 @@ int gpioGetValue(uint gpio) {
     return 1; // HIGH
   } else {
     debug("Unknown value %c", ch);
+    return -1;
   }
 }
 
