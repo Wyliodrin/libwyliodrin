@@ -24,14 +24,14 @@ extern "C" {
 
 // If they'll like this macro, I'll move it in a more generic file
 #define DEBUG 1
-#define debug(...)                                                           \
-  do {                                                                       \
-    if (DEBUG) {                                                             \
-      fprintf(stderr, "Error in file %s at line %d:\n", __FILE__, __LINE__); \
-      fprintf(stderr, __VA_ARGS__);                                          \
-      fprintf(stderr, "\n");                                                 \
-    }                                                                        \
-  } while (0)                                                                \
+#define debug(...)                                                                 \
+  do {                                                                             \
+    if (DEBUG) {                                                                   \
+      fprintf(stderr, "Debug alert in file %s at line %d:\n", __FILE__, __LINE__); \
+      fprintf(stderr, __VA_ARGS__);                                                \
+      fprintf(stderr, "\n");                                                       \
+    }                                                                              \
+  } while (0)                                                                      \
 
 typedef unsigned int uint;
 
@@ -69,20 +69,21 @@ typedef struct pin_t {
 
 void   beagleTest    ();
 
-uint   getGpioByName (const char *name);
-uint   getGpioByKey  (const char *key);
+uint   getGpioByName  (const char *name);
+uint   getGpioByKey   (const char *key);
 
-void   gpioExport    (uint gpio);
-void   gpioUnexport  (uint gpio);
+int    gpioIsExported (uint gpio);
+void   gpioExport     (uint gpio);
+void   gpioUnexport   (uint gpio);
 
-void   gpioSetDir    (uint gpio, pin_direction_t dir);
-int    gpioGetDir    (uint gpio);
+void   gpioSetDir     (uint gpio, pin_direction_t dir);
+int    gpioGetDir     (uint gpio);
 
-void   gpioSetValue  (uint gpio, pin_value_t value);
-int    gpioGetValue  (uint gpio);
+void   gpioSetValue   (uint gpio, pin_value_t value);
+int    gpioGetValue   (uint gpio);
 
-void   gpioSetEdge   (uint gpio, edge_t edge);
-edge_t gpioGetEdge   (uint gpio);
+void   gpioSetEdge    (uint gpio, edge_t edge);
+edge_t gpioGetEdge    (uint gpio);
 
 
 

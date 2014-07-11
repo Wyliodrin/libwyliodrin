@@ -179,6 +179,24 @@ uint getGpioByKey(const char *key) {
 }
 
 /**
+ * Returns 0 if the pin gpio is not exported, or 1 otherwise
+ */
+int gpioIsExported(uint gpio) {
+  int fd;
+  char buf[MAX_BUF];
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d", gpio);
+
+  fd = open(buf, O_WRONLY);
+
+  if(fd < 0) { // Not exported
+    return 0;
+  } else {     // Exported
+    return 1;
+  }
+}
+
+/**
  * Exports pin
  */
 void gpioExport(uint gpio) {
