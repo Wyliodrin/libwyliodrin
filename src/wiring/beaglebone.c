@@ -6,6 +6,7 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "beagleboneConfig.h"
 #include "wiring.h"
 
 /**************************************************************************************************
@@ -37,10 +38,10 @@ int wiringSetup() {
 }
 
 /**
- * TODO
+ * Resets pin
  */
 void pinReset(int pin) {
-  // TODO
+  gpioUnexport(pin);
 }
 
 
@@ -54,26 +55,68 @@ void pinReset(int pin) {
  *
  * PARAMETERS:
  * pin  - the number of the pin whose pin you wish to set 
- * mode - INPUT or OUTPUT
+ * mode - 0 for INPUT or 1 for OUTPUT
  */
 void pinMode(int pin, int mode) {
-  // TODO
+  pin_direction_t dir;
+
+  gpioExport(pin);
+
+  if(mode == 0) {
+    dir = INPUT;
+  } else if(mode == 1) {
+    dir = OUTPUT;
+  } else {
+    debug("Wrong mode %d. Mode can be either INPUT or OUTPUT", mode);
+    return;
+  }
+
+  gpioSetDir(pin, dir);
 }
 
 /**
- * TODO
+ * Writes a HIGH or a LOW value to a digital pin.
+ *
+ * PARAMETERS:
+ * pin   - the pin number
+ * value - 0 for LOW or 1 for HIGH
  */
 void digitalWrite(int pin, int value) {
-  // TODO
+  pin_value_t val;
+
+  if(!gpioIsExported(pin)) {
+    debug("pin %d is not exported. You should call pinMode before digitalWrite", pin);
+    return;
+  }
+
+  if(value == 0) {
+    val = LOW;
+  } else if(value == 1) {
+    val = HIGH;
+  } else {
+    debug("Wrong value %d. Value can be either LOW or HIGH", value);
+    return;
+  }
+
+  gpioSetValue(pin, val);
 }
 
 /**
- * TODO
+ * Reads the value from a specified digital pin, either HIGH or LOW.
+ *
+ * PARAMETERS:
+ * pin: the number of the digital pin you want to read (int)
+ *
+ * RETURNS: 
+ * 1 for HIGH or 0 for LOW
  */
 int digitalRead(int pin) {
-  // TODO
+  if(!gpioIsExported(pin)) {
+    debug("pin %d is not exported. You should call pinMode before digitalRead", pin);
+    return -1;
+  }
 
-  return 0;
+  return gpioGetValue(pin);
 }
 
 
