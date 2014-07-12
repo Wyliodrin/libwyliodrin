@@ -67,23 +67,26 @@ typedef struct pin_t {
  * 3.GPIO
  *************************************************************************************************/
 
-void   beagleTest    ();
+void   beagleTest       ();
 
-uint   getGpioByName  (const char *name);
-uint   getGpioByKey   (const char *key);
+uint   getGpioByName    (const char *name);
+uint   getGpioByKey     (const char *key);
 
-int    gpioIsExported (uint gpio);
-void   gpioExport     (uint gpio);
-void   gpioUnexport   (uint gpio);
+int    gpioIsExported   (uint gpio);
+void   gpioExport       (uint gpio);
+void   gpioUnexport     (uint gpio);
 
-void   gpioSetDir     (uint gpio, pin_direction_t dir);
-int    gpioGetDir     (uint gpio);
+void   gpioSetDir       (uint gpio, pin_direction_t dir);
+int    gpioGetDir       (uint gpio);
 
-void   gpioSetValue   (uint gpio, pin_value_t value);
-int    gpioGetValue   (uint gpio);
+void   gpioSetValue     (uint gpio, pin_value_t value);
+int    gpioGetValue     (uint gpio);
 
-void   gpioSetEdge    (uint gpio, edge_t edge);
-edge_t gpioGetEdge    (uint gpio);
+void   gpioSetActiveLow (uint gpio, int value);
+int    gpioGetActiveLow (uint gpio);
+
+void   gpioSetEdge      (uint gpio, edge_t edge);
+edge_t gpioGetEdge      (uint gpio);
 
 
 

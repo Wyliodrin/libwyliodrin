@@ -185,7 +185,7 @@ int gpioIsExported(uint gpio) {
   int fd;
   char buf[MAX_BUF];
 
-  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d", gpio);
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
   fd = open(buf, O_WRONLY);
 
@@ -343,6 +343,61 @@ int gpioGetValue(uint gpio) {
     return 0; // LOW
   } else if(ch == '1') {
     return 1; // HIGH
+  } else {
+    debug("Unknown value %c", ch);
+    return -1;
+  }
+}
+
+/**
+ * Set active_low of pin
+ */
+void gpioSetActiveLow(uint gpio, int value) {
+  int fd;
+  char buf[MAX_BUF];
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/active_low", gpio);
+
+  fd = open(buf, O_WRONLY);
+  if(fd < 0) {
+    perror("gpioSetActiveLow");
+    return;
+  }
+
+  if(value == 0) {
+    write(fd, "0", 2);
+  } else if(value == 1) {
+    write(fd, "1", 2);
+  } else {
+    debug("Value can be either 0 or 1");
+  }
+
+  close(fd);
+}
+
+/**
+ * Returns active_low value of pin
+ */
+int gpioGetActiveLow(uint gpio) {
+  int fd;
+  char buf[MAX_BUF];
+  char ch;
+
+  snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/active_low", gpio);
+
+  fd = open(buf, O_RDONLY);
+  if(fd < 0) {
+    perror("gpioGetActiveLow");
+    return;
+  }
+
+  read(fd, &ch, 1);
+  close(fd);
+
+  if(ch == '0') {
+    return 0;
+  } else if(ch == '1') {
+    return 1;
   } else {
     debug("Unknown value %c", ch);
     return -1;
