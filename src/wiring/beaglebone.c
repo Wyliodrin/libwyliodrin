@@ -59,6 +59,11 @@ void pinReset(int pin) {
  * mode - 0 for INPUT or 1 for OUTPUT
  */
 void pinMode(int pin, int mode) {
+  if(!gpioIsValid(pin)) {
+    debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
+    return;
+  }
+
   // Handle case where pin is allocated as a gpio-led
   if(isLed(pin)) {
     if(mode != 1) {
@@ -96,7 +101,7 @@ void digitalWrite(int pin, int value) {
   pin_value_t val;
 
   if(!gpioIsExported(pin)) {
-    debug("pin %d is not exported. You should call pinMode before digitalWrite", pin);
+    debug("pin %d is not exported. pinMode should be called before digitalWrite", pin);
     return;
   }
 

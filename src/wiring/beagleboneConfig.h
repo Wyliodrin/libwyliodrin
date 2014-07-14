@@ -75,6 +75,7 @@ void   beagleTest       ();
 uint   getGpioByName    (const char *name);
 uint   getGpioByKey     (const char *key);
 
+int    gpioIsValid      (uint gpio);
 int    gpioIsExported   (uint gpio);
 void   gpioExport       (uint gpio);
 void   gpioUnexport     (uint gpio);

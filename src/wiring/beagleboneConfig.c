@@ -179,7 +179,26 @@ uint getGpioByKey(const char *key) {
 }
 
 /**
- * Returns 0 if the pin gpio is not exported, or 1 otherwise
+ * Returns 0 if the pin gpio is not valid or 1 otherwise
+ */
+int gpioIsValid(uint gpio) {
+  int i;
+  pin_t *aux;
+
+  aux = pinTable;
+  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+    if(aux->gpio == gpio) {
+      return 1;
+    }
+
+    aux++;
+  }
+
+  return 0;
+}
+
+/**
+ * Returns 0 if the pin gpio is not exported or 1 otherwise
  */
 int gpioIsExported(uint gpio) {
   int fd;
