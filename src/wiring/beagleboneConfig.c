@@ -254,7 +254,7 @@ void gpioUnexport(uint gpio) {
 /**
  * Sets direction of pin
  */
-void gpioSetDir(uint gpio, pin_direction_t dir) {
+void gpioSetDir(uint gpio, int dir) {
   int fd;
   char buf[MAX_BUF];
 
@@ -278,10 +278,7 @@ void gpioSetDir(uint gpio, pin_direction_t dir) {
 }
 
 /**
- * Returns direction of pin
- *
- * 0 INPUT
- * 1 OUTPUT
+ * Returns direction of pin INPUT or OUTPUT
  */
 int gpioGetDir(uint gpio) {
   int fd;
@@ -301,9 +298,9 @@ int gpioGetDir(uint gpio) {
   close(fd);
 
   if(strncmp(buf, "in", 2) == 0) {
-    return 0; // INPUT
+    return INPUT;
   } else if(strncmp(buf, "out", 3) == 0) {
-    return 1; // OUTPUT
+    return OUTPUT;
   } else {
     debug("Unknown direction %s", buf);
     return -1;
@@ -313,7 +310,7 @@ int gpioGetDir(uint gpio) {
 /**
  * Sets value of pin
  */
-void gpioSetValue(uint gpio, pin_value_t value) {
+void gpioSetValue(uint gpio, int value) {
   int fd;
   char buf[MAX_BUF];
 
@@ -337,10 +334,7 @@ void gpioSetValue(uint gpio, pin_value_t value) {
 }
 
 /**
- * Returns value of pin
- * 
- * 0 LOW
- * 1 HIGH
+ * Returns value of pin LOW or HIGH
  */
 int gpioGetValue(uint gpio) {
   int fd;
@@ -359,9 +353,9 @@ int gpioGetValue(uint gpio) {
   close(fd);
 
   if(ch == '0') {
-    return 0; // LOW
+    return LOW;
   } else if(ch == '1') {
-    return 1; // HIGH
+    return HIGH;
   } else {
     debug("Unknown value %c", ch);
     return -1;
@@ -426,7 +420,7 @@ int gpioGetActiveLow(uint gpio) {
 /**
  * Sets edge of pin
  */
-void gpioSetEdge(uint gpio, edge_t edge) {
+void gpioSetEdge(uint gpio, int edge) {
   int fd;
   char buf[MAX_BUF];
 
@@ -447,7 +441,7 @@ void gpioSetEdge(uint gpio, edge_t edge) {
   } else if(edge == BOTH) {
     write(fd, "both", 5);
   } else {
-    debug("Edge can be NONE, RISING, FALLING or BOTH");
+    debug("Edge can be either NONE, RISING, FALLING or BOTH");
   }
 
   close(fd);
@@ -456,7 +450,7 @@ void gpioSetEdge(uint gpio, edge_t edge) {
 /**
  * Returns edge of pin
  */
-edge_t gpioGetEdge(uint gpio) {
+int gpioGetEdge(uint gpio) {
   int fd;
   char buf[MAX_BUF];
 
@@ -482,7 +476,7 @@ edge_t gpioGetEdge(uint gpio) {
     return BOTH;
   } else {
     debug("Unknown edge %s", buf);
-    return NONE;
+    return -1;
   }
 }
 

@@ -19,9 +19,21 @@ extern "C" {
  * 1.Constants
  *************************************************************************************************/
 
-#define MAX_BUF        64
+#define MAX_BUF 64
+
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define SYSFS_LEDS_DIR "/sys/class/leds"
+
+#define INPUT  0
+#define OUTPUT 1
+
+#define LOW  0
+#define HIGH 1
+
+#define NONE    0
+#define RISING  1
+#define FALLING 2
+#define BOTH    3
 
 #define isLed(gpio) (53 <= (gpio) && (gpio) <= 56)
 
@@ -37,23 +49,6 @@ extern "C" {
   } while (0)                                                                      \
 
 typedef unsigned int uint;
-
-typedef enum {
-  INPUT  = 0,
-  OUTPUT = 1
-} pin_direction_t;
-
-typedef enum {
-  LOW  = 0,
-  HIGH = 1
-} pin_value_t;
-
-typedef enum {
-  NONE    = 0,
-  RISING  = 1,
-  FALLING = 2,
-  BOTH    = 3,
-} edge_t;
 
 typedef struct pin_t {
   const char *name;
@@ -80,17 +75,17 @@ int    gpioIsExported   (uint gpio);
 void   gpioExport       (uint gpio);
 void   gpioUnexport     (uint gpio);
 
-void   gpioSetDir       (uint gpio, pin_direction_t dir);
+void   gpioSetDir       (uint gpio, int dir);
 int    gpioGetDir       (uint gpio);
 
-void   gpioSetValue     (uint gpio, pin_value_t value);
+void   gpioSetValue     (uint gpio, int value);
 int    gpioGetValue     (uint gpio);
 
 void   gpioSetActiveLow (uint gpio, int value);
 int    gpioGetActiveLow (uint gpio);
 
-void   gpioSetEdge      (uint gpio, edge_t edge);
-edge_t gpioGetEdge      (uint gpio);
+void   gpioSetEdge      (uint gpio, int edge);
+int    gpioGetEdge      (uint gpio);
 
 void   setLedToGpio     (uint gpio);
 

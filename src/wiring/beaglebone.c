@@ -56,17 +56,24 @@ void pinReset(int pin) {
  *
  * PARAMETERS:
  * pin  - the number of the pin whose pin you wish to set 
- * mode - 0 for INPUT or 1 for OUTPUT
+ * mode - INPUT or OUTPUT
  */
 void pinMode(int pin, int mode) {
+  // Test valid pin
   if(!gpioIsValid(pin)) {
     debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
     return;
   }
 
+  // Test valid mode
+  if(mode =! INPUT && mode != OUTPUT) {
+    debug("Mode can be either INPUT or OUTPUT");
+    return;
+  }
+
   // Handle case where pin is allocated as a gpio-led
   if(isLed(pin)) {
-    if(mode != 1) {
+    if(mode != OUTPUT) {
       debug("pinMode only supports mode OUTPUT for LEDs");
     } else {
       setUserLedToGpio(pin);
@@ -74,20 +81,8 @@ void pinMode(int pin, int mode) {
     return;
   }
 
-  pin_direction_t dir;
-
   gpioExport(pin);
-
-  if(mode == 0) {
-    dir = INPUT;
-  } else if(mode == 1) {
-    dir = OUTPUT;
-  } else {
-    debug("Wrong mode %d. Mode can be either INPUT or OUTPUT", mode);
-    return;
-  }
-
-  gpioSetDir(pin, dir);
+  gpioSetDir(pin, mode);
 }
 
 /**
@@ -95,26 +90,28 @@ void pinMode(int pin, int mode) {
  *
  * PARAMETERS:
  * pin   - the pin number
- * value - 0 for LOW or 1 for HIGH
+ * value - LOW or HIGH
  */
 void digitalWrite(int pin, int value) {
-  pin_value_t val;
+  // Test valid pin
+  if(!gpioIsValid(pin)) {
+    debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
+    return;
+  }
 
+  // Test valid value
+  if(value =! LOW && value != HIGH) {
+    debug("Value can be either LOW or HIGH");
+    return;
+  }
+
+  // Test if pin is exported
   if(!gpioIsExported(pin)) {
-    debug("pin %d is not exported. pinMode should be called before digitalWrite", pin);
+    debug("Pin %d is not exported. pinMode should be called before digitalWrite", pin);
     return;
   }
 
-  if(value == 0) {
-    val = LOW;
-  } else if(value == 1) {
-    val = HIGH;
-  } else {
-    debug("Wrong value %d. Value can be either LOW or HIGH", value);
-    return;
-  }
-
-  gpioSetValue(pin, val);
+  gpioSetValue(pin, value);
 }
 
 /**
@@ -124,9 +121,16 @@ void digitalWrite(int pin, int value) {
  * pin: the number of the digital pin you want to read (int)
  *
  * RETURNS: 
- * 1 for HIGH or 0 for LOW
+ * LOW or HIGH
  */
 int digitalRead(int pin) {
+  // Test valid pin
+  if(!gpioIsValid(pin)) {
+    debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
+    return;
+  }
+
+  // Test if pin is exported
   if(!gpioIsExported(pin)) {
     debug("pin %d is not exported. You should call pinMode before digitalRead", pin);
     return -1;
