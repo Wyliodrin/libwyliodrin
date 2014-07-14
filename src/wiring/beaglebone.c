@@ -66,7 +66,7 @@ void pinMode(int pin, int mode) {
   }
 
   // Test valid mode
-  if(mode =! INPUT && mode != OUTPUT) {
+  if(mode != INPUT && mode != OUTPUT) {
     debug("Mode can be either INPUT or OUTPUT");
     return;
   }
@@ -100,7 +100,7 @@ void digitalWrite(int pin, int value) {
   }
 
   // Test valid value
-  if(value =! LOW && value != HIGH) {
+  if(value != LOW && value != HIGH) {
     debug("Value can be either LOW or HIGH");
     return;
   }
