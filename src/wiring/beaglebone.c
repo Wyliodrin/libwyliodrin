@@ -59,6 +59,16 @@ void pinReset(int pin) {
  * mode - 0 for INPUT or 1 for OUTPUT
  */
 void pinMode(int pin, int mode) {
+  // Handle case where pin is allocated as a gpio-led
+  if(isLed(pin)) {
+    if(mode != 1) {
+      debug("pinMode only supports mode OUTPUT for LEDs");
+    } else {
+      setUserLedToGpio(pin);
+    }
+    return;
+  }
+
   pin_direction_t dir;
 
   gpioExport(pin);

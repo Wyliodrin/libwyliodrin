@@ -467,6 +467,30 @@ edge_t gpioGetEdge(uint gpio) {
   }
 }
 
+/**
+ * Sets user led trigger to gpio
+ */
+void setUserLedToGpio(uint gpio) {
+  if(!isLed(gpio)) {
+    debug("GPIO %d does not refer and USER LED", gpio);
+    return;
+  }
+
+  int fd;
+  char buf[MAX_BUF];
+
+  sprintf(buf, SYSFS_LEDS_DIR "beaglebone:green:usr%d/trigger", gpio - 53);
+
+  fd = open(buf, O_WRONLY);
+  if(fd < 0) {
+    perror("setUserLedToGpio");
+    return;
+  }
+
+  write(fd, "gpio", 5);
+  close(fd);
+}
+
 
 
 #ifdef __cplusplus

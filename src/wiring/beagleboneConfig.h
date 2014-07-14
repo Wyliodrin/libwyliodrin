@@ -21,6 +21,9 @@ extern "C" {
 
 #define MAX_BUF        64
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
+#define SYSFS_LEDS_DIR "/sys/class/leds"
+
+#define isLed(gpio) (53 <= (gpio) && (gpio) <= 56)
 
 // If they'll like this macro, I'll move it in a more generic file
 #define DEBUG 1
@@ -88,7 +91,7 @@ int    gpioGetActiveLow (uint gpio);
 void   gpioSetEdge      (uint gpio, edge_t edge);
 edge_t gpioGetEdge      (uint gpio);
 
-
+void   setLedToGpio     (uint gpio);
 
 #ifdef __cplusplus
 }
