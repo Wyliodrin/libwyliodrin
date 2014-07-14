@@ -17,6 +17,7 @@ extern "C" {
  * CONTENT
  * 1.Pins configuration table
  * 2.GPIO
+ * 3.User LEDs
  *************************************************************************************************/
 
 
@@ -141,7 +142,7 @@ void beagleTest() {
 /**
  * Returns the gpio pin number by name or -1 in case of failure
  */
-uint getGpioByName(const char *name) {
+byte getGpioByName(const char *name) {
   int i;
   pin_t *aux;
 
@@ -161,7 +162,7 @@ uint getGpioByName(const char *name) {
 /**
  * Returns the gpio pin number by key or -1 in case of failure
  */
-uint getGpioByKey(const char *key) {
+byte getGpioByKey(const char *key) {
   int i;
   pin_t *aux;
 
@@ -181,7 +182,7 @@ uint getGpioByKey(const char *key) {
 /**
  * Returns 0 if the pin gpio is not valid or 1 otherwise
  */
-int gpioIsValid(uint gpio) {
+byte gpioIsValid(byte gpio) {
   int i;
   pin_t *aux;
 
@@ -200,7 +201,7 @@ int gpioIsValid(uint gpio) {
 /**
  * Returns 0 if the pin gpio is not exported or 1 otherwise
  */
-int gpioIsExported(uint gpio) {
+byte gpioIsExported(byte gpio) {
   int fd;
   char buf[MAX_BUF];
 
@@ -218,7 +219,7 @@ int gpioIsExported(uint gpio) {
 /**
  * Exports pin
  */
-void gpioExport(uint gpio) {
+void gpioExport(byte gpio) {
   int fd, len;
   char buf[MAX_BUF];
 
@@ -236,7 +237,7 @@ void gpioExport(uint gpio) {
 /**
  * Unexports pin
  */
-void gpioUnexport(uint gpio) {
+void gpioUnexport(byte gpio) {
   int fd, len;
   char buf[MAX_BUF];
 
@@ -254,7 +255,7 @@ void gpioUnexport(uint gpio) {
 /**
  * Sets direction of pin
  */
-void gpioSetDir(uint gpio, int dir) {
+void gpioSetDir(byte gpio, byte dir) {
   int fd;
   char buf[MAX_BUF];
 
@@ -280,7 +281,7 @@ void gpioSetDir(uint gpio, int dir) {
 /**
  * Returns direction of pin INPUT or OUTPUT
  */
-int gpioGetDir(uint gpio) {
+byte gpioGetDir(byte gpio) {
   int fd;
   char buf[MAX_BUF];
   char ch;
@@ -310,7 +311,7 @@ int gpioGetDir(uint gpio) {
 /**
  * Sets value of pin
  */
-void gpioSetValue(uint gpio, int value) {
+void gpioSetValue(byte gpio, byte value) {
   int fd;
   char buf[MAX_BUF];
 
@@ -336,7 +337,7 @@ void gpioSetValue(uint gpio, int value) {
 /**
  * Returns value of pin LOW or HIGH
  */
-int gpioGetValue(uint gpio) {
+byte gpioGetValue(byte gpio) {
   int fd;
   char buf[MAX_BUF];
   char ch;
@@ -365,7 +366,7 @@ int gpioGetValue(uint gpio) {
 /**
  * Set active_low of pin
  */
-void gpioSetActiveLow(uint gpio, int value) {
+void gpioSetActiveLow(byte gpio, byte value) {
   int fd;
   char buf[MAX_BUF];
 
@@ -391,7 +392,7 @@ void gpioSetActiveLow(uint gpio, int value) {
 /**
  * Returns active_low value of pin
  */
-int gpioGetActiveLow(uint gpio) {
+byte gpioGetActiveLow(byte gpio) {
   int fd;
   char buf[MAX_BUF];
   char ch;
@@ -420,7 +421,7 @@ int gpioGetActiveLow(uint gpio) {
 /**
  * Sets edge of pin
  */
-void gpioSetEdge(uint gpio, int edge) {
+void gpioSetEdge(byte gpio, byte edge) {
   int fd;
   char buf[MAX_BUF];
 
@@ -432,16 +433,21 @@ void gpioSetEdge(uint gpio, int edge) {
     return;
   }
 
-  if(edge == NONE) {
-    write(fd, "none", 5);
-  } else if(edge == RISING) {
-    write(fd, "rising", 7);
-  } else if(edge == FALLING) {
-    write(fd, "falling", 8);
-  } else if(edge == BOTH) {
-    write(fd, "both", 5);
-  } else {
-    debug("Edge can be either NONE, RISING, FALLING or BOTH");
+  switch(edge) {
+    case NONE:
+      write(fd, "none", 5);
+      break;
+    case RISING:
+      write(fd, "rising", 7);
+      break;
+    case FALLING:
+      write(fd, "falling", 8);
+      break;
+    case BOTH:
+      write(fd, "both", 5);
+      break;
+    default:
+      debug("Edge can be either NONE, RISING, FALLING or BOTH");
   }
 
   close(fd);
@@ -450,7 +456,7 @@ void gpioSetEdge(uint gpio, int edge) {
 /**
  * Returns edge of pin
  */
-int gpioGetEdge(uint gpio) {
+byte gpioGetEdge(byte gpio) {
   int fd;
   char buf[MAX_BUF];
 
@@ -480,28 +486,136 @@ int gpioGetEdge(uint gpio) {
   }
 }
 
+
+
+/**************************************************************************************************
+ * 1.User LEDs
+ *************************************************************************************************/
+
 /**
- * Sets user led trigger to gpio
+ * Sets user led trigger
  */
-void setUserLedToGpio(uint gpio) {
+void ledSetTrigger(byte gpio, byte trigger) {
   if(!isLed(gpio)) {
-    debug("GPIO %d does not refer and USER LED", gpio);
+    debug("GPIO %d does not refer an USER LED", gpio);
     return;
   }
 
   int fd;
   char buf[MAX_BUF];
 
-  sprintf(buf, SYSFS_LEDS_DIR "beaglebone:green:usr%d/trigger", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "beaglebone:green:usr%d/trigger", gpio - 53);
 
   fd = open(buf, O_WRONLY);
   if(fd < 0) {
-    perror("setUserLedToGpio");
+    perror("setLedTriggerToNone");
     return;
   }
 
-  write(fd, "gpio", 5);
+  switch(trigger) {
+    case NONE:
+      write(fd, "none", 5);
+      break;
+    case NAND_DISK:
+      write(fd, "nand-disk", 10);
+      break;
+    case MMC0:
+      write(fd, "mmc0", 5);
+      break;
+    case MMC1:
+      write(fd, "mmc1", 5);
+      break;
+    case TIMER:
+      write(fd, "timer", 6);
+      break;
+    case ONESHOT:
+      write(fd, "oneshot", 8);
+      break;
+    case BACKLIGHT:
+      write(fd, "backlight", 10);
+      break;
+    case GPIO:
+      write(fd, "gpio", 5);
+      break;
+    case CPU0:
+      write(fd, "cpu0", 5);
+      break;
+    case DEFAULT_ON:
+      write(fd, "default-on", 11);
+      break;
+    case TRANSIENT:
+      write(fd, "transient", 10);
+      break;
+    default:
+      debug("Unknown trigger");
+  }
+
   close(fd);
+}
+
+/**
+ * Sets led value LOW or HIGH
+ */
+void ledSetValue(byte gpio, byte value) {
+  if(!isLed(gpio)) {
+    debug("GPIO %d does not refer an USER LED", gpio);
+    return;
+  }
+
+  int fd;
+  char buf[MAX_BUF];
+
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "beaglebone:green:usr%d/brightness", gpio - 53);
+
+  fd = open(buf, O_WRONLY);
+  if(fd < 0) {
+    perror("setLedValue");
+    return;
+  }
+
+  if(value == LOW) {
+    write(fd, "0", 2);
+  } else if(value == HIGH) {
+    write(fd, "1", 2);
+  } else {
+    debug("Value can be either INPUT or OUTPUT");
+  }
+
+  close(fd);
+}
+
+/**
+ * Returns value of gpio-led LOW or HIGH
+ */
+byte ledGetValue(byte gpio) {
+  if(!isLed(gpio)) {
+    debug("GPIO %d does not refer an USER LED", gpio);
+    return;
+  }
+
+  int fd;
+  char buf[MAX_BUF];
+  char ch;
+
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "beaglebone:green:usr%d/brightness", gpio - 53);
+
+  fd = open(buf, O_RDONLY);
+  if(fd < 0) {
+    perror("getLedValue");
+    return;
+  }
+
+  read(fd, &ch, 1);
+  close(fd);
+
+  if(ch == '0') {
+    return LOW;
+  } else if(ch == '1') {
+    return HIGH;
+  } else {
+    debug("Unknown value %c", ch);
+    return -1;
+  }
 }
 
 

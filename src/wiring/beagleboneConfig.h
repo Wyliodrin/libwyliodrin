@@ -11,6 +11,7 @@ extern "C" {
  * CONTENT:
  * 1.Constants
  * 2.GPIO
+ * 3.User LEDs
  *************************************************************************************************/
 
 
@@ -24,18 +25,47 @@ extern "C" {
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define SYSFS_LEDS_DIR "/sys/class/leds"
 
+// Direction
 #define INPUT  0
 #define OUTPUT 1
 
+// Value
 #define LOW  0
 #define HIGH 1
 
+// Edge
 #define NONE    0
 #define RISING  1
 #define FALLING 2
 #define BOTH    3
 
+// Trigger
+#define NONE        0
+#define NAND_DISK   1
+#define MMC0        2
+#define MMC1        3
+#define TIMER       4
+#define ONESHOT     5
+#define HEARTBEAT   6
+#define BACKLIGHT   7
+#define GPIO        8
+#define CPU0        9
+#define DEFAULT_ON 10
+#define TRANSIENT  11
+
 #define isLed(gpio) (53 <= (gpio) && (gpio) <= 56)
+
+typedef unsigned int  uint;
+typedef unsigned char byte;
+
+typedef struct pin_t {
+  const char *name;
+  const char *key;
+  byte gpio;
+  int pwm_mux_mode;
+  int ain;
+  int isAllocatedByDefault;
+} pin_t;
 
 // If they'll like this macro, I'll move it in a more generic file
 #define DEBUG 1
@@ -48,46 +78,47 @@ extern "C" {
     }                                                                              \
   } while (0)                                                                      \
 
-typedef unsigned int uint;
-
-typedef struct pin_t {
-  const char *name;
-  const char *key;
-  uint gpio;
-  int pwm_mux_mode;
-  int ain;
-  int isAllocatedByDefault;
-} pin_t;
-
 
 
 /**************************************************************************************************
- * 3.GPIO
+ * 2.GPIO
  *************************************************************************************************/
 
 void   beagleTest       ();
 
-uint   getGpioByName    (const char *name);
-uint   getGpioByKey     (const char *key);
+byte   getGpioByName    (const char *name);
+byte   getGpioByKey     (const char *key);
 
-int    gpioIsValid      (uint gpio);
-int    gpioIsExported   (uint gpio);
-void   gpioExport       (uint gpio);
-void   gpioUnexport     (uint gpio);
+byte   gpioIsValid      (byte gpio);
+byte   gpioIsExported   (byte gpio);
 
-void   gpioSetDir       (uint gpio, int dir);
-int    gpioGetDir       (uint gpio);
+void   gpioExport       (byte gpio);
+void   gpioUnexport     (byte gpio);
 
-void   gpioSetValue     (uint gpio, int value);
-int    gpioGetValue     (uint gpio);
+void   gpioSetDir       (byte gpio, byte dir);
+byte   gpioGetDir       (byte gpio);
 
-void   gpioSetActiveLow (uint gpio, int value);
-int    gpioGetActiveLow (uint gpio);
+void   gpioSetValue     (byte gpio, byte value);
+byte   gpioGetValue     (byte gpio);
 
-void   gpioSetEdge      (uint gpio, int edge);
-int    gpioGetEdge      (uint gpio);
+void   gpioSetActiveLow (byte gpio, byte value);
+byte   gpioGetActiveLow (byte gpio);
 
-void   setLedToGpio     (uint gpio);
+void   gpioSetEdge      (byte gpio, byte edge);
+byte   gpioGetEdge      (byte gpio);
+
+
+
+/**************************************************************************************************
+ * 3.User LEDs
+ *************************************************************************************************/
+
+void   ledSetTrigger (byte gpio, byte trigger);
+
+void   ledSetValue   (byte gpio, byte value);
+byte   ledGetValue   (byte gpio);
+
+
 
 #ifdef __cplusplus
 }

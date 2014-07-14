@@ -76,7 +76,7 @@ void pinMode(int pin, int mode) {
     if(mode != OUTPUT) {
       debug("pinMode only supports mode OUTPUT for LEDs");
     } else {
-      setUserLedToGpio(pin);
+      ledSetTrigger(pin, NONE);
     }
     return;
   }
@@ -105,9 +105,15 @@ void digitalWrite(int pin, int value) {
     return;
   }
 
+  // Handle case where pin is allocated as a gpio-led
+  if(isLed(pin)) {
+    setLedValue(pin, value);
+    return;
+  }
+
   // Test if pin is exported
   if(!gpioIsExported(pin)) {
-    debug("Pin %d is not exported. pinMode should be called before digitalWrite", pin);
+    debug("Pin %d is not exported. pinMode should be called before digitalWrite.", pin);
     return;
   }
 
@@ -134,6 +140,11 @@ int digitalRead(int pin) {
   if(!gpioIsExported(pin)) {
     debug("pin %d is not exported. You should call pinMode before digitalRead", pin);
     return -1;
+  }
+
+  // Handle case where pin is allocated as a gpio-led
+  if(isLed(pin)) {
+    return ledGetValue(pin);
   }
 
   return gpioGetValue(pin);
