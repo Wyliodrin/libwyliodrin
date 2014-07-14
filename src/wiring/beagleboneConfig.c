@@ -504,11 +504,11 @@ void ledSetTrigger(byte gpio, byte trigger) {
   int fd;
   char buf[MAX_BUF];
 
-  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "beaglebone:green:usr%d/trigger", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/trigger", gpio - 53);
 
   fd = open(buf, O_WRONLY);
   if(fd < 0) {
-    perror("setLedTriggerToNone");
+    perror("ledSetTrigger");
     return;
   }
 
@@ -565,7 +565,7 @@ void ledSetValue(byte gpio, byte value) {
   int fd;
   char buf[MAX_BUF];
 
-  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "beaglebone:green:usr%d/brightness", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", gpio - 53);
 
   fd = open(buf, O_WRONLY);
   if(fd < 0) {
@@ -597,7 +597,7 @@ byte ledGetValue(byte gpio) {
   char buf[MAX_BUF];
   char ch;
 
-  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "beaglebone:green:usr%d/brightness", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", gpio - 53);
 
   fd = open(buf, O_RDONLY);
   if(fd < 0) {
