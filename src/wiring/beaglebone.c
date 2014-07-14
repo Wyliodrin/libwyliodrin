@@ -107,7 +107,7 @@ void digitalWrite(int pin, int value) {
 
   // Handle case where pin is allocated as a gpio-led
   if(isLed(pin)) {
-    setLedValue(pin, value);
+    ledSetValue(pin, value);
     return;
   }
 
