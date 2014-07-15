@@ -28,6 +28,8 @@ set (wyliodrin_VERSION_PATCH 0})
 
 option (GALILEO "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi." OFF)
+option (UDOO "Build for the Udoo." OFF)
+
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
@@ -36,9 +38,10 @@ elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
   find_package(Wiringpi REQUIRED)
   include_directories(${WIRINGPI_INCLUDE_DIR})
-
+elseif (UDOO)
+  add_definitions(-DUDOO)
 else ()
-  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON or -DGALILEO=ON")
+  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, or -DUDOO=ON")
 endif ()
 
 set (wyliodrin_LIB_SRCS                                                                                   
