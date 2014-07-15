@@ -49,7 +49,7 @@ enum whatEdge {
 
 typedef struct udooPin_t {
 	const char* bank;
-	const char* phPin;        // physical Pin
+	const char* key;          // the pin as it appears on the board
 	const char* name;
 	const char* ardFunction;  // Arduino Function
 	byte gpio;
@@ -67,6 +67,8 @@ void udooTest           (const char* message);
 byte getGpioByName      (const char* name);
 
 byte getGpioByArdFunc   (const char* ardFunction);
+
+byte getGpioByKey       (const char* key);
 
 /* test if some number could reference a correct GPIO */
 byte gpioIsValid        (byte gpio);
