@@ -1,3 +1,18 @@
+/**************************************************************************************************
+ * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ * 
+ * This file contains the definitions of all wiring functions for the BeagleBone Black.
+ *
+ * CONTENT
+ * 1.General
+ * 2.Digital I/O
+ * 3.Analog I/O
+ * 4.Advanced I/O
+ * 5.Time
+ * 6.SPI
+ * 7.I2C
+ *************************************************************************************************/
+
 #ifdef BEAGLEBONE
 
 #ifdef __cplusplus
@@ -9,19 +24,6 @@ extern "C" {
 #include <time.h>
 #include "beagleboneConfig.h"
 #include "wiring.h"
-
-/**************************************************************************************************
- * This file contains the definitions of all wiring functions for the BeagleBone Black
- *
- * CONTENT
- * 1.General
- * 2.Digital I/O
- * 3.Analog I/O
- * 4.Advanced I/O
- * 5.Time
- * 6.SPI
- * 7.I2C
- *************************************************************************************************/
 
 
 
@@ -42,6 +44,11 @@ int wiringSetup() {
  * Resets pin
  */
 void pinReset(int pin) {
+  if(isLed(pin)) {
+    ledReset(pin);
+    return;
+  }
+
   gpioUnexport(pin);
 }
 
@@ -124,7 +131,7 @@ void digitalWrite(int pin, int value) {
  * Reads the value from a specified digital pin, either HIGH or LOW.
  *
  * PARAMETERS:
- * pin: the number of the digital pin you want to read (int)
+ * pin: the number of the digital pin you want to read
  *
  * RETURNS: 
  * LOW or HIGH

@@ -1,3 +1,15 @@
+/**************************************************************************************************
+ * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ *
+ * This file contains the definitions of the GPIO configuration functions for the BeagleBone Black.
+ * Based on Software by Derek Molloy.
+ *
+ * CONTENT
+ * 1.Pins configuration table
+ * 2.GPIO
+ * 3.User LEDs
+ *************************************************************************************************/
+
 #ifdef BEAGLEBONE
 
 #ifdef __cplusplus
@@ -9,16 +21,6 @@ extern "C" {
 #include <string.h>
 #include <stdlib.h>
 #include "beagleboneConfig.h"
-
-/**************************************************************************************************
- * This file contains the definitions of the GPIO configuration functions for the BeagleBone Black.
- * Based on Software by Derek Molloy.
- *
- * CONTENT
- * 1.Pins configuration table
- * 2.GPIO
- * 3.User LEDs
- *************************************************************************************************/
 
 
 
@@ -489,7 +491,7 @@ byte gpioGetEdge(byte gpio) {
 
 
 /**************************************************************************************************
- * 1.User LEDs
+ * 3.User LEDs
  *************************************************************************************************/
 
 /**
@@ -530,6 +532,9 @@ void ledSetTrigger(byte gpio, byte trigger) {
       break;
     case ONESHOT:
       write(fd, "oneshot", 8);
+      break;
+    case HEARTBEAT:
+      write(fd, "hearbeat", 9);
       break;
     case BACKLIGHT:
       write(fd, "backlight", 10);
@@ -615,6 +620,33 @@ byte ledGetValue(byte gpio) {
   } else {
     debug("Unknown value %c", ch);
     return -1;
+  }
+}
+
+/**
+ * Resets an USER LED
+ */
+void ledReset(byte gpio) {
+  if(!isLed(gpio)) {
+    debug("GPIO %d does not refer an USER LED", gpio);
+    return;
+  }
+
+  switch(gpio - 53) {
+    case 0:
+      ledSetTrigger(gpio, HEARTBEAT);
+      break;
+    case 1:
+      ledSetTrigger(gpio, MMC0);
+      break;
+    case 2:
+      ledSetTrigger(gpio, CPU0);
+      break;
+    case 3:
+      ledSetTrigger(gpio, MMC1);
+      break;
+    default:
+      debug("This should not have happened");
   }
 }
 

@@ -1,11 +1,6 @@
-#ifndef BEAGLEBONE_CONFIG_H
-#define BEAGLEBONE_CONFIG_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**************************************************************************************************
+ * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ *
  * This file contains the declarations of the GPIO configuration functions for the BeagleBone Black
  *
  * CONTENT:
@@ -13,6 +8,13 @@ extern "C" {
  * 2.GPIO
  * 3.User LEDs
  *************************************************************************************************/
+
+#ifndef BEAGLEBONE_CONFIG_H
+#define BEAGLEBONE_CONFIG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -55,16 +57,15 @@ extern "C" {
 
 #define isLed(gpio) (53 <= (gpio) && (gpio) <= 56)
 
-typedef unsigned int  uint;
 typedef unsigned char byte;
 
-typedef struct pin_t {
+typedef struct {
   const char *name;
   const char *key;
   byte gpio;
-  int pwm_mux_mode;
-  int ain;
-  int isAllocatedByDefault;
+  byte pwmMuxMode;
+  byte ain;
+  byte isAllocatedByDefault;
 } pin_t;
 
 // If they'll like this macro, I'll move it in a more generic file
@@ -117,6 +118,8 @@ void   ledSetTrigger (byte gpio, byte trigger);
 
 void   ledSetValue   (byte gpio, byte value);
 byte   ledGetValue   (byte gpio);
+
+void   ledReset      (byte gpio);
 
 
 
