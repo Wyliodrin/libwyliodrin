@@ -1,0 +1,105 @@
+#ifndef __UDOO_CONFIG_H__
+#define __UDOO_CONFIG_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**************************************************************************************************
+ * This header file contains declarations of the GPIO configuration functions for the UDOO Board
+ * Follow "Wyliodrin Coding Style Convention" at: 
+ *     https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
+ * 
+ *
+ * CONTENT:
+ * 1. Constants & Flags
+ * 2. GPIO
+ *************************************************************************************************/
+
+
+
+/**************************************************************************************************
+ * 1. Constants
+ *************************************************************************************************/
+
+
+typedef unsigned char byte;
+
+#define GPIO_FILE_PREFIX "/sys/class/gpio/"
+#define GPIO_FILE_EXPORT GPIO_FILE_PREFIX "export"
+
+// Direction
+#define GPIOF_DIR_IN  "in"    // to configure direction as input
+#define GPIOF_DIR_OUT "out"   // to configure direction as output 
+
+// Values
+#define HIGH 1
+#define LOW  0
+
+#define GPIOF_INIT_LOW  LOW   // as output, set initial level to LOW
+#define GPIOF_INIT_HIGH HIGH  // as input, set initial level to HIGH
+
+// Edge
+enum whatEdge {
+	NONE,
+	RISING,
+	FALLING, 
+	BOTH
+};
+
+typedef struct udooPin_t {
+	const char* bank;
+	const char* phPin;        // physical Pin
+	const char* name;
+	const char* ardFunction;  // Arduino Function
+	byte gpio;
+} udooPin_t;
+
+
+
+/**************************************************************************************************
+ * 2. GPIO
+ *************************************************************************************************/
+
+
+void udooTest           (const char* message);
+
+byte getGpioByName      (const char* name);
+
+byte getGpioByArdFunc   (const char* ardFunction);
+
+/* test if some number could reference a correct GPIO */
+byte gpioIsValid        (byte gpio);
+byte gpioIsExported     (byte gpio);
+
+/* set as input or output, returning 0 or negative errno */
+int gpioSetDirInput     (byte gpio);
+int gpioSetDirOutput    (byte gpio, const char* value);
+
+byte gpioGetDir         (byte gpio);
+
+int gpioGetValue        (byte gpio);
+void gpioSetValue       (byte gpio, byte value);
+
+void gpioExport         (byte gpio); 
+void gpioUnexport       (byte gpio);
+
+void gpioSetEdge        (byte gpio, byte edge);
+byte gpioGetEdge        (byte gpio);
+
+void gpioSetActiveLow   (byte gpio, byte value);
+byte gpioGetActiveLow   (byte gpio);
+
+/* map GPIO numbers to IRQ numbers */
+int gpioToIrq           (byte gpio);
+
+/* map IRQ numbers to IRQ numbers */
+int irqToGpio           (byte gpio);
+		
+
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif /* __UDOO_CONFIG_H__ */
