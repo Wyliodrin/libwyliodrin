@@ -1,10 +1,3 @@
-#ifndef __UDOO_CONFIG_H__
-#define __UDOO_CONFIG_H__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**************************************************************************************************
  * This header file contains declarations of the GPIO configuration functions for the UDOO Board
  * Follow "Wyliodrin Coding Style Convention" at: 
@@ -17,13 +10,18 @@ extern "C" {
  *************************************************************************************************/
 
 
+#ifndef __UDOO_CONFIG_H__
+#define __UDOO_CONFIG_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /**************************************************************************************************
  * 1. Constants
  *************************************************************************************************/
 
-
-typedef unsigned char byte;
 
 #define GPIO_FILE_PREFIX "/sys/class/gpio/"
 #define GPIO_FILE_EXPORT GPIO_FILE_PREFIX "export"
@@ -47,11 +45,13 @@ enum whatEdge {
 	BOTH
 };
 
-typedef struct udooPin_t {
-	const char* bank;
-	const char* key;          // the pin as it appears on the board
-	const char* name;
-	const char* ardFunction;  // Arduino Function
+typedef unsigned char byte;
+
+typedef struct {
+	const char *bank;
+	const char *key;          // the pin as it appears on the board
+	const char *name;
+	const char *ardFunction;  // Arduino Function
 	byte gpio;
 } udooPin_t;
 
@@ -62,7 +62,7 @@ typedef struct udooPin_t {
  *************************************************************************************************/
 
 
-void udooTest           (const char* message);
+void boardTest          (const char* message);
 
 byte getGpioByName      (const char* name);
 
