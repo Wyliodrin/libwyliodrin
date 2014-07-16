@@ -131,6 +131,28 @@ udooPin_t pinTable[] = {
     {"J15",  "CANTX",   "PA1",         "CANTX",       0 }};
 
 
+
+/**************************************************************************************************
+ * 2. GPIO functions [extend definitions]
+ *************************************************************************************************/
+
+/**
+ * There are a few functions here that I took from the beagleboneConfig file after discussion
+ * with Matei. These functions can be used for the UDOO board, too.
+ * We decided not to make a generic "common" library just for the moment.
+ */
+
+
+/**
+ * "Hello world!" function, used for testing the correctness of the install
+ */
+
+void boardTest(const char* message) 
+{
+    printf("%s\n", message);
+}
+
+
 #ifdef __cplusplus
 }
 #endif
