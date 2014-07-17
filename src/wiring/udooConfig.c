@@ -22,6 +22,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include "udooConfig.h"
 
 
@@ -159,7 +160,8 @@ void boardTest(const char* message)
  */
 
 byte getGpioByName (const char* name)
-{
+{   
+    int i;
     udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->name, name) == 0)
@@ -172,6 +174,7 @@ byte getGpioByName (const char* name)
 
 byte getGpioByArdFunc (const char* ardFunction)
 {
+    int i;
     udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->ardFunction, ardFunction) == 0)
@@ -184,6 +187,7 @@ byte getGpioByArdFunc (const char* ardFunction)
 
 byte getGpioByKey (const char* key)
 {
+    int i;
     udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->key, key) == 0)
@@ -196,6 +200,7 @@ byte getGpioByKey (const char* key)
 
 byte gpioIsValid (byte gpio)
 {
+    int i;
     if (gpio == 0)
         return 0;
     udooPin_t *tmpTable = pinTable;
@@ -204,6 +209,17 @@ byte gpioIsValid (byte gpio)
             return 1;
     }
     return 0;
+}
+
+byte gpioIsExported (byte gpio)
+{
+    char buffer[64];
+    snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
+    int canOpenFile = open(buffer, O_WRONLY);
+    if (canOpenFile == -1)
+        return 0;
+    close(canOpenFile);
+    return 1;
 }
 
 #ifdef __cplusplus
