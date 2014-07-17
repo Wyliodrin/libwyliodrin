@@ -35,8 +35,14 @@ extern "C" {
 #define HIGH 1
 #define LOW  0
 
+#define INPUT 0
+#define OUTPUT 1
+
 #define GPIOF_INIT_LOW  LOW    // as output, set initial level to LOW
 #define GPIOF_INIT_HIGH HIGH   // as input, set initial level to HIGH
+
+#define PIN_UNEXPORTED_ERROR -132
+#define PIN_INVALID_ERROR -133
 
 // Edge
 enum whatEdge {
@@ -78,10 +84,10 @@ byte gpioIsExported     (byte gpio);
 
 // set as input or output, returning 1 or negative errno
 int gpioSetDirInput     (byte gpio);
-int gpioSetDirOutput    (byte gpio, const char* value);
+int gpioSetDirOutput    (byte gpio);
 
 // get the pin direction
-byte gpioGetDir         (byte gpio);
+int gpioGetDir         (byte gpio);
 
 int gpioGetValue        (byte gpio);
 void gpioSetValue       (byte gpio, byte value);
