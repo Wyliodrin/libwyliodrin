@@ -291,7 +291,7 @@ int gpioGetDir (byte gpio)
  * Set/Get the gpio value
  * 0 returned for the 1st and the gpio val for the 2nd function if operation succeeded
  */
- 
+
 int gpioSetValue (byte gpio, byte value)
 {
     if (!gpioIsValid(gpio)) {
@@ -321,10 +321,10 @@ int gpioSetValue (byte gpio, byte value)
 int gpioGetValue (byte gpio)
 {
     if (!gpioIsValid(gpio)) {
-        debug("Can't set value for gpio no: %d [INVALID]", gpio);
+        debug("Can't get value for gpio no: %d [INVALID]", gpio);
         return PIN_INVALID_ERROR;
     } else if (!gpioIsExported(gpio)) {
-        debug("Can't set value for gpio: %d [UNEXPORTED]", gpio);
+        debug("Can't get value for gpio: %d [UNEXPORTED]", gpio);
         return PIN_UNEXPORTED_ERROR;
     } else {
         char buffer[64], value;
@@ -337,6 +337,42 @@ int gpioGetValue (byte gpio)
         } else if (value == '1') {
             return HIGH;
         }
+    }
+}
+
+int gpioExport (byte gpio)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't export gpio no: %d [INVALID]", gpio);
+        return PIN_INVALID_ERROR;
+    } else if (gpioIsExported(gpio)) {
+        debug("Can't export gpio no: %d [ALREADY EXPORTED]", gpio);
+        return PIN_EXPORTED_ERROR;
+    } else {
+        char buffer[64];
+        int sLength = snprintf(buffer, 64, "%d", gpio);
+        int fo = open(GPIO_FILE_EXPORT, O_WRONLY);
+        write(fo, buffer, sLength);
+        close(fo);
+        return 0;
+    }
+}
+
+int gpioUnexport (byte gpio)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't unexport gpio no: %d [INVALID]", gpio);
+        return PIN_INVALID_ERROR;
+    } else if (!gpioIsExported(gpio)) {
+        debug("Can't unexport gpio no: %d [ALREADY UNEXPORTED]", gpio);
+        return PIN_UNEXPORTED_ERROR;
+    } else {
+        char buffer[64];
+        int sLength = snprintf(buffer, 64, "%d", gpio);
+        int fo = open(GPIO_FILE_UNEXPORT, O_WRONLY);
+        write(fo, buffer, sLength);
+        close(fo);
+        return 0;
     }
 }
 
