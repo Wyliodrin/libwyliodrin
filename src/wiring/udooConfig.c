@@ -152,6 +152,47 @@ void boardTest(const char* message)
     printf("%s\n", message);
 }
 
+/**
+ * Given some atributes of some pin, these 3 functions return the related gpio number
+ * If the gpio returned is 0, that means there is no gpio for that pin
+ * In case of -1 returned, the given name doesn't exist
+ */
+
+byte getGpioByName (const char* name)
+{
+    udooPin_t *tmpTable = pinTable;
+    for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
+        if (strcmp(tmpTable->name, name) == 0)
+            return tmpTable->gpio;
+        tmpTable++;
+    }
+    debug("There is no pin on the board named %s", name);
+    return -1;
+}
+
+byte getGpioByArdFunc (const char* ardFunction)
+{
+    udooPin_t *tmpTable = pinTable;
+    for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
+        if (strcmp(tmpTable->ardFunction, ardFunction) == 0)
+            return tmpTable->gpio;
+        tmpTable++;
+    }
+    debug("There is no pin on the board with %s Arduino Function", ardFunction);
+    return -1;
+}
+
+byte getGpioByKey (const char* key)
+{
+    udooPin_t *tmpTable = pinTable;
+    for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
+        if (strcmp(tmpTable->key, key) == 0)
+            return tmpTable->key;
+        tmpTable++;
+    }
+    debug("There is no pin on the board with key %s", key);
+    return -1;
+}
 
 #ifdef __cplusplus
 }
