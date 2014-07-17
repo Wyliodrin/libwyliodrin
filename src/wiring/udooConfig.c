@@ -224,23 +224,41 @@ byte gpioIsExported (byte gpio)
 }
 
 /**
- * Function that set a gpio direction to input if possible
- * Returns 0 if succeeded
+ * Functions that set a gpio direction to input/output if possible
+ * Return 0 if succeeded and negative errno contrary
  */
- 
+
 int gpioSetDirInput (byte gpio)
 {
     if (!gpioIsValid(gpio)) {
         debug("Can't set direction for gpio no: %d [INVALID]", gpio);
-        return EINVAL;
+        return -EINVAL;
     } else if (!gpioIsExported(gpio)) {
         debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
-        return EINVAL;
+        return -EINVAL;
     } else {
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
         int fo = open(buffer, O_WRONLY);
         write(fo, GPIOF_DIR_IN, sizeof(GPIOF_DIR_IN));
+        close(fo);
+        return 0;
+    }
+}
+
+int gpioSetDirOutput (byte gpio)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't set direction for gpio no: %d [INVALID]", gpio);
+        return -EINVAL;
+    } else if (!gpioIsExported(gpio)) {
+        debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
+        return -EINVAL;
+    } else {
+        char buffer[64];
+        snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
+        int fo = open(buffer, O_WRONLY);
+        write(fo, GPIOF_DIR_OUT, sizeof(GPIOF_DIR_OUT));
         close(fo);
         return 0;
     }
