@@ -194,6 +194,18 @@ byte getGpioByKey (const char* key)
     return -1;
 }
 
+byte gpioIsValid (byte gpio)
+{
+    if (gpio == 0)
+        return 0;
+    udooPin_t *tmpTable = pinTable;
+    for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
+        if (tmpTable->gpio == gpio)
+            return 1;
+    }
+    return 0;
+}
+
 #ifdef __cplusplus
 }
 #endif
