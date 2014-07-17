@@ -23,6 +23,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <errno.h>
 #include "udooConfig.h"
 
@@ -232,10 +233,10 @@ int gpioSetDirInput (byte gpio)
 {
     if (!gpioIsValid(gpio)) {
         debug("Can't set direction for gpio no: %d [INVALID]", gpio);
-        return -EINVAL;
+        return PIN_INVALID_ERROR;
     } else if (!gpioIsExported(gpio)) {
         debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
-        return -EINVAL;
+        return PIN_UNEXPORTED_ERROR;
     } else {
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
@@ -250,10 +251,10 @@ int gpioSetDirOutput (byte gpio)
 {
     if (!gpioIsValid(gpio)) {
         debug("Can't set direction for gpio no: %d [INVALID]", gpio);
-        return -EINVAL;
+        return PIN_INVALID_ERROR;
     } else if (!gpioIsExported(gpio)) {
         debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
-        return -EINVAL;
+        return PIN_UNEXPORTED_ERROR;
     } else {
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
@@ -261,6 +262,28 @@ int gpioSetDirOutput (byte gpio)
         write(fo, GPIOF_DIR_OUT, sizeof(GPIOF_DIR_OUT));
         close(fo);
         return 0;
+    }
+}
+
+int gpioGetDir (byte gpio)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't set direction for gpio no: %d [INVALID]", gpio);
+        return PIN_INVALID_ERROR;
+    } else if (!gpioIsExported(gpio)) {
+        debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
+        return PIN_UNEXPORTED_ERROR;
+    } else {
+        char buffer[64];
+        snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
+        int fo = open(buffer, O_WRONLY);
+        memset(buffer, 0, 64);
+        read(fo, buffer, 64);
+        close(fo);
+        if (strncmp(buffer, 2, GPIOF_DIR_IN) == 0) {
+            return INPUT;
+        } else if (strncmp(buffer, 3, GPIOF_DIR_OUT) == 0)
+            return OUTPUT;
     }
 }
 
