@@ -23,6 +23,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <errno.h>
 #include "udooConfig.h"
 
 
@@ -200,9 +201,9 @@ byte getGpioByKey (const char* key)
 
 byte gpioIsValid (byte gpio)
 {
-    int i;
     if (gpio == 0)
         return 0;
+    int i;
     udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (tmpTable->gpio == gpio)
@@ -220,6 +221,29 @@ byte gpioIsExported (byte gpio)
         return 0;
     close(canOpenFile);
     return 1;
+}
+
+/**
+ * Function that set a gpio direction to input if possible
+ * Returns 0 if succeeded
+ */
+ 
+int gpioSetDirInput (byte gpio)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't set direction for gpio no: %d [INVALID]", gpio);
+        return EINVAL;
+    } else if (!gpioIsExported(gpio)) {
+        debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
+        return EINVAL;
+    } else {
+        char buffer[64];
+        snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
+        int fo = open(buffer, O_WRONLY);
+        write(fo, GPIOF_DIR_IN, sizeof(GPIOF_DIR_IN));
+        close(fo);
+        return 0;
+    }
 }
 
 #ifdef __cplusplus
