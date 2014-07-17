@@ -226,7 +226,7 @@ byte gpioIsExported (byte gpio)
 
 /**
  * Functions that set a gpio direction to input/output if possible
- * Return 0 if succeeded and negative errno contrary
+ * Return 0 if succeeded and negative errNo defined in udooConfig.h contrary
  */
 
 int gpioSetDirInput (byte gpio)
@@ -241,7 +241,7 @@ int gpioSetDirInput (byte gpio)
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
         int fo = open(buffer, O_WRONLY);
-        write(fo, GPIOF_DIR_IN, sizeof(GPIOF_DIR_IN));
+        write(fo, GPIOF_DIR_IN, 3);
         close(fo);
         return 0;
     }
@@ -259,7 +259,7 @@ int gpioSetDirOutput (byte gpio)
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
         int fo = open(buffer, O_WRONLY);
-        write(fo, GPIOF_DIR_OUT, sizeof(GPIOF_DIR_OUT));
+        write(fo, GPIOF_DIR_OUT, 4);
         close(fo);
         return 0;
     }
@@ -268,10 +268,10 @@ int gpioSetDirOutput (byte gpio)
 int gpioGetDir (byte gpio)
 {
     if (!gpioIsValid(gpio)) {
-        debug("Can't set direction for gpio no: %d [INVALID]", gpio);
+        debug("Can't get direction for gpio no: %d [INVALID]", gpio);
         return PIN_INVALID_ERROR;
     } else if (!gpioIsExported(gpio)) {
-        debug("Can't set direction for gpio: %d [UNEXPORTED]", gpio);
+        debug("Can't get direction for gpio: %d [UNEXPORTED]", gpio);
         return PIN_UNEXPORTED_ERROR;
     } else {
         char buffer[64];
@@ -284,6 +284,59 @@ int gpioGetDir (byte gpio)
             return INPUT;
         } else if (strncmp(buffer, 3, GPIOF_DIR_OUT) == 0)
             return OUTPUT;
+    }
+}
+
+/**
+ * Set/Get the gpio value
+ * 0 returned for the 1st and the gpio val for the 2nd function if operation succeeded
+ */
+ 
+int gpioSetValue (byte gpio, byte value)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't set value for gpio no: %d [INVALID]", gpio);
+        return PIN_INVALID_ERROR;
+    } else if (!gpioIsExported(gpio)) {
+        debug("Can't set value for gpio: %d [UNEXPORTED]", gpio);
+        return PIN_UNEXPORTED_ERROR;
+    } else {
+        char buffer[64];
+        snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
+        int fo = open(buffer, O_WRONLY);
+        if (value == LOW) {
+            write(fo, LOW, 3);
+        } else if (value == HIGH) {
+            write(fo, HIGH, 4);
+        } else {
+            debug("Value can be either LOW or HIGH");
+            close(fo);
+            return UNKNOWN_VALUE_ERROR;
+        }
+        close(fo);
+        return 0;
+    }
+}
+
+int gpioGetValue (byte gpio)
+{
+    if (!gpioIsValid(gpio)) {
+        debug("Can't set value for gpio no: %d [INVALID]", gpio);
+        return PIN_INVALID_ERROR;
+    } else if (!gpioIsExported(gpio)) {
+        debug("Can't set value for gpio: %d [UNEXPORTED]", gpio);
+        return PIN_UNEXPORTED_ERROR;
+    } else {
+        char buffer[64], value;
+        snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
+        int fo = open(buffer, O_WRONLY);
+        read(fo, value, 1);
+        close(fo);
+        if (value == '0') {
+            return LOW;
+        } else if (value == '1') {
+            return HIGH;
+        }
     }
 }
 
