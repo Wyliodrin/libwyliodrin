@@ -1,9 +1,9 @@
 /**************************************************************************************************
  * This header file contains declarations of the GPIO configuration functions for the UDOO Board
+ * 
  * Follow "Wyliodrin Coding Style Convention" at: 
  *     https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
  * 
- *
  * CONTENT:
  * 1. Constants & Flags
  * 2. GPIO
@@ -26,10 +26,11 @@ extern "C" {
 
 #define GPIO_FILE_PREFIX "/sys/class/gpio/"
 #define GPIO_FILE_EXPORT GPIO_FILE_PREFIX "export"
+#define GPIO_FILE_UNEXPORT GPIO_FILE_PREFIX "unexport"
 
 // Direction
-#define GPIOF_DIR_IN  "in"     // to configure direction as input
-#define GPIOF_DIR_OUT "out"    // to configure direction as output 
+#define GPIOF_DIR_IN  "in"        // to configure direction as input
+#define GPIOF_DIR_OUT "out"       // to configure direction as output 
 
 // Values
 #define HIGH 1
@@ -38,11 +39,13 @@ extern "C" {
 #define INPUT 0
 #define OUTPUT 1
 
-#define GPIOF_INIT_LOW  LOW    // as output, set initial level to LOW
-#define GPIOF_INIT_HIGH HIGH   // as input, set initial level to HIGH
+#define GPIOF_INIT_LOW  LOW       // as output, set initial level to LOW
+#define GPIOF_INIT_HIGH HIGH      // as input, set initial level to HIGH
 
-#define PIN_UNEXPORTED_ERROR -132
-#define PIN_INVALID_ERROR -133
+#define PIN_UNEXPORTED_ERROR -132 // pin is unexported
+#define PIN_EXPORTED_ERROR -133   // pin is exported
+#define PIN_INVALID_ERROR -134    // pin is invalid
+#define UNKNOWN_VALUE_ERROR -135
 
 // Edge
 enum whatEdge {
@@ -56,9 +59,9 @@ typedef unsigned char byte;
 
 typedef struct {
 	const char *bank;
-	const char *key;          // the pin as it appears on the board
+	const char *key;             // the pin as it appears on the board
 	const char *name;
-	const char *ardFunction;  // Arduino Function
+	const char *ardFunction;     // Arduino Function
 	byte gpio;
 } udooPin_t;
 
@@ -87,10 +90,10 @@ int gpioSetDirInput     (byte gpio);
 int gpioSetDirOutput    (byte gpio);
 
 // get the pin direction
-int gpioGetDir         (byte gpio);
+int gpioGetDir          (byte gpio);
 
 int gpioGetValue        (byte gpio);
-void gpioSetValue       (byte gpio, byte value);
+int gpioSetValue        (byte gpio, byte value);
 
 void gpioExport         (byte gpio); 
 void gpioUnexport       (byte gpio);
