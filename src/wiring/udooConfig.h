@@ -95,8 +95,8 @@ int gpioGetDir          (byte gpio);
 int gpioGetValue        (byte gpio);
 int gpioSetValue        (byte gpio, byte value);
 
-void gpioExport         (byte gpio); 
-void gpioUnexport       (byte gpio);
+int gpioExport         (byte gpio); 
+int gpioUnexport       (byte gpio);
 
 void gpioSetEdge        (byte gpio, byte edge);
 byte gpioGetEdge        (byte gpio);

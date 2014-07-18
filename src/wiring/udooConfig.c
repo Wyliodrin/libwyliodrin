@@ -161,7 +161,7 @@ void boardTest(const char* message)
  * In case of -1 returned, the given name doesn't exist
  */
 
-byte getGpioByName (const char* name)
+int getGpioByName (const char* name)
 {   
     int i;
     udooPin_t *tmpTable = pinTable;
@@ -174,7 +174,7 @@ byte getGpioByName (const char* name)
     return -1;
 }
 
-byte getGpioByArdFunc (const char* ardFunction)
+int getGpioByArdFunc (const char* ardFunction)
 {
     int i;
     udooPin_t *tmpTable = pinTable;
@@ -187,13 +187,13 @@ byte getGpioByArdFunc (const char* ardFunction)
     return -1;
 }
 
-byte getGpioByKey (const char* key)
+int getGpioByKey (const char* key)
 {
     int i;
     udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->key, key) == 0)
-            return tmpTable->key;
+            return tmpTable->gpio;
         tmpTable++;
     }
     debug("There is no pin on the board with key %s", key);
@@ -209,6 +209,7 @@ byte gpioIsValid (byte gpio)
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (tmpTable->gpio == gpio)
             return 1;
+        tmpTable++;
     }
     return 0;
 }
@@ -217,7 +218,7 @@ byte gpioIsExported (byte gpio)
 {
     char buffer[64];
     snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
-    int canOpenFile = open(buffer, O_WRONLY);
+    int canOpenFile = open(buffer, O_RDONLY);
     if (canOpenFile == -1)
         return 0;
     close(canOpenFile);
@@ -276,13 +277,13 @@ int gpioGetDir (byte gpio)
     } else {
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
-        int fo = open(buffer, O_WRONLY);
+        int fo = open(buffer, O_RDONLY);
         memset(buffer, 0, 64);
         read(fo, buffer, 64);
         close(fo);
-        if (strncmp(buffer, 2, GPIOF_DIR_IN) == 0) {
+        if (strncmp(buffer, GPIOF_DIR_IN, 2) == 0) {
             return INPUT;
-        } else if (strncmp(buffer, 3, GPIOF_DIR_OUT) == 0)
+        } else if (strncmp(buffer, GPIOF_DIR_OUT, 3) == 0)
             return OUTPUT;
     }
 }
@@ -305,9 +306,9 @@ int gpioSetValue (byte gpio, byte value)
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
         int fo = open(buffer, O_WRONLY);
         if (value == LOW) {
-            write(fo, LOW, 3);
+            write(fo, "0", 2);
         } else if (value == HIGH) {
-            write(fo, HIGH, 4);
+            write(fo, "1", 2);
         } else {
             debug("Value can be either LOW or HIGH");
             close(fo);
@@ -329,8 +330,8 @@ int gpioGetValue (byte gpio)
     } else {
         char buffer[64], value;
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
-        int fo = open(buffer, O_WRONLY);
-        read(fo, value, 1);
+        int fo = open(buffer, O_RDONLY);
+        read(fo, &value, 1);
         close(fo);
         if (value == '0') {
             return LOW;
@@ -339,6 +340,12 @@ int gpioGetValue (byte gpio)
         }
     }
 }
+
+
+/**
+ * Export/Unexport a specified pin
+ * Functions return 0 if operation succeeded
+ */
 
 int gpioExport (byte gpio)
 {
