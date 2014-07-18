@@ -74,11 +74,11 @@ typedef struct {
 
 void boardTest          (const char* message);
 
-byte getGpioByName      (const char* name);
+int getGpioByName      (const char* name);
 
-byte getGpioByArdFunc   (const char* ardFunction);
+int getGpioByArdFunc   (const char* ardFunction);
 
-byte getGpioByKey       (const char* key);
+int getGpioByKey       (const char* key);
 
 // test if some number could reference a correct GPIO.
 byte gpioIsValid        (byte gpio);
