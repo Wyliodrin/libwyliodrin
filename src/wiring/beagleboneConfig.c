@@ -145,9 +145,7 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size
   struct dirent *entry;
   char* foundString;
 
-  dir = opendir(dirPath);
-
-  if(dir != NULL) {
+  if((dir = opendir(dirPath)) != NULL) {
     while((entry = readdir(dir)) != NULL) {
       // Enforce that the prefix must be the first part of the file
       foundString = strstr(entry->d_name, prefix);
@@ -163,7 +161,7 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size
     closedir(dir);
     return ERROR;
   } else {
-    perror(buildPath);
+    debug("Could not open directory %s", dirPath);
     return ERROR;
   }
 }
@@ -187,7 +185,7 @@ result_t loadDeviceTree(const char *name) {
   snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
 
   if((pFile = fopen(slotsPath, "r+")) == NULL) {
-    debug("Could not open file %s" slotsPath);
+    debug("Could not open file %s", slotsPath);
     return ERROR;
   }
 
@@ -199,7 +197,7 @@ result_t loadDeviceTree(const char *name) {
     }
   }
 
-  fprintf(pFile, name);
+  fprintf(pFile, "%s", name);
   fclose(pFile);
   return SUCCESS;
 }
@@ -207,8 +205,39 @@ result_t loadDeviceTree(const char *name) {
 /**
  * Unloads a device tree
  */
-result_t unloadDeviceTree (const char *name) {
-  
+result_t unloadDeviceTree(const char *name) {
+  FILE *pFile;
+  char slotsPath    [128];
+  char slotsDirPath [128];
+  char line         [256];
+  char *slotsLine;
+
+  build_path("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
+  snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
+
+  if((pFile = fopen(slotsPath, "r+")) == NULL) {
+    debug("Could not open file %s", slotsPath);
+    return ERROR;
+  }
+
+  while (fgets(line, sizeof(line), pFile)) {
+    // Device is loaded, let's unload it
+    if (strstr(line, name)) {
+      slotsLine = strtok(line, ":");
+
+      // Remove leading spaces
+      while(*slotsLine == ' ') {
+        slotsLine++;
+      }
+
+      fprintf(pFile, "-%s", slotsLine);
+      fclose(pFile);
+      return SUCCESS;
+    }
+  }
+
+  fclose(pFile);
+  return SUCCESS;
 }
 
 /**************************************************************************************************
