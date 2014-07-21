@@ -90,6 +90,7 @@ typedef enum {
       fprintf(stderr, "Debug alert in file %s at line %d:\n", __FILE__, __LINE__); \
       fprintf(stderr, __VA_ARGS__);                                                \
       fprintf(stderr, "\n");                                                       \
+      perror(NULL);                                                                \
     }                                                                              \
   } while (0)                                                                      \
 
@@ -104,8 +105,8 @@ result_t buildPath (const char *partialPath,
  * 3.Device Tree
  *************************************************************************************************/
 
-void loadDeviceTree   (const char *name);
-void unloadDeviceTree (const char *name);
+result_t loadDeviceTree   (const char *name);
+result_t unloadDeviceTree (const char *name);
 
 
 

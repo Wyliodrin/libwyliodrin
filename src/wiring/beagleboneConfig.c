@@ -1,15 +1,15 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
  *
- * This file contains the definitions of the GPIO configuration functions for the BeagleBone Black.
- * Based on Software by Derek Molloy.
+ * This file contains the definitions of all configuration functions for the BeagleBone Black.
  *
  * CONTENT
  * 1.Pins configuration table
  * 2.General
- * 2.GPIO
- * 3.User LEDs
- * 4.PWM
+ * 3.Device Tree
+ * 3.GPIO
+ * 4.User LEDs
+ * 5.PWM
  *************************************************************************************************/
 
 #ifdef BEAGLEBONE
@@ -137,6 +137,9 @@ pin_t pinTable[] = {
  * 2.General
  *************************************************************************************************/
 
+/**
+ * Builds in fullPath the full path of the file prefix* from directory dirPath
+ */
 result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size_t fullPathLen) {
   DIR *dir;
   struct dirent *entry;
@@ -160,7 +163,7 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size
     closedir(dir);
     return ERROR;
   } else {
-    debug("Could not open directory %s", dirPath);
+    perror(buildPath);
     return ERROR;
   }
 }
@@ -168,7 +171,48 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size
 
 
 /**************************************************************************************************
- * 3.GPIO
+ * 3.Device Tree
+ *************************************************************************************************/
+
+/**
+ * Loads a device tree
+ */
+result_t loadDeviceTree(const char *name) {
+  FILE *pFile;
+  char slotsPath    [128];
+  char slotsDirPath [128];
+  char line         [256];
+
+  build_path("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
+  snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
+
+  if((pFile = fopen(slotsPath, "r+")) == NULL) {
+    debug("Could not open file %s" slotsPath);
+    return ERROR;
+  }
+
+  while (fgets(line, sizeof(line), pFile)) {
+    // Device Tree already loaded
+    if (strstr(line, name)) {
+      fclose(pFile);
+      return SUCCESS;
+    }
+  }
+
+  fprintf(pFile, name);
+  fclose(pFile);
+  return SUCCESS;
+}
+
+/**
+ * Unloads a device tree
+ */
+result_t unloadDeviceTree (const char *name) {
+  
+}
+
+/**************************************************************************************************
+ * 4.GPIO
  *************************************************************************************************/
 
 /**
@@ -528,7 +572,7 @@ byte gpioGetEdge(byte gpio) {
 
 
 /**************************************************************************************************
- * 4.User LEDs
+ * 5.User LEDs
  *************************************************************************************************/
 
 /**
@@ -690,7 +734,7 @@ void ledReset(byte gpio) {
 
 
 /**************************************************************************************************
- * 5.PWM
+ * 6.PWM
  *************************************************************************************************/
 
 
