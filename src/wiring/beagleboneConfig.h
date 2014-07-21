@@ -27,6 +27,7 @@ extern "C" {
 
 #define MAX_BUF 64
 
+// Paths
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define SYSFS_LEDS_DIR "/sys/class/leds"
 #define SYSFS_PWM_DIR  "/sys/class/pwm"
@@ -77,6 +78,11 @@ typedef enum {
   ERROR   = 99
 } result_t;
 
+// PWM Constants
+byte pwmInitialized = 0;
+char dirCapemgr [128];
+char dirOcp     [128];
+
 
 
 /**************************************************************************************************
@@ -94,10 +100,7 @@ typedef enum {
     }                                                                              \
   } while (0)                                                                      \
 
-result_t buildPath (const char *partialPath, 
-                    const char *prefix, 
-                    char *fullPath, 
-                    size_t fullPathLen);
+result_t buildPath (const char *dirPath, const char *prefix, char *fullPath, size_t fullPathLen);
 
 
 
@@ -155,13 +158,16 @@ void   ledReset      (byte gpio);
 /**************************************************************************************************
  * 6.PWM
  *************************************************************************************************/
-void pwmStart   (const char *key, float duty, float freq, int polarity);
-void pwmDisable (const char *key);
 
-void pwmSetFreq (const char *key, float freq);
-void pwmSetDuty (const char *key, float duty);
+result_t pwmInit    ();
 
-void pwmCleanup ();
+result_t pwmStart   (const char *key, float duty, float freq, int polarity);
+result_t pwmDisable (const char *key);
+
+result_t pwmSetFreq (const char *key, float freq);
+result_t pwmSetDuty (const char *key, float duty);
+
+result_t pwmCleanup ();
 
 
 

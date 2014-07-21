@@ -236,6 +236,7 @@ result_t unloadDeviceTree(const char *name) {
     }
   }
 
+  // Device not loaded
   fclose(pFile);
   return SUCCESS;
 }
@@ -766,6 +767,18 @@ void ledReset(byte gpio) {
  * 6.PWM
  *************************************************************************************************/
 
+/**
+ * PWM Initializations
+ */
+result_t pwmInit() {
+  if(!pwmInitialized && load_device_tree("am33xx_pwm")) {
+    build_path("/sys/devices", "ocp", ocp_dir, sizeof(ocp_dir));
+    pwmInitialized = 1;
+    return SUCCESS;
+  }
+
+  return 0; 
+}
 
 
 #ifdef __cplusplus
