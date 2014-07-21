@@ -6,8 +6,10 @@
  *
  * CONTENT
  * 1.Pins configuration table
+ * 2.General
  * 2.GPIO
  * 3.User LEDs
+ * 4.PWM
  *************************************************************************************************/
 
 #ifdef BEAGLEBONE
@@ -20,6 +22,7 @@ extern "C" {
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include "beagleboneConfig.h"
 
 
@@ -131,7 +134,41 @@ pin_t pinTable[] = {
 
 
 /**************************************************************************************************
- * 2.GPIO
+ * 2.General
+ *************************************************************************************************/
+
+result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size_t fullPathLen) {
+  DIR *dir;
+  struct dirent *entry;
+  char* foundString;
+
+  dir = opendir(dirPath);
+
+  if(dir != NULL) {
+    while((entry = readdir(dir)) != NULL) {
+      // Enforce that the prefix must be the first part of the file
+      foundString = strstr(entry->d_name, prefix);
+
+      if(foundString != NULL && (entry->d_name - foundString) == 0) {
+        snprintf(fullPath, fullPathLen, "%s/%s", dirPath, entry->d_name);
+        closedir(dir);
+        return SUCCESS;
+      }
+    }
+    
+    debug("There is not a file named %s* in directory %s", prefix, dirPath);
+    closedir(dir);
+    return ERROR;
+  } else {
+    debug("Could not open directory %s", dirPath);
+    return ERROR;
+  }
+}
+
+
+
+/**************************************************************************************************
+ * 3.GPIO
  *************************************************************************************************/
 
 /**
@@ -491,7 +528,7 @@ byte gpioGetEdge(byte gpio) {
 
 
 /**************************************************************************************************
- * 3.User LEDs
+ * 4.User LEDs
  *************************************************************************************************/
 
 /**
@@ -649,6 +686,12 @@ void ledReset(byte gpio) {
       debug("This should not have happened");
   }
 }
+
+
+
+/**************************************************************************************************
+ * 5.PWM
+ *************************************************************************************************/
 
 
 

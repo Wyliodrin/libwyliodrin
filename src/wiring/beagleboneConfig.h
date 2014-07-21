@@ -5,8 +5,11 @@
  *
  * CONTENT:
  * 1.Constants
- * 2.GPIO
- * 3.User LEDs
+ * 2.General
+ * 3.Device Tree
+ * 4.GPIO
+ * 5.User LEDs
+ * 6.PWM
  *************************************************************************************************/
 
 #ifndef BEAGLEBONE_CONFIG_H
@@ -26,6 +29,7 @@ extern "C" {
 
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define SYSFS_LEDS_DIR "/sys/class/leds"
+#define SYSFS_PWM_DIR  "/sys/class/pwm"
 
 // Direction
 #define INPUT  0
@@ -68,7 +72,17 @@ typedef struct {
   byte isAllocatedByDefault;
 } pin_t;
 
-// If they'll like this macro, I'll move it in a more generic file
+typedef enum {
+  SUCCESS = 0,
+  ERROR   = 99
+} result_t;
+
+
+
+/**************************************************************************************************
+ * 2.General
+ *************************************************************************************************/
+
 #define DEBUG 1
 #define debug(...)                                                                 \
   do {                                                                             \
@@ -79,10 +93,24 @@ typedef struct {
     }                                                                              \
   } while (0)                                                                      \
 
+result_t buildPath (const char *partialPath, 
+                    const char *prefix, 
+                    char *fullPath, 
+                    size_t fullPathLen);
+
 
 
 /**************************************************************************************************
- * 2.GPIO
+ * 3.Device Tree
+ *************************************************************************************************/
+
+void loadDeviceTree   (const char *name);
+void unloadDeviceTree (const char *name);
+
+
+
+/**************************************************************************************************
+ * 4.GPIO
  *************************************************************************************************/
 
 void   beagleTest       ();
@@ -111,7 +139,7 @@ byte   gpioGetEdge      (byte gpio);
 
 
 /**************************************************************************************************
- * 3.User LEDs
+ * 5.User LEDs
  *************************************************************************************************/
 
 void   ledSetTrigger (byte gpio, byte trigger);
@@ -120,6 +148,19 @@ void   ledSetValue   (byte gpio, byte value);
 byte   ledGetValue   (byte gpio);
 
 void   ledReset      (byte gpio);
+
+
+
+/**************************************************************************************************
+ * 6.PWM
+ *************************************************************************************************/
+void pwmStart   (const char *key, float duty, float freq, int polarity);
+void pwmDisable (const char *key);
+
+void pwmSetFreq (const char *key, float freq);
+void pwmSetDuty (const char *key, float duty);
+
+void pwmCleanup ();
 
 
 
