@@ -181,7 +181,7 @@ result_t loadDeviceTree(const char *name) {
   char slotsDirPath [128];
   char line         [256];
 
-  build_path("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
+  buildPath("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
   snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
 
   if((pFile = fopen(slotsPath, "r+")) == NULL) {
@@ -212,7 +212,7 @@ result_t unloadDeviceTree(const char *name) {
   char line         [256];
   char *slotsLine;
 
-  build_path("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
+  buildPath("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
   snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
 
   if((pFile = fopen(slotsPath, "r+")) == NULL) {
