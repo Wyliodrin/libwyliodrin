@@ -1,7 +1,10 @@
 #ifdef RASPBERRYPI
 #include "wiring.h"
+#include <linux/i2c-dev.h>
 #include <pthread.h>
 #include <string.h>
+#include <stdio.h>
+#include <fcntl.h>
 
 struct serial_bus
 {
@@ -121,20 +124,42 @@ int i2c_getadapter(uint32_t i2c_bus_address)
 
 int i2c_openadapter(uint8_t i2c_bus)
 {
+	// printf ("%d\n", i2c_bus);
 	int id = getI2CId();
-	i2c_buses[id] = wiringPiI2CSetup (i2c_bus) ;
+	// i2c_buses[id] = wiringPiI2CSetup (i2c_bus) ;
+	int d = 0;
+	if (piBoardRev ()==1)
+	{
+		d = 0;
+	}
+	else
+	{
+		d = 1;
+	}
+	char filepath[32];
+    snprintf(filepath, 32, "/dev/i2c-%u", d);
+    if ((i2c_buses[i2c_bus] = open(filepath, O_RDWR)) < 1) {
+        fprintf(stderr, "Failed to open requested i2c port %s\n", filepath);
+    }
+	//perror ("set");
 	return id;
 }
 
 int i2c_setslave(int i2c_id, uint8_t addr)
 {
-	i2c_addresses[i2c_id] = addr;
+	// i2c_addresses[i2c_id] = addr;
+	ioctl (i2c_buses[i2c_id], I2C_SLAVE_FORCE, addr);
 	return 0;
 }
 
 int i2c_writebyte(int i2c_id, uint8_t byte)
 {
-	return wiringPiI2CWriteReg8 (i2c_buses[i2c_id], i2c_addresses[i2c_id], byte) ;
+	// wiringPiI2CWrite (i2c_buses[i2c_id], byte) ;
+	// perror ("write");
+	if (i2c_smbus_write_byte(i2c_buses[i2c_id], byte) < 0) {
+        fprintf(stderr, "Failed to write to i2c\n");
+    }
+	return 0;
 }
 
 int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
@@ -142,39 +167,62 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
 	int rc = 0;
 	int i;
 	int fd = i2c_buses[i2c_id];
-	int addr = i2c_addresses[i2c_id];
+	// int addr = i2c_addresses[i2c_id];
 
-	for (i=0; i<length; i++)
-	{
-		if(wiringPiI2CWriteReg8(fd, addr, bytes[i]) != 0)
-		{
-			rc = -1;
-		}
-	}
+	if (i2c_smbus_write_i2c_block_data(i2c_buses[i2c_id], bytes[0], length-1, (uint8_t*) bytes+1) < 0) {
+        fprintf(stderr, "Failed to write to i2c\n");
+    }
+	// for (i=0; i<length; i++)
+	// {
+	// 	if(wiringPiI2CWrite(fd, bytes[i]) < 0)
+	// 	{
+	// 		// rc = -1;
+	// 	}
+	// 	perror ("write");
+	// 	delay (10);
+	// }
 	return rc;
 	//return mraa_i2c_write (i2c_buses[i2c_bus], bytes, length);
 }
 
 int i2c_readbyte(int i2c_id)
 {
-	return wiringPiI2CReadReg8 (i2c_buses[i2c_id], i2c_addresses[i2c_id]);
+	// printf ("Read byte %d\n", i2c_id);
+	int data;
+	data = i2c_smbus_read_byte(i2c_buses[i2c_id]);
+	// data = wiringPiI2CRead (i2c_buses[i2c_id]);
+	if (data < 0) return -1;
+	else return data;
 	//return mraa_i2c_read_byte (i2c_buses[i2c_bus]);	
 }
 
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
 {
+	//printf ("Read bytes %d\n", i2c_id);
 	int rc = 0;
 	int i;
+	int data;
 	int fd = i2c_buses[i2c_id];
-	int addr = i2c_addresses[i2c_id];
+	// int addr = i2c_addresses[i2c_id];
 
-	for (i=0; i<length; i++)
-	{
-		if(wiringPiI2CReadReg8(fd, addr, buf[i]) != 0)
-		{
-			rc = -1;
-		}
-	}
+	if (read(i2c_buses[i2c_id], buf, length) == length) {
+        return length;
+    }
+	// for (i=0; i<length; i++)
+	// {
+	// 	//printf ("a %d\n", addr);
+	// 	data = wiringPiI2CRead(fd);
+	// 	//perror ("readbytes");
+	// 	if (data < 0)
+	// 	{
+	// 		rc = -1;
+	// 	}
+	// 	else
+	// 	{
+	// 		buf[i]=data;
+	// 	}
+	// 	// printf ("%d\n", data);
+	// }
 	return rc;
 	//return mraa_i2c_read (i2c_buses[i2c_bus], buf, length);
 }
