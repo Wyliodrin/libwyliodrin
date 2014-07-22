@@ -777,7 +777,7 @@ char dirOcp     [128];
  */
 result_t pwmInit() {
   if(!pwmInitialized && loadDeviceTree("am33xx_pwm")) {
-    build_path("/sys/devices", "ocp", dirOcp, sizeof(dirOcp));
+    buildPath("/sys/devices", "ocp", dirOcp, sizeof(dirOcp));
     pwmInitialized = 1;
     return SUCCESS;
   }
