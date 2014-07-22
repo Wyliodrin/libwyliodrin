@@ -46,11 +46,7 @@ void TwoWire::begin(void)
 	// if ((adapter_nr = i2c_getadapter(I2C2)) < 0) {
 	// 	return;	
 	// }
-	#ifdef RASPBERRYPI
-	adapter_nr = 1;
-	#else
 	adapter_nr = 0;
-	#endif
 	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
 		return;	
 	}
