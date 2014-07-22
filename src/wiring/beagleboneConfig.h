@@ -78,11 +78,6 @@ typedef enum {
   ERROR   = 99
 } result_t;
 
-// PWM Constants
-byte pwmInitialized = 0;
-char dirCapemgr [128];
-char dirOcp     [128];
-
 
 
 /**************************************************************************************************

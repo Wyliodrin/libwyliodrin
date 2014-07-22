@@ -767,12 +767,17 @@ void ledReset(byte gpio) {
  * 6.PWM
  *************************************************************************************************/
 
+// PWM Constants
+byte pwmInitialized = 0;
+char dirCapemgr [128];
+char dirOcp     [128];
+
 /**
- * PWM Initializations
+ * PWM Initialization
  */
 result_t pwmInit() {
-  if(!pwmInitialized && load_device_tree("am33xx_pwm")) {
-    build_path("/sys/devices", "ocp", ocp_dir, sizeof(ocp_dir));
+  if(!pwmInitialized && loadDeviceTree("am33xx_pwm")) {
+    build_path("/sys/devices", "ocp", dirOcp, sizeof(dirOcp));
     pwmInitialized = 1;
     return SUCCESS;
   }
