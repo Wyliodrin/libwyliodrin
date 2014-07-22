@@ -25,6 +25,11 @@ extern "C" {
 #include <dirent.h>
 #include "beagleboneConfig.h"
 
+// PWM Constants
+byte pwmInitialized    = 0;
+char pathCapemgr [128] = "";
+char pathOcp     [128] = "";
+
 
 
 /**************************************************************************************************
@@ -177,15 +182,16 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size
  */
 result_t loadDeviceTree(const char *name) {
   FILE *pFile;
-  char slotsPath    [128];
-  char slotsDirPath [128];
-  char line         [256];
+  char pathSlots [128];
+  char line      [256];
 
-  buildPath("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
-  snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
+  if(strcmp(pathCapemgr, "") != 0) {
+    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
+  }
+  snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
 
-  if((pFile = fopen(slotsPath, "r+")) == NULL) {
-    debug("Could not open file %s", slotsPath);
+  if((pFile = fopen(pathSlots, "r+")) == NULL) {
+    debug("Could not open file %s", pathSlots);
     return ERROR;
   }
 
@@ -207,33 +213,31 @@ result_t loadDeviceTree(const char *name) {
  */
 result_t unloadDeviceTree(const char *name) {
   FILE *pFile;
-  char slotsPath    [128];
+  char pathSlots    [128];
   char slotsDirPath [128];
   char line         [256];
-  char *slotsLine;
+  byte slotsLine;
 
-  buildPath("/sys/devices", "bone_capemgr", slotsDirPath, sizeof(slotsDirPath));
-  snprintf(slotsPath, sizeof(slotsPath), "%s/slots", slotsDirPath);
+  if(strcmp(pathCapemgr, "") != 0) {
+    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
+  }
+  snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
 
-  if((pFile = fopen(slotsPath, "r+")) == NULL) {
-    debug("Could not open file %s", slotsPath);
+  if((pFile = fopen(pathSlots, "r+")) == NULL) {
+    debug("Could not open file %s", pathSlots);
     return ERROR;
   }
 
+  slotsLine = 0;
   while (fgets(line, sizeof(line), pFile)) {
     // Device is loaded, let's unload it
     if (strstr(line, name)) {
-      slotsLine = strtok(line, ":");
-
-      // Remove leading spaces
-      while(*slotsLine == ' ') {
-        slotsLine++;
-      }
-
-      fprintf(pFile, "-%s", slotsLine);
+      fprintf(pFile, "-%d", slotsLine);
       fclose(pFile);
       return SUCCESS;
     }
+
+    slotsLine++;
   }
 
   // Device not loaded
@@ -249,7 +253,7 @@ result_t unloadDeviceTree(const char *name) {
  * Function used for testing the correctness of the install
  */
 void beagleTest() {
-  printf("Hello from beagleboneConfig.c! Magic number: 7\n");
+  printf("Hello from beagleboneConfig.c! Magic number: 11\n");
 }
 
 /**
@@ -767,23 +771,16 @@ void ledReset(byte gpio) {
  * 6.PWM
  *************************************************************************************************/
 
-// PWM Constants
-byte pwmInitialized = 0;
-char dirCapemgr [128];
-char dirOcp     [128];
-
 /**
  * PWM Initialization
  */
 result_t pwmInit() {
   if(!pwmInitialized && loadDeviceTree("am33xx_pwm")) {
-    buildPath("/sys/devices", "ocp", dirOcp, sizeof(dirOcp));
+    buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
     pwmInitialized = 1;
-    return SUCCESS;
   }
-
-  return 0; 
 }
+
 
 
 #ifdef __cplusplus

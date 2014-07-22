@@ -154,15 +154,22 @@ void   ledReset      (byte gpio);
  * 6.PWM
  *************************************************************************************************/
 
-result_t pwmInit    ();
+result_t pwmInit        ();
 
-result_t pwmStart   (const char *key, float duty, float freq, int polarity);
-result_t pwmDisable (const char *key);
+result_t pwmEnable      (const char *key, float duty, float freq, int polarity);
+result_t pwmDisable     (const char *key);
 
-result_t pwmSetFreq (const char *key, float freq);
-result_t pwmSetDuty (const char *key, float duty);
+result_t pwmSetFreq     (const char *key, float freq);
+result_t pwmGetFreq     (const char *key);
 
-result_t pwmCleanup ();
+result_t pwmSetDuty     (const char *key, float duty);
+result_t pwmGetDuty     (const char *key);
+
+result_t pwmSetPolarity (const char *key);
+result_t pwmGetPolarity (const char *key);
+
+result_t pwmSetRun      (const char* key);
+result_t pwmGetRun      (const char* key);
 
 
 
