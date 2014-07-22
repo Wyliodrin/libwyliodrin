@@ -5,7 +5,7 @@
  *     https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
  * 
  * CONTENT:
- * 1. Constants & Flags
+ * 1. Constants, Flags and Structures
  * 2. GPIO
  * 3. Debug
  *************************************************************************************************/
@@ -20,9 +20,10 @@ extern "C" {
 
 
 /**************************************************************************************************
- * 1. Constants
+ * 1. Constants, Flags and Structures
  *************************************************************************************************/
 
+#include <stdint.h>
 
 #define GPIO_FILE_PREFIX "/sys/class/gpio/"
 #define GPIO_FILE_EXPORT GPIO_FILE_PREFIX "export"
@@ -47,22 +48,69 @@ extern "C" {
 #define PIN_INVALID_ERROR -134    // pin is invalid
 #define UNKNOWN_VALUE_ERROR -135
 
+#define ADC_RESOLUTION 12
+
 // Edge
 enum whatEdge {
-	NONE,
-	RISING,
-	FALLING, 
-	BOTH
+    NONE,
+    RISING,
+    FALLING, 
+    BOTH
 };
+
+typedef enum _EAnalogChannel {
+    NO_ADC = -1,
+    ADC0 = 0,
+    ADC1,
+    ADC2,
+    ADC3,
+    ADC4,
+    ADC5,
+    ADC6,
+    ADC7,
+    ADC8,
+    ADC9,
+    ADC10,
+    ADC11,
+    ADC12,
+    ADC13
+    ADC14,
+    ADC15,
+    DA0,
+    DA1
+} EAnalogChannel;
+
+// Analog Pins
+static const uint8_t A0    = 54;
+static const uint8_t A1    = 55;
+static const uint8_t A2    = 56;
+static const uint8_t A3    = 57;
+static const uint8_t A4    = 58;
+static const uint8_t A5    = 59;
+static const uint8_t A6    = 60;
+static const uint8_t A7    = 61;
+static const uint8_t A8    = 62;
+static const uint8_t A9    = 63;
+static const uint8_t A10   = 64;
+static const uint8_t A11   = 65;
+static const uint8_t DAC0  = 66;
+static const uint8_t DAC1  = 67;
+static const uint8_t CANRX = 68;
+static const uint8_t CANTX = 69;
+
+typedef struct _AnalogPinDescription {
+    uint32_t analogChannel;       // Analog pin in the Arduino context (label on the board)
+    uint32_t adcChannelNumber;    // ADC Channel number in the SAM device
+} analogPinDescription;
 
 typedef unsigned char byte;
 
 typedef struct {
-	const char *bank;
-	const char *key;             // the pin as it appears on the board
-	const char *name;
-	const char *ardFunction;     // Arduino Function
-	byte gpio;
+    const char *bank;
+    const char *key;             // the pin as it appears on the board
+    const char *name;
+    const char *ardFunction;     // Arduino Function
+    byte gpio;
 } udooPin_t;
 
 
