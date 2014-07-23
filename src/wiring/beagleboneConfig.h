@@ -170,10 +170,10 @@ pwmNode_t* pwmGetPin      (const char *key);
 result_t   pwmEnable      (const char *key);
 result_t   pwmDisable     (const char *key);
 
-result_t   pwmSetFreq     (const char *key, float freq);
-result_t   pwmGetFreq     (const char *key);
+result_t   pwmSetPeriod   (const char *key, ulong period);
+result_t   pwmGetPeriod   (const char *key);
 
-result_t   pwmSetDuty     (const char *key, float duty);
+result_t   pwmSetDuty     (const char *key, ulong duty);
 result_t   pwmGetDuty     (const char *key);
 
 result_t   pwmSetPolarity (const char *key, byte polarity);
