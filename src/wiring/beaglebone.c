@@ -1,5 +1,6 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ * Date last modified: July 2014
  * 
  * This file contains the definitions of all wiring functions for the BeagleBone Black.
  *

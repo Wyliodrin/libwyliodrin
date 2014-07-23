@@ -1,7 +1,8 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ * Date last modified: July 2014
  *
- * This file contains the declarations of the GPIO configuration functions for the BeagleBone Black
+ * This file contains the declarations of all configuration functions for the BeagleBone Black.
  *
  * CONTENT:
  * 1.Constants
@@ -63,8 +64,10 @@ extern "C" {
 #define isLed(gpio) (53 <= (gpio) && (gpio) <= 56)
 
 typedef unsigned char byte;
+typedef unsigned int  uint;
+typedef unsigned long ulong;
 
-typedef struct {
+typedef struct pin_t {
   const char *name;
   const char *key;
   byte gpio;
@@ -73,9 +76,16 @@ typedef struct {
   byte isAllocatedByDefault;
 } pin_t;
 
+typedef struct pwmNode_t {
+  const char *key;
+  const char *pathPwmTest;
+
+  struct pwmNode_t *next;
+} pwmNode_t;
+
 typedef enum {
-  SUCCESS = 0,
-  ERROR   = 99
+  ERROR   = 0,
+  SUCCESS = 1
 } result_t;
 
 
@@ -154,22 +164,23 @@ void   ledReset      (byte gpio);
  * 6.PWM
  *************************************************************************************************/
 
-result_t pwmInit        ();
+result_t   pwmInit        ();
+pwmNode_t *pwmGetPin      (const char *key);
 
-result_t pwmEnable      (const char *key, float duty, float freq, int polarity);
-result_t pwmDisable     (const char *key);
+result_t   pwmEnable      (const char *key);
+result_t   pwmDisable     (const char *key);
 
-result_t pwmSetFreq     (const char *key, float freq);
-result_t pwmGetFreq     (const char *key);
+result_t   pwmSetFreq     (const char *key, float freq);
+result_t   pwmGetFreq     (const char *key);
 
-result_t pwmSetDuty     (const char *key, float duty);
-result_t pwmGetDuty     (const char *key);
+result_t   pwmSetDuty     (const char *key, float duty);
+result_t   pwmGetDuty     (const char *key);
 
-result_t pwmSetPolarity (const char *key);
-result_t pwmGetPolarity (const char *key);
+result_t   pwmSetPolarity (const char *key, byte polarity);
+result_t   pwmGetPolarity (const char *key);
 
-result_t pwmSetRun      (const char* key);
-result_t pwmGetRun      (const char* key);
+result_t   pwmSetRun      (const char* key, byte run);
+result_t   pwmGetRun      (const char* key);
 
 
 

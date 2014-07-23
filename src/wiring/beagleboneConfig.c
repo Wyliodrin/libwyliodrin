@@ -1,5 +1,6 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ * Date last modified: July 2014
  *
  * This file contains the definitions of all configuration functions for the BeagleBone Black.
  *
@@ -7,9 +8,9 @@
  * 1.Pins configuration table
  * 2.General
  * 3.Device Tree
- * 3.GPIO
- * 4.User LEDs
- * 5.PWM
+ * 4.GPIO
+ * 5.User LEDs
+ * 6.PWM
  *************************************************************************************************/
 
 #ifdef BEAGLEBONE
@@ -29,6 +30,7 @@ extern "C" {
 byte pwmInitialized    = 0;
 char pathCapemgr [128] = "";
 char pathOcp     [128] = "";
+pwmNode_t *pwmList     = NULL;
 
 
 
@@ -185,8 +187,11 @@ result_t loadDeviceTree(const char *name) {
   char pathSlots [128];
   char line      [256];
 
-  if(strcmp(pathCapemgr, "") != 0) {
-    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
+  if(strcmp(pathCapemgr, "") == 0) {
+    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
+      debug("Could not build path to %s", pathCapemgr);
+      return ERROR;
+    }
   }
   snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
 
@@ -218,8 +223,10 @@ result_t unloadDeviceTree(const char *name) {
   char line         [256];
   byte slotsLine;
 
-  if(strcmp(pathCapemgr, "") != 0) {
-    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
+  if(strcmp(pathCapemgr, "") == 0) {
+    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
+      debug("Could not build path to %s", pathCapemgr);
+    }
   }
   snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
 
@@ -779,6 +786,73 @@ result_t pwmInit() {
     buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
     pwmInitialized = 1;
   }
+}
+
+/**
+ * Returns the node key from pwmList or NULL in case it doesn't exist
+ */
+pwmNode_t *pwmGetPin(const char *key) {
+  pwmNode_t *aux = pwmList;
+
+  while(aux != NULL) {
+    if(strcmp(aux->key, key) == 0) {
+      return aux;
+    }
+    aux = aux->next;
+  }
+
+  return NULL;
+}
+
+/**
+ * Enables PWM for pin key
+ */
+result_t pwmEnable(const char *key) {
+  if(pwmGetPin(key) != NULL) {
+    // PWM pin already enabled
+    return SUCCESS;
+  }
+
+  char slotsFragment   [16];
+  char pwmTestFragment [16];
+  char pathPwmTest     [64];
+  pwmNode_t *aux;
+  pwmNode_t *newNode;
+
+  if(!pwmInitialized) {
+    pwmInit();
+  }
+
+  snprintf(slotsFragment, sizeof(slotsFragment), "bone_pwm_%s", key);
+  if (loadDeviceTree(slotsFragment) == ERROR) {
+    debug("Could not load device tree %s", slotsFragment);
+    return ERROR;
+  }
+
+  snprintf(pwmTestFragment, sizeof(pwmTestFragment), "pwm_test_%s", key);
+  if(buildPath(pathOcp, pwmTestFragment, pathPwmTest, sizeof(pathPwmTest)) == ERROR) {
+    debug("Could not build path to %s", pwmTestFragment);
+    return ERROR;
+  }
+
+  newNode = (pwmNode_t*) malloc(sizeof(pwmNode_t));
+  newNode->key = key;
+  newNode->pathPwmTest = strdup(pathPwmTest);
+  newNode->next = NULL;
+
+  // Empty pwmList
+  if(pwmList == NULL) {
+    pwmList = newNode;
+    return SUCCESS;
+  }
+
+  aux = pwmList;
+  while(aux->next != NULL) {
+    aux = aux->next;
+  }
+
+  aux->next = newNode;
+  return SUCCESS;
 }
 
 
