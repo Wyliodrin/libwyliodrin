@@ -914,7 +914,7 @@ result_t pwmSetDuty(const char *key, ulong duty) {
     return ERROR;
   }
 
-  snprintf(pathDuty, sizeof(pathDuty), "%s/period", aux->pathPwmTest);
+  snprintf(pathDuty, sizeof(pathDuty), "%s/duty", aux->pathPwmTest);
   if((fdDuty = open(pathDuty, O_RDWR)) < 0) {
     debug("Could not open file %s", pathDuty);
     return ERROR;
