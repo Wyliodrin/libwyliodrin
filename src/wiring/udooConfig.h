@@ -47,6 +47,7 @@ extern "C" {
 #define PIN_EXPORTED_ERROR -133   // pin is exported
 #define PIN_INVALID_ERROR -134    // pin is invalid
 #define UNKNOWN_VALUE_ERROR -135
+#define NOT_ANALOG_PIN_ERROR -136
 
 #define ADC_RESOLUTION 12
 

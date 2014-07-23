@@ -19,12 +19,6 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
 #include "udooConfig.h"
 
 
@@ -134,7 +128,7 @@ udooPin_t pinTable[] = {
     {"J15",  "CANTX",   "PA1",         "CANTX",       0 }};
 
 
-analogPinDescription analogPin[] = {
+analogPin[] = {
     // 0 .. 53 - Digital pins
     // ----------------------
     // 0/1 - UART (Serial)
