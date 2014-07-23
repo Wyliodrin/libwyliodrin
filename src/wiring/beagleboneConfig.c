@@ -791,7 +791,7 @@ result_t pwmInit() {
 /**
  * Returns the node key from pwmList or NULL in case it doesn't exist
  */
-pwmNode_t *pwmGetPin(const char *key) {
+pwmNode_t* pwmGetPin(const char *key) {
   pwmNode_t *aux = pwmList;
 
   while(aux != NULL) {
@@ -853,6 +853,78 @@ result_t pwmEnable(const char *key) {
 
   aux->next = newNode;
   return SUCCESS;
+}
+
+/**
+ * TODO
+ */
+result_t pwmDisable(const char *key) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmSetFreq(const char *key, float freq) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmGetFreq(const char *key) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmSetDuty(const char *key, float duty) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmGetDuty(const char *key) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmSetPolarity(const char *key, byte polarity) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmGetPolarity(const char *key) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmSetRun(const char* key, byte run) {
+  // TODO
+  return ERROR;
+}
+
+/**
+ * TODO
+ */
+result_t pwmGetRun(const char* key) {
+  // TODO
+  return ERROR;
 }
 
 

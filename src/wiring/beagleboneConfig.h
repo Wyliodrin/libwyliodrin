@@ -165,7 +165,7 @@ void   ledReset      (byte gpio);
  *************************************************************************************************/
 
 result_t   pwmInit        ();
-pwmNode_t *pwmGetPin      (const char *key);
+pwmNode_t* pwmGetPin      (const char *key);
 
 result_t   pwmEnable      (const char *key);
 result_t   pwmDisable     (const char *key);
