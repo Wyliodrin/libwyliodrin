@@ -147,7 +147,7 @@ pin_t pinTable[] = {
 /**
  * Builds in fullPath the full path of the file prefix* from directory dirPath
  */
-result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, size_t fullPathLen) {
+result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, int fullPathLen) {
   DIR *dir;
   struct dirent *entry;
   char* foundString;

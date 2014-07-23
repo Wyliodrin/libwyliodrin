@@ -105,7 +105,7 @@ typedef enum {
     }                                                                              \
   } while (0)                                                                      \
 
-result_t buildPath (const char *dirPath, const char *prefix, char *fullPath, size_t fullPathLen);
+result_t buildPath (const char *dirPath, const char *prefix, char *fullPath, int fullPathLen);
 
 
 
