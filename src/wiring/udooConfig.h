@@ -8,6 +8,7 @@
  * 1. Constants, Flags and Structures
  * 2. GPIO
  * 3. Debug
+ * 4. Includes
  *************************************************************************************************/
 
 
@@ -23,7 +24,6 @@ extern "C" {
  * 1. Constants, Flags and Structures
  *************************************************************************************************/
 
-#include <stdint.h>
 
 #define GPIO_FILE_PREFIX "/sys/class/gpio/"
 #define GPIO_FILE_EXPORT GPIO_FILE_PREFIX "export"
@@ -80,6 +80,10 @@ typedef enum _EAnalogChannel {
     DA1
 } EAnalogChannel;
 
+typedef enum _eAnalogReference {
+    AR_DEFAULT = 5,
+} eAnalogReference;
+
 // Analog Pins
 static const uint8_t A0    = 54;
 static const uint8_t A1    = 55;
@@ -100,8 +104,11 @@ static const uint8_t CANTX = 69;
 
 typedef struct _AnalogPinDescription {
     uint32_t analogChannel;       // Analog pin in the Arduino context (label on the board)
-    uint32_t adcChannelNumber;    // ADC Channel number in the SAM device
+    uint32_t ADCChannelNumber;    // ADC Channel number in the SAM device
 } analogPinDescription;
+
+// Pins table to be instanciated into other sources
+extern const analogPinDescription analogPin[];
 
 typedef unsigned char byte;
 
@@ -112,8 +119,6 @@ typedef struct {
     const char *ardFunction;     // Arduino Function
     byte gpio;
 } udooPin_t;
-
-
 
 /**************************************************************************************************
  * 2. GPIO
@@ -165,7 +170,8 @@ int irqToGpio           (byte gpio);
  *************************************************************************************************/
 
 /**
- * Took this from Matei. It's a nice macro that does all the work good.
+ * Took this from Matei. 
+ * It's a nice macro that does all the work good.
  */
 
 #define DEBUG 1
@@ -177,6 +183,25 @@ int irqToGpio           (byte gpio);
       fprintf(stderr, "\n");                                                       \
     }                                                                              \
   } while (0)                                                                      \
+
+
+
+/**************************************************************************************************
+ * 4. Includes
+ *************************************************************************************************/
+
+/**
+ * All the required libraries in most of cases
+ * Particular libraries are included separately in the c files
+ */
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
 
 
 #ifdef __cplusplus
