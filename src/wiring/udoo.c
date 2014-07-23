@@ -33,14 +33,12 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #include <time.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include "wiring.h"
 #include "udooConfig.h"
+// Includes Atmel CMSIS
+#include <chip.h> 
 
 
 /**************************************************************************************************
@@ -85,8 +83,93 @@ void digitalWrite (int pin, int value)
 
 int digitalRead (int pin)
 {
-    // See defined values in udooConfig.h for invalid/unexported pin that can be returned 
+    // See defined error values in udooConfig.h for invalid/unexported pin that can be returned 
     return gpioGetValue(pin);
+}
+
+
+
+/**************************************************************************************************
+ 3. Analog I/O
+ *************************************************************************************************/
+
+static int _readResolution = 10;   // 10 bit resolution
+static int _writeResolution = 8;   // 8 bit resolution
+
+static inline uint32_t mapResolution (uint32_t value, uint32_t from, uint32_t to) {
+    if (from == to)
+        return value;
+    if (from > to)
+        return value >> (from - to);
+    else
+        return value << (to - from);
+}
+
+eAnalogReference analog_reference = AR_DEFAULT;
+
+/*
+ * \brief Configures the reference voltage used for analog input (i.e. the value used as top of the 
+ * input range)
+ * \param arefMode should be set to AR_DEFAULT
+ */
+void analogReference (eAnalogReference arefMode)
+{
+    analog_reference = arefMode;
+}
+
+uint32_t analogRead (uint32_t myPin)
+{
+    uint32_t myPinValue = 0;
+    uint32_t myPinChannel;
+
+    if (myPin < A0 || myPin > CANTX) {
+        debug("%d is not an Analog Pin", myPin);
+        return NOT_ANALOG_PIN_ERROR;
+    }
+
+        
+    myPinChannel = analogPin[myPin].ADCChannelNumber;
+    switch (analogPin[myPin].analogChannel) {
+        // handling ADC 12  bits channels
+        case ADC0:
+        case ADC1:
+        case ADC2:
+        case ADC3:
+        case ADC4:
+        case ADC5:
+        case ADC7:
+        case ADC8:
+        case ADC9:
+        case ADC10:
+        case ADC11:
+
+                // Enable the corresponding channel
+                adc_enable_channel(ADC, myPinChannel);
+
+                // Start the ADC (analog digital converter)
+                adc_start();
+
+                /* Wait for end of conversion && check the ADC conversion status
+                 * ADC_ISR_DRDY is a constant that suggest data is ready
+                 * ISR = Interrupt Status Register
+                 */
+                while ( (adc_get_status(ADC) & ADC_ISR_DRDY) != ADC_ISR_DRDY) 
+                    ;
+
+                // Read the value
+                myPinValue = adc_get_latest_value(ADC);
+                myPinValue = mapResolution(myPinValue, ADC_RESOLUTION, _readResolution);
+
+                // Disable the corresponding channel
+                adc_disable_channel(ADC, myPinChannel);
+
+                break;
+
+        default:
+                myPinValue = 0;
+                break;
+    }
+    return myPinValue;
 }
 
 #ifdef __cplusplus
