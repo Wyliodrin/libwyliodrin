@@ -952,7 +952,7 @@ ulong pwmGetPeriod(const char *key) {
 
   snprintf(pathPeriod, sizeof(pathPeriod), "%s/period", aux->pathPwmTest);
   if((fdPeriod = open(pathPeriod, O_RDWR)) < 0) {
-    debug("Coul dnot open file %s", pathPeriod);
+    debug("Could not open file %s", pathPeriod);
     return 0;
   }
 

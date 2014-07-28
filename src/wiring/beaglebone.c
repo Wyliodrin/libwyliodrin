@@ -193,7 +193,7 @@ void analogWrite(int pin, int value) {
   pwmEnable(key);
 
   period = pwmGetPeriod(key);
-  duty   = (value / 255.0) * period;
+  duty   = (1.0 - value / 255.0) * period;
 
   pwmSetDuty(key, duty);
 }
