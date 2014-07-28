@@ -19,6 +19,7 @@ typedef unsigned char uint8_t;
 // use wiring library
 #ifdef RASPBERRYPI
 #include <wiringPi.h>
+#include "raspberrypi.h"
 #define MAX_I2C_PINS	10
 #endif
 
