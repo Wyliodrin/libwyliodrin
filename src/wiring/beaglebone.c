@@ -20,9 +20,10 @@
 extern "C" {
 #endif
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
 #include "beagleboneConfig.h"
 #include "wiring.h"
 
@@ -165,10 +166,36 @@ int digitalRead(int pin) {
  *************************************************************************************************/
 
 /**
- * TODO
+ * Writes an analog value (PWM wave) to a pin. 
+ *
+ * Can be used to light a LED at varying brightnesses or drive a motor at various speeds.
+ *
+ * After a call to analogWrite(), the pin will generate a steady square wave of the specified duty
+ * cycle until the next call to analogWrite() (or a call to digitalRead() or digitalWrite() on the
+ * same pin).
  */
 void analogWrite(int pin, int value) {
-  // TODO
+  if(!(0 <= value && value <= 255)) {
+    debug("Value should be in [0, 255] interval");
+    return;
+  }
+
+  if(!pwmIsValid(pin)) {
+    debug("Pin %d is not a valid PWM pin", pin);
+    return;
+  }
+
+  char *key;
+  ulong duty;
+  ulong period;
+
+  key = strdup(getKeyByGpio(pin));
+  pwmEnable(key);
+
+  period = pwmGetPeriod(key);
+  duty   = (value / 255.0) * period;
+
+  pwmSetDuty(key, duty);
 }
 
 /**

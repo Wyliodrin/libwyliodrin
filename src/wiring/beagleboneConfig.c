@@ -264,7 +264,7 @@ void beagleTest() {
 }
 
 /**
- * Returns the gpio pin number by name or -1 in case of failure
+ * Returns the gpio pin number by name or 0 if doesn't exists
  */
 byte getGpioByName(const char *name) {
   int i;
@@ -284,7 +284,7 @@ byte getGpioByName(const char *name) {
 }
 
 /**
- * Returns the gpio pin number by key or -1 in case of failure
+ * Returns the gpio pin number by key or 0 if doesn't exists
  */
 byte getGpioByKey(const char *key) {
   int i;
@@ -304,28 +304,48 @@ byte getGpioByKey(const char *key) {
 }
 
 /**
- * Returns 0 if the pin gpio is not valid or 1 otherwise
+ * Returns the key of pin by gpio or 0 if doesn't exists
  */
-byte gpioIsValid(byte gpio) {
+const char* getKeyByGpio(byte gpio) {
   int i;
   pin_t *aux;
 
   aux = pinTable;
   for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
     if(aux->gpio == gpio) {
-      return 1;
+      return aux->key;
     }
 
     aux++;
   }
 
+  debug("There is no pin with gpio %d", gpio);
   return 0;
 }
 
 /**
- * Returns 0 if the pin gpio is not exported or 1 otherwise
+ * Returns false if the pin gpio is not valid or true otherwise
  */
-byte gpioIsExported(byte gpio) {
+bool gpioIsValid(byte gpio) {
+  int i;
+  pin_t *aux;
+
+  aux = pinTable;
+  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+    if(aux->gpio == gpio) {
+      return true;
+    }
+
+    aux++;
+  }
+
+  return false;
+}
+
+/**
+ * Returns false if the pin gpio is not exported or true otherwise
+ */
+bool gpioIsExported(byte gpio) {
   int fd;
   char buf[MAX_BUF];
 
@@ -334,9 +354,9 @@ byte gpioIsExported(byte gpio) {
   fd = open(buf, O_WRONLY);
 
   if(fd < 0) { // Not exported
-    return 0;
+    return false;
   } else {     // Exported
-    return 1;
+    return true;
   }
 }
 
@@ -779,10 +799,35 @@ void ledReset(byte gpio) {
  *************************************************************************************************/
 
 /**
+ * Checks if pin GPIO is a valid PWM
+ */
+bool pwmIsValid(byte gpio) {
+  switch(gpio) {
+    case 23:  // P8_13
+    case 22:  // P8_19
+    case 81:  // P8_34
+    case 80:  // P8_36
+    case 70:  // P8_45
+    case 71:  // P8_46
+    case 50:  // P9_14
+    case 51:  // P9_16
+    case 3:   // P9_21
+    case 2:   // P9_22
+    case 113: // P9_28
+    case 111: // P9_21
+    case 110: // P9_31
+    case 7:   // P9_42
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
  * PWM Initialization
  */
 result_t pwmInit() {
-  if(!pwmInitialized && loadDeviceTree("am33xx_pwm")) {
+  if(!pwmInitialized && loadDeviceTree("am33xx_pwm") == SUCCESS) {
     buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
     pwmInitialized = 1;
   }
@@ -892,11 +937,29 @@ result_t pwmSetPeriod(const char *key, ulong period) {
 }
 
 /**
- * TODO
+ * Returns PWM period or 0 in case of failure
  */
-result_t pwmGetPeriod(const char *key) {
-  // TODO
-  return ERROR;
+ulong pwmGetPeriod(const char *key) {
+  pwmNode_t *aux;
+  char buff[20];
+  char pathPeriod[64];
+  int fdPeriod;
+
+  if((aux = pwmGetPin(key)) == NULL) {
+    debug("PWM %s not enabled yet", key);
+    return 0;
+  }
+
+  snprintf(pathPeriod, sizeof(pathPeriod), "%s/period", aux->pathPwmTest);
+  if((fdPeriod = open(pathPeriod, O_RDWR)) < 0) {
+    debug("Coul dnot open file %s", pathPeriod);
+    return 0;
+  }
+
+  read(fdPeriod, buff, sizeof(buff));
+
+  close(fdPeriod);
+  return atol(buff);
 }
 
 /**
@@ -930,9 +993,9 @@ result_t pwmSetDuty(const char *key, ulong duty) {
 /**
  * TODO
  */
-result_t pwmGetDuty(const char *key) {
+ulong pwmGetDuty(const char *key) {
   // TODO
-  return ERROR;
+  return 0;
 }
 
 /**
@@ -966,9 +1029,9 @@ result_t pwmSetPolarity(const char *key, byte polarity) {
 /**
  * TODO
  */
-result_t pwmGetPolarity(const char *key) {
+byte pwmGetPolarity(const char *key) {
   // TODO
-  return ERROR;
+  return 0;
 }
 
 /**
@@ -1002,9 +1065,9 @@ result_t pwmSetRun(const char* key, byte run) {
 /**
  * TODO
  */
-result_t pwmGetRun(const char* key) {
+byte pwmGetRun(const char* key) {
   // TODO
-  return ERROR;
+  return 0;
 }
 
 

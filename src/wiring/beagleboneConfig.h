@@ -16,6 +16,8 @@
 #ifndef BEAGLEBONE_CONFIG_H
 #define BEAGLEBONE_CONFIG_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -122,28 +124,29 @@ result_t unloadDeviceTree (const char *name);
  * 4.GPIO
  *************************************************************************************************/
 
-void   beagleTest       ();
+void        beagleTest       ();
 
-byte   getGpioByName    (const char *name);
-byte   getGpioByKey     (const char *key);
+byte        getGpioByName    (const char *name);
+byte        getGpioByKey     (const char *key);
+const char* getKeyByGpio     (byte gpio);
 
-byte   gpioIsValid      (byte gpio);
-byte   gpioIsExported   (byte gpio);
+bool        gpioIsValid      (byte gpio);
+bool        gpioIsExported   (byte gpio);
 
-void   gpioExport       (byte gpio);
-void   gpioUnexport     (byte gpio);
+void        gpioExport       (byte gpio);
+void        gpioUnexport     (byte gpio);
 
-void   gpioSetDir       (byte gpio, byte dir);
-byte   gpioGetDir       (byte gpio);
+void        gpioSetDir       (byte gpio, byte dir);
+byte        gpioGetDir       (byte gpio);
 
-void   gpioSetValue     (byte gpio, byte value);
-byte   gpioGetValue     (byte gpio);
+void        gpioSetValue     (byte gpio, byte value);
+byte        gpioGetValue     (byte gpio);
 
-void   gpioSetActiveLow (byte gpio, byte value);
-byte   gpioGetActiveLow (byte gpio);
+void        gpioSetActiveLow (byte gpio, byte value);
+byte        gpioGetActiveLow (byte gpio);
 
-void   gpioSetEdge      (byte gpio, byte edge);
-byte   gpioGetEdge      (byte gpio);
+void        gpioSetEdge      (byte gpio, byte edge);
+byte        gpioGetEdge      (byte gpio);
 
 
 
@@ -164,6 +167,8 @@ void   ledReset      (byte gpio);
  * 6.PWM
  *************************************************************************************************/
 
+bool       pwmIsValid     (byte gpio);
+
 result_t   pwmInit        ();
 pwmNode_t* pwmGetPin      (const char *key);
 
@@ -171,16 +176,16 @@ result_t   pwmEnable      (const char *key);
 result_t   pwmDisable     (const char *key);
 
 result_t   pwmSetPeriod   (const char *key, ulong period);
-result_t   pwmGetPeriod   (const char *key);
+ulong      pwmGetPeriod   (const char *key);
 
 result_t   pwmSetDuty     (const char *key, ulong duty);
-result_t   pwmGetDuty     (const char *key);
+ulong      pwmGetDuty     (const char *key);
 
 result_t   pwmSetPolarity (const char *key, byte polarity);
-result_t   pwmGetPolarity (const char *key);
+byte       pwmGetPolarity (const char *key);
 
 result_t   pwmSetRun      (const char* key, byte run);
-result_t   pwmGetRun      (const char* key);
+byte       pwmGetRun      (const char* key);
 
 
 
