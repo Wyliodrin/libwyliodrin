@@ -836,7 +836,6 @@ void pwmInit() {
     loadDeviceTree("am33xx_pwm");
     buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
     pwmInitialized = true;
-    return SUCCESS;
   }
 }
 
@@ -1089,9 +1088,29 @@ byte pwmGetRun(const char* key) {
 void ainInit() {
   if(!ainInitialized) {
     loadDeviceTree("cape-bone-iio");
-    buildPath("/sys/devices", "helper", pathHelper, sizeof(pathHelper));
+    buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
+    buildPath(pathOcp, "helper", pathHelper, sizeof(pathHelper));
     ainInitialized = true;
   }
+}
+
+/**
+ * Returns value of AIN pin
+ */
+int ainGetValue(byte ain) {
+  int  fdAin;
+  char buf     [16];
+  char pathAin [128];
+
+  snprintf(pathAin, sizeof(pathAin), "%s/AIN%d", pathHelper, ain);
+
+  if((fdAin = open(pathAin, O_RDONLY)) < 0) {
+    debug("Could not open file %s", pathAin);
+    return ERROR;
+  }
+
+  read(fdAin, buf, sizeof(buf));
+  return atoi(buf);
 }
 
 

@@ -54,6 +54,20 @@ void pinReset(int pin) {
   gpioUnexport(pin);
 }
 
+/**
+ * TODO
+ */
+int getPinByName() {
+  return 0;
+}
+
+/**
+ * TODO
+ */
+int getPinByKey() {
+  return 0;
+}
+
 
 
 /**************************************************************************************************
@@ -199,12 +213,24 @@ void analogWrite(int pin, int value) {
 }
 
 /**
- * TODO
+ * Reads the voltage at an analog input pin.
+ * The Beaglebone Black has 7 analog input pins.
+ * Maximum input voltage is 1.8V.
+ * 
+ * PARAMETERS:
+ * pin - analog pin
+ *
+ * RETURN:
+ * value between 0 and 1 (coresponding to 1.8V)
  */
 int analogRead(int pin) {
-  // TODO
+  if(!(0 <= pin && pin <= 7)) {
+    debug("Value of pin should be in [0, 7] interval");
+    return -1;
+  }
 
-  return 0;
+  ainInit();
+  return ainGetValue(pin);
 }
 
 

@@ -193,7 +193,9 @@ byte       pwmGetRun      (const char* key);
  * 7.AIN
  *************************************************************************************************/
 
-void ainEnable ();
+void ainInit     ();
+int  ainGetValue (byte ain);
+
 
 
 
