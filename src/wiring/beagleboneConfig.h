@@ -108,7 +108,15 @@ typedef enum {
     }                                                                              \
   } while(0)                                                                       \
 
-result_t buildPath (const char *dirPath, const char *prefix, char *fullPath, int fullPathLen);
+void        beagleTest    ();
+
+result_t    buildPath     (const char *dirPath, const char *prefix, char *fullPath, int pathLen);
+
+byte        getGpioByName (const char *name);
+byte        getGpioByKey  (const char *key);
+
+const char* getNameByGpio (const byte gpio);
+const char* getKeyByGpio  (const byte gpio);
 
 
 
@@ -124,12 +132,6 @@ result_t unloadDeviceTree (const char *name);
 /**************************************************************************************************
  * 4.GPIO
  *************************************************************************************************/
-
-void        beagleTest       ();
-
-byte        getGpioByName    (const char *name);
-byte        getGpioByKey     (const char *key);
-const char* getKeyByGpio     (const byte gpio);
 
 bool        gpioIsValid      (const byte gpio);
 bool        gpioIsExported   (const byte gpio);

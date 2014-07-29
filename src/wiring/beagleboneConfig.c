@@ -150,9 +150,16 @@ pin_t pinTable[] = {
  *************************************************************************************************/
 
 /**
+ * Function used for testing the correctness of install
+ */
+void beagleTest() {
+  printf("Hello from beagleboneConfig.c! Magic number: 11\n");
+}
+
+/**
  * Builds in fullPath the full path of the file prefix* from directory dirPath
  */
-result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, int fullPathLen) {
+result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, int pathLen) {
   DIR *dir;
   struct dirent *entry;
   char* foundString;
@@ -163,7 +170,7 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, int 
       foundString = strstr(entry->d_name, prefix);
 
       if(foundString != NULL && (entry->d_name - foundString) == 0) {
-        snprintf(fullPath, fullPathLen, "%s/%s", dirPath, entry->d_name);
+        snprintf(fullPath, pathLen, "%s/%s", dirPath, entry->d_name);
         closedir(dir);
         return SUCCESS;
       }
@@ -176,6 +183,82 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, int 
     debug("Could not open directory %s", dirPath);
     return ERROR;
   }
+}
+
+/**
+ * Returns the gpio pin number by name or 0xFF if doesn't exists
+ */
+byte getGpioByName(const char *name) {
+  int i;
+  pin_t *aux;
+
+  aux = pinTable;
+  for(i = 0; i < NO_PINS; i++) {
+    if(strcmp(aux->name, name) == 0) {
+      return aux->gpio;
+    }
+    aux++;
+  }
+
+  debug("There is no pin named %s", name);
+  return -1;
+}
+
+/**
+ * Returns the gpio pin number by key or 0xFF if doesn't exists
+ */
+byte getGpioByKey(const char *key) {
+  int i;
+  pin_t *aux;
+
+  aux = pinTable;
+  for(i = 0; i < NO_PINS; i++) {
+    if(strcmp(aux->key, key) == 0) {
+      return aux->gpio;
+    }
+    aux++;
+  }
+
+  debug("There is no pin with the key %s", key);
+  return -1;
+}
+
+/**
+ * Returns the name of pin by gpio or NULL if doesn't exists
+ */
+const char* getNameByGpio(const byte gpio) {
+  int i;
+  pin_t *aux;
+
+  aux = pinTable;
+  for(i = 0; i < NO_PINS; i++) {
+    if(aux->gpio == gpio) {
+      return aux->name;
+    }
+    aux++;
+  }
+
+  debug("There is no pin with gpio %d", gpio);
+  return NULL;
+}
+
+/**
+ * Returns the key of pin by gpio or NULL if doesn't exists
+ */
+const char* getKeyByGpio(const byte gpio) {
+  int i;
+  pin_t *aux;
+
+  aux = pinTable;
+  for(i = 0; i < NO_PINS; i++) {
+    if(aux->gpio == gpio) {
+      return aux->key;
+    }
+    aux++;
+  }
+
+  debug("There is no pin with gpio %d", gpio);
+  return NULL;
 }
 
 
@@ -256,70 +339,6 @@ result_t unloadDeviceTree(const char *name) {
 /**************************************************************************************************
  * 4.GPIO
  *************************************************************************************************/
-
-/**
- * Function used for testing the correctness of install
- */
-void beagleTest() {
-  printf("Hello from beagleboneConfig.c! Magic number: 11\n");
-}
-
-/**
- * Returns the gpio pin number by name or 0xFF if doesn't exists
- */
-byte getGpioByName(const char *name) {
-  int i;
-  pin_t *aux;
-
-  aux = pinTable;
-  for(i = 0; i < NO_PINS; i++) {
-    if(strcmp(aux->name, name) == 0) {
-      return aux->gpio;
-    }
-    aux++;
-  }
-
-  debug("There is no pin named %s", name);
-  return -1;
-}
-
-/**
- * Returns the gpio pin number by key or 0xFF if doesn't exists
- */
-byte getGpioByKey(const char *key) {
-  int i;
-  pin_t *aux;
-
-  aux = pinTable;
-  for(i = 0; i < NO_PINS; i++) {
-    if(strcmp(aux->key, key) == 0) {
-      return aux->gpio;
-    }
-    aux++;
-  }
-
-  debug("There is no pin with the key %s", key);
-  return -1;
-}
-
-/**
- * Returns the key of pin by gpio or NULL if doesn't exists
- */
-const char* getKeyByGpio(const byte gpio) {
-  int i;
-  pin_t *aux;
-
-  aux = pinTable;
-  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
-    if(aux->gpio == gpio) {
-      return aux->key;
-    }
-    aux++;
-  }
-
-  debug("There is no pin with gpio %d", gpio);
-  return NULL;
-}
 
 /**
  * Returns false if the pin gpio is not valid or true otherwise
