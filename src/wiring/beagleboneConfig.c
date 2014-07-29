@@ -193,11 +193,9 @@ result_t loadDeviceTree(const char *name) {
   char line      [256];
 
   if(strcmp(pathCapemgr, "") == 0) {
-    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
-      debug("Could not build path to %s", pathCapemgr);
-      return ERROR;
-    }
+    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
   }
+
   snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
 
   if((pFile = fopen(pathSlots, "r+")) == NULL) {
@@ -205,9 +203,9 @@ result_t loadDeviceTree(const char *name) {
     return ERROR;
   }
 
-  while (fgets(line, sizeof(line), pFile)) {
+  while(fgets(line, sizeof(line), pFile)) {
     // Device Tree already loaded
-    if (strstr(line, name)) {
+    if(strstr(line, name)) {
       fclose(pFile);
       return SUCCESS;
     }
@@ -220,7 +218,6 @@ result_t loadDeviceTree(const char *name) {
 
 /**
  * Unloads a device tree
- * TODO
  */
 result_t unloadDeviceTree(const char *name) {
   FILE *pFile;
@@ -230,10 +227,9 @@ result_t unloadDeviceTree(const char *name) {
   char *colon;
 
   if(strcmp(pathCapemgr, "") == 0) {
-    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
-      debug("Could not build path to %s", pathCapemgr);
-    }
+    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
   }
+
   snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
 
   if((pFile = fopen(pathSlots, "r+")) == NULL) {
@@ -262,56 +258,54 @@ result_t unloadDeviceTree(const char *name) {
  *************************************************************************************************/
 
 /**
- * Function used for testing the correctness of the install
+ * Function used for testing the correctness of install
  */
 void beagleTest() {
   printf("Hello from beagleboneConfig.c! Magic number: 11\n");
 }
 
 /**
- * Returns the gpio pin number by name or 0 if doesn't exists
+ * Returns the gpio pin number by name or 0xFF if doesn't exists
  */
 byte getGpioByName(const char *name) {
   int i;
   pin_t *aux;
 
   aux = pinTable;
-  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+  for(i = 0; i < NO_PINS; i++) {
     if(strcmp(aux->name, name) == 0) {
       return aux->gpio;
     }
-
     aux++;
   }
 
   debug("There is no pin named %s", name);
-  return 0;
+  return -1;
 }
 
 /**
- * Returns the gpio pin number by key or 0 if doesn't exists
+ * Returns the gpio pin number by key or 0xFF if doesn't exists
  */
 byte getGpioByKey(const char *key) {
   int i;
   pin_t *aux;
 
   aux = pinTable;
-  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+  for(i = 0; i < NO_PINS; i++) {
     if(strcmp(aux->key, key) == 0) {
       return aux->gpio;
     }
-
     aux++;
   }
 
   debug("There is no pin with the key %s", key);
-  return 0;
+  return -1;
 }
 
 /**
- * Returns the key of pin by gpio or 0 if doesn't exists
+ * Returns the key of pin by gpio or NULL if doesn't exists
  */
-const char* getKeyByGpio(byte gpio) {
+const char* getKeyByGpio(const byte gpio) {
   int i;
   pin_t *aux;
 
@@ -320,18 +314,17 @@ const char* getKeyByGpio(byte gpio) {
     if(aux->gpio == gpio) {
       return aux->key;
     }
-
     aux++;
   }
 
   debug("There is no pin with gpio %d", gpio);
-  return 0;
+  return NULL;
 }
 
 /**
  * Returns false if the pin gpio is not valid or true otherwise
  */
-bool gpioIsValid(byte gpio) {
+bool gpioIsValid(const byte gpio) {
   int i;
   pin_t *aux;
 
@@ -340,7 +333,6 @@ bool gpioIsValid(byte gpio) {
     if(aux->gpio == gpio) {
       return true;
     }
-
     aux++;
   }
 
@@ -348,72 +340,66 @@ bool gpioIsValid(byte gpio) {
 }
 
 /**
- * Returns false if the pin gpio is not exported or true otherwise
+ * Checks if GPIO pin is exported
  */
-bool gpioIsExported(byte gpio) {
-  int fd;
+bool gpioIsExported(const byte gpio) {
   char buf[MAX_BUF];
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
-  fd = open(buf, O_WRONLY);
-
-  if(fd < 0) { // Not exported
-    return false;
-  } else {     // Exported
-    return true;
-  }
+  return open(buf, O_WRONLY) > 0;
 }
 
 /**
- * Exports pin
+ * Exports GPIO pin
  */
-void gpioExport(byte gpio) {
-  int fd, len;
+result_t gpioExport(const byte gpio) {
+  int fd;
   char buf[MAX_BUF];
 
-  fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
-  if(fd < 0) {
-    perror("gpioExport");
-    return;
+  if((fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY)) < 0) {
+    debug("Could not open file" SYSFS_GPIO_DIR "/export");
+    return ERROR;
   }
 
-  len = snprintf(buf, sizeof(buf), "%d", gpio);
-  write(fd, buf, len);
+  snprintf(buf, sizeof(buf), "%d", gpio);
+  write(fd, buf, sizeof(buf));
+
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Unexports pin
+ * Unexports GPIO pin
  */
-void gpioUnexport(byte gpio) {
-  int fd, len;
+result_t gpioUnexport(const byte gpio) {
+  int fd;
   char buf[MAX_BUF];
 
-  fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
-  if(fd < 0) {
-    perror("gpioUnexport");
-    return;
+  if((fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/unexport");
+    return ERROR;
   }
 
-  len = snprintf(buf, sizeof(buf), "%d", gpio);
-  write(fd, buf, len);
+  snprintf(buf, sizeof(buf), "%d", gpio);
+  write(fd, buf, sizeof(buf));
+
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Sets direction of pin
+ * Sets direction of GPIO pin
  */
-void gpioSetDir(byte gpio, byte dir) {
+result_t gpioSetDir(const byte gpio, const byte dir) {
   int fd;
   char buf[MAX_BUF];
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
 
-  fd = open(buf, O_WRONLY);
-  if(fd < 0) {
-    perror("gpioSetDir");
-    return;
+  if((fd = open(buf, O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
+    return ERROR;
   }
 
   if(dir == INPUT) {
@@ -422,29 +408,31 @@ void gpioSetDir(byte gpio, byte dir) {
     write(fd, "out", 4);
   } else {
     debug("Direction can be either INPUT or OUTPUT");
+    close(fd);
+    return ERROR;
   }
 
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Returns direction of pin INPUT or OUTPUT
+ * Returns direction of GPIO pin INPUT, OUTPUT or 0xFF in case of failure
  */
-byte gpioGetDir(byte gpio) {
+byte gpioGetDir(const byte gpio) {
   int fd;
   char buf[MAX_BUF];
   char ch;
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
 
-  fd = open(buf, O_RDONLY);
-  if(fd < 0) {
-    perror("gpioGetDir");
+  if((fd = open(buf, O_RDONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
     return -1;
   }
 
-  memset(buf, 0, MAX_BUF);
-  read(fd, buf, MAX_BUF);
+  memset(buf, 0, sizeof(buf));
+  read(fd, buf, sizeof(buf));
   close(fd);
 
   if(strncmp(buf, "in", 2) == 0) {
@@ -458,18 +446,17 @@ byte gpioGetDir(byte gpio) {
 }
 
 /**
- * Sets value of pin
+ * Sets value of GPIO pin
  */
-void gpioSetValue(byte gpio, byte value) {
+result_t gpioSetValue(const byte gpio, const byte value) {
   int fd;
   char buf[MAX_BUF];
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
-  fd = open(buf, O_WRONLY);
-  if(fd < 0) {
-    perror("gpioSetValue");
-    return;
+  if((fd = open(buf, O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+    return ERROR;
   }
 
   if(value == LOW) {
@@ -478,25 +465,27 @@ void gpioSetValue(byte gpio, byte value) {
     write(fd, "1", 2);
   } else {
     debug("Value can be either LOW or HIGH");
+    close(fd);
+    return ERROR;
   }
 
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Returns value of pin LOW or HIGH
+ * Returns value of GPIO pin LOW, HIGH or 0xFF in case of failure
  */
-byte gpioGetValue(byte gpio) {
+byte gpioGetValue(const byte gpio) {
   int fd;
   char buf[MAX_BUF];
   char ch;
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
-  fd = open(buf, O_RDONLY);
-  if(fd < 0) {
-    perror("gpioGetValue");
-    return;
+  if((fd = open(buf, O_RDONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+    return -1;
   }
 
   read(fd, &ch, 1);
@@ -513,18 +502,17 @@ byte gpioGetValue(byte gpio) {
 }
 
 /**
- * Set active_low of pin
+ * Set active_low of GPIO pin
  */
-void gpioSetActiveLow(byte gpio, byte value) {
+result_t gpioSetActiveLow(const byte gpio, const byte value) {
   int fd;
   char buf[MAX_BUF];
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/active_low", gpio);
 
-  fd = open(buf, O_WRONLY);
-  if(fd < 0) {
-    perror("gpioSetActiveLow");
-    return;
+  if((fd = open(buf, O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/active_low", gpio);
+    return ERROR;
   }
 
   if(value == 0) {
@@ -533,25 +521,27 @@ void gpioSetActiveLow(byte gpio, byte value) {
     write(fd, "1", 2);
   } else {
     debug("Value can be either 0 or 1");
+    close(fd);
+    return ERROR;
   }
 
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Returns active_low value of pin
+ * Returns active_low value of GPIO pin or 0xFF in case of failure
  */
-byte gpioGetActiveLow(byte gpio) {
+byte gpioGetActiveLow(const byte gpio) {
   int fd;
   char buf[MAX_BUF];
   char ch;
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/active_low", gpio);
 
-  fd = open(buf, O_RDONLY);
-  if(fd < 0) {
-    perror("gpioGetActiveLow");
-    return;
+  if((fd = open(buf, O_RDONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/active_low", gpio);
+    return -1;
   }
 
   read(fd, &ch, 1);
@@ -568,18 +558,17 @@ byte gpioGetActiveLow(byte gpio) {
 }
 
 /**
- * Sets edge of pin
+ * Sets edge of GPIO pin
  */
-void gpioSetEdge(byte gpio, byte edge) {
+result_t gpioSetEdge(const byte gpio, const byte edge) {
   int fd;
   char buf[MAX_BUF];
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
 
-  fd = open(buf, O_WRONLY);
-  if (fd < 0) {
-    perror("gpioSetEdge");
-    return;
+  if ((fd = open(buf, O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
+    return ERROR;
   }
 
   switch(edge) {
@@ -597,28 +586,30 @@ void gpioSetEdge(byte gpio, byte edge) {
       break;
     default:
       debug("Edge can be either NONE, RISING, FALLING or BOTH");
+      close(fd);
+      return ERROR;
   }
 
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Returns edge of pin
+ * Returns edge of GPIO pin or 0xFF in case of failure
  */
-byte gpioGetEdge(byte gpio) {
+byte gpioGetEdge(const byte gpio) {
   int fd;
   char buf[MAX_BUF];
 
   snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
 
-  fd = open(buf, O_RDONLY);
-  if (fd < 0) {
-    perror("gpioGetEdge");
-    return;
+  if ((fd = open(buf, O_RDONLY)) < 0) {
+    debug("Could not open file " SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
+    return -1;
   }
 
-  memset(buf, 0, MAX_BUF);
-  read(fd, buf, MAX_BUF);
+  memset(buf, 0, sizeof(buf));
+  read(fd, buf, sizeof(buf));
   close(fd);
 
   if(strncmp(buf, "none", 4) == 0) {
@@ -919,7 +910,7 @@ result_t pwmDisable(const char *key) {
  */
 result_t pwmSetPeriod(const char *key, ulong period) {
   pwmNode_t *aux;
-  char buff[20];
+  char buf[20];
   char pathPeriod[64];
   int fdPeriod;
   int len;
@@ -935,8 +926,8 @@ result_t pwmSetPeriod(const char *key, ulong period) {
     return ERROR;
   }
 
-  len = snprintf(buff, sizeof(buff), "%lu", period);
-  write(fdPeriod, buff, len);
+  len = snprintf(buf, sizeof(buf), "%lu", period);
+  write(fdPeriod, buf, len);
 
   close(fdPeriod);
   return SUCCESS;
@@ -947,7 +938,7 @@ result_t pwmSetPeriod(const char *key, ulong period) {
  */
 ulong pwmGetPeriod(const char *key) {
   pwmNode_t *aux;
-  char buff[20];
+  char buf[20];
   char pathPeriod[64];
   int fdPeriod;
 
@@ -962,10 +953,10 @@ ulong pwmGetPeriod(const char *key) {
     return 0;
   }
 
-  read(fdPeriod, buff, sizeof(buff));
+  read(fdPeriod, buf, sizeof(buf));
 
   close(fdPeriod);
-  return atol(buff);
+  return atol(buf);
 }
 
 /**
@@ -973,7 +964,7 @@ ulong pwmGetPeriod(const char *key) {
  */
 result_t pwmSetDuty(const char *key, ulong duty) {
   pwmNode_t *aux;
-  char buff[20];
+  char buf[20];
   char pathDuty[64];
   int fdDuty;
   int len;
@@ -989,8 +980,8 @@ result_t pwmSetDuty(const char *key, ulong duty) {
     return ERROR;
   }
 
-  len = snprintf(buff, sizeof(buff), "%lu", duty);
-  write(fdDuty, buff, len);
+  len = snprintf(buf, sizeof(buf), "%lu", duty);
+  write(fdDuty, buf, len);
 
   close(fdDuty);
   return SUCCESS;
@@ -1009,7 +1000,7 @@ ulong pwmGetDuty(const char *key) {
  */
 result_t pwmSetPolarity(const char *key, byte polarity) {
   pwmNode_t *aux;
-  char buff[20];
+  char buf[20];
   char pathPolarity[64];
   int fdPolarity;
   int len;
@@ -1025,8 +1016,8 @@ result_t pwmSetPolarity(const char *key, byte polarity) {
     return ERROR;
   }
 
-  len = snprintf(buff, sizeof(buff), "%d", polarity);
-  write(fdPolarity, buff, len);
+  len = snprintf(buf, sizeof(buf), "%d", polarity);
+  write(fdPolarity, buf, len);
 
   close(fdPolarity);
   return SUCCESS;
@@ -1045,7 +1036,7 @@ byte pwmGetPolarity(const char *key) {
  */
 result_t pwmSetRun(const char* key, byte run) {
   pwmNode_t *aux;
-  char buff[20];
+  char buf[20];
   char pathRun[64];
   int fdRun;
   int len;
@@ -1061,8 +1052,8 @@ result_t pwmSetRun(const char* key, byte run) {
     return ERROR;
   }
 
-  len = snprintf(buff, sizeof(buff), "%d", run);
-  write(fdRun, buff, len);
+  len = snprintf(buf, sizeof(buf), "%d", run);
+  write(fdRun, buf, len);
 
   close(fdRun);
   return SUCCESS;

@@ -29,12 +29,12 @@ extern "C" {
  * 1.Constants
  *************************************************************************************************/
 
-#define MAX_BUF 64
+#define MAX_BUF 128
+#define NO_PINS sizeof(pinTable)/sizeof(pinTable[0])
 
 // Paths
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define SYSFS_LEDS_DIR "/sys/class/leds"
-#define SYSFS_PWM_DIR  "/sys/class/pwm"
 
 // Direction
 #define INPUT  0
@@ -106,7 +106,7 @@ typedef enum {
       fprintf(stderr, "\n");                                                       \
       perror(NULL);                                                                \
     }                                                                              \
-  } while (0)                                                                      \
+  } while(0)                                                                       \
 
 result_t buildPath (const char *dirPath, const char *prefix, char *fullPath, int fullPathLen);
 
@@ -129,25 +129,25 @@ void        beagleTest       ();
 
 byte        getGpioByName    (const char *name);
 byte        getGpioByKey     (const char *key);
-const char* getKeyByGpio     (byte gpio);
+const char* getKeyByGpio     (const byte gpio);
 
-bool        gpioIsValid      (byte gpio);
-bool        gpioIsExported   (byte gpio);
+bool        gpioIsValid      (const byte gpio);
+bool        gpioIsExported   (const byte gpio);
 
-void        gpioExport       (byte gpio);
-void        gpioUnexport     (byte gpio);
+result_t    gpioExport       (const byte gpio);
+result_t    gpioUnexport     (const byte gpio);
 
-void        gpioSetDir       (byte gpio, byte dir);
-byte        gpioGetDir       (byte gpio);
+result_t    gpioSetDir       (const byte gpio, const byte dir);
+byte        gpioGetDir       (const byte gpio);
 
-void        gpioSetValue     (byte gpio, byte value);
-byte        gpioGetValue     (byte gpio);
+result_t    gpioSetValue     (const byte gpio, const byte value);
+byte        gpioGetValue     (const byte gpio);
 
-void        gpioSetActiveLow (byte gpio, byte value);
-byte        gpioGetActiveLow (byte gpio);
+result_t    gpioSetActiveLow (const byte gpio, const byte value);
+byte        gpioGetActiveLow (const byte gpio);
 
-void        gpioSetEdge      (byte gpio, byte edge);
-byte        gpioGetEdge      (byte gpio);
+result_t    gpioSetEdge      (const byte gpio, const byte edge);
+byte        gpioGetEdge      (const byte gpio);
 
 
 
