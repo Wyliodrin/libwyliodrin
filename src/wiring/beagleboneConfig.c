@@ -11,6 +11,7 @@
  * 4.GPIO
  * 5.User LEDs
  * 6.PWM
+ * 7.AIN
  *************************************************************************************************/
 
 #ifdef BEAGLEBONE
@@ -27,10 +28,14 @@ extern "C" {
 #include "beagleboneConfig.h"
 
 // PWM Constants
-byte pwmInitialized    = 0;
+bool pwmInitialized    = false;
 char pathCapemgr [128] = "";
 char pathOcp     [128] = "";
 pwmNode_t *pwmList     = NULL;
+
+// AIN Constants
+bool ainInitialized   = false;
+char pathHelper [128] = "";
 
 
 
@@ -827,9 +832,11 @@ bool pwmIsValid(byte gpio) {
  * PWM Initialization
  */
 result_t pwmInit() {
-  if(!pwmInitialized && loadDeviceTree("am33xx_pwm") == SUCCESS) {
+  if(!pwmInitialized) {
+    loadDeviceTree("am33xx_pwm");
     buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
-    pwmInitialized = 1;
+    pwmInitialized = true;
+    return SUCCESS;
   }
 }
 
@@ -1068,6 +1075,23 @@ result_t pwmSetRun(const char* key, byte run) {
 byte pwmGetRun(const char* key) {
   // TODO
   return 0;
+}
+
+
+
+/**************************************************************************************************
+ * 7. AIN
+ *************************************************************************************************/
+
+/**
+ * AIN Initialization
+ */
+result_t ainInit() {
+  if(!ainInitialized) {
+    loadDeviceTree("cape-bone-iio");
+    buildPath("/sys/devices", "helper", pathHelper, sizeof(pathHelper));
+    ainInitialized = true;
+  }
 }
 
 
