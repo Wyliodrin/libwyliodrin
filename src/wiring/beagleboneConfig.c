@@ -654,21 +654,20 @@ byte gpioGetEdge(const byte gpio) {
 /**
  * Sets user led trigger
  */
-void ledSetTrigger(byte gpio, byte trigger) {
-  if(!isLed(gpio)) {
-    debug("GPIO %d does not refer an USER LED", gpio);
-    return;
+result_t ledSetTrigger(const byte led, const byte trigger) {
+  if(!(0 <= led && led <= 3)) {
+    debug("Invalid led %d. Value of led should be in [0, 3] interval", led);
+    return ERROR;
   }
 
   int fd;
   char buf[MAX_BUF];
 
-  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/trigger", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/trigger", led);
 
-  fd = open(buf, O_WRONLY);
-  if(fd < 0) {
-    perror("ledSetTrigger");
-    return;
+  if((fd = open(buf, O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_LEDS_DIR "/beaglebone:green:usr%d/trigger", led);
+    return ERROR;
   }
 
   switch(trigger) {
@@ -709,30 +708,32 @@ void ledSetTrigger(byte gpio, byte trigger) {
       write(fd, "transient", 10);
       break;
     default:
-      debug("Unknown trigger");
+      debug("Invalid trigger %d", trigger);
+      close(fd);
+      return ERROR;
   }
 
   close(fd);
+  return SUCCESS;
 }
 
 /**
  * Sets led value LOW or HIGH
  */
-void ledSetValue(byte gpio, byte value) {
-  if(!isLed(gpio)) {
-    debug("GPIO %d does not refer an USER LED", gpio);
-    return;
+result_t ledSetValue(const byte led, const byte value) {
+  if(!(0 <= led && led <= 3)) {
+    debug("Invalid led %d. Value of led should be in [0, 3] interval", led);
+    return ERROR;
   }
 
   int fd;
   char buf[MAX_BUF];
 
-  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", led);
 
-  fd = open(buf, O_WRONLY);
-  if(fd < 0) {
-    perror("setLedValue");
-    return;
+  if((fd = open(buf, O_WRONLY)) < 0) {
+    debug("Could not open file " SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", led);
+    return ERROR;
   }
 
   if(value == LOW) {
@@ -740,31 +741,33 @@ void ledSetValue(byte gpio, byte value) {
   } else if(value == HIGH) {
     write(fd, "1", 2);
   } else {
-    debug("Value can be either INPUT or OUTPUT");
+    debug("Value can be either INPUT or OUTPUT. Invalid value %d", value);
+    close(fd);
+    return ERROR;
   }
 
   close(fd);
+  return SUCCESS;
 }
 
 /**
- * Returns value of gpio-led LOW or HIGH
+ * Returns value of gpio-led LOW or HIGH or 0xFF in case of failure
  */
-byte ledGetValue(byte gpio) {
-  if(!isLed(gpio)) {
-    debug("GPIO %d does not refer an USER LED", gpio);
-    return;
+byte ledGetValue(const byte gpio) {
+  if(!(0 <= led && led <= 3)) {
+    debug("Invalid led %d. Value of led should be in [0, 3] interval", led);
+    return ERROR;
   }
 
   int fd;
   char buf[MAX_BUF];
   char ch;
 
-  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", gpio - 53);
+  snprintf(buf, sizeof(buf), SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", led);
 
-  fd = open(buf, O_RDONLY);
-  if(fd < 0) {
-    perror("getLedValue");
-    return;
+  if((fd = open(buf, O_RDONLY)) < 0) {
+    debug("Could not open file " SYSFS_LEDS_DIR "/beaglebone:green:usr%d/brightness", led);
+    return -1;
   }
 
   read(fd, &ch, 1);
@@ -783,13 +786,13 @@ byte ledGetValue(byte gpio) {
 /**
  * Resets an USER LED
  */
-void ledReset(byte gpio) {
-  if(!isLed(gpio)) {
-    debug("GPIO %d does not refer an USER LED", gpio);
-    return;
+result_t ledReset(const byte led) {
+  if(!(0 <= led && led <= 3)) {
+    debug("Invalid led %d. Value of led should be in [0, 3] interval", led);
+    return ERROR;
   }
 
-  switch(gpio - 53) {
+  switch(led) {
     case 0:
       ledSetTrigger(gpio, HEARTBEAT);
       break;
@@ -804,7 +807,10 @@ void ledReset(byte gpio) {
       break;
     default:
       debug("This should not have happened");
+      return ERROR;
   }
+
+  return SUCCESS;
 }
 
 

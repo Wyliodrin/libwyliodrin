@@ -157,12 +157,12 @@ byte        gpioGetEdge      (const byte gpio);
  * 5.User LEDs
  *************************************************************************************************/
 
-void   ledSetTrigger (byte gpio, byte trigger);
+result_t ledSetTrigger (const byte led, const byte trigger);
 
-void   ledSetValue   (byte gpio, byte value);
-byte   ledGetValue   (byte gpio);
+result_t ledSetValue   (const byte led, const byte value);
+byte     ledGetValue   (const byte led);
 
-void   ledReset      (byte gpio);
+result_t ledReset      (const byte led);
 
 
 
