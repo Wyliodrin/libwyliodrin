@@ -831,7 +831,7 @@ bool pwmIsValid(byte gpio) {
 /**
  * PWM Initialization
  */
-result_t pwmInit() {
+void pwmInit() {
   if(!pwmInitialized) {
     loadDeviceTree("am33xx_pwm");
     buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
@@ -1086,7 +1086,7 @@ byte pwmGetRun(const char* key) {
 /**
  * AIN Initialization
  */
-result_t ainInit() {
+void ainInit() {
   if(!ainInitialized) {
     loadDeviceTree("cape-bone-iio");
     buildPath("/sys/devices", "helper", pathHelper, sizeof(pathHelper));

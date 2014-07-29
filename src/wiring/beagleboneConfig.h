@@ -168,9 +168,8 @@ void   ledReset      (byte gpio);
  * 6.PWM
  *************************************************************************************************/
 
+void       pwmInit        ();
 bool       pwmIsValid     (byte gpio);
-
-result_t   pwmInit        ();
 pwmNode_t* pwmGetPin      (const char *key);
 
 result_t   pwmEnable      (const char *key);
@@ -194,7 +193,7 @@ byte       pwmGetRun      (const char* key);
  * 7.AIN
  *************************************************************************************************/
 
-result_t ainEnable ();
+void ainEnable ();
 
 
 
