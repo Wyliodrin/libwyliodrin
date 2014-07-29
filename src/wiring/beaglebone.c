@@ -221,7 +221,7 @@ void analogWrite(int pin, int value) {
  * pin - analog pin
  *
  * RETURN:
- * value between 0 and 1 (coresponding to 1.8V)
+ * value between 0 and 100 (coresponding to 1.8V)
  */
 int analogRead(int pin) {
   if(!(0 <= pin && pin <= 7)) {
@@ -230,7 +230,7 @@ int analogRead(int pin) {
   }
 
   ainInit();
-  return ainGetValue(pin);
+  return ainGetValue(pin) / 18;
 }
 
 

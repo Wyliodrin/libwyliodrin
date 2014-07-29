@@ -244,7 +244,7 @@ result_t unloadDeviceTree(const char *name) {
   while (fgets(line, sizeof(line), pFile)) {
     // Device is loaded, let's unload it
     if (strstr(line, name)) {
-      colon = strtok(line, ":");
+      colon = strstr(line, ":");
       colon = '\0';
       fprintf(pFile, "-%s", line);
       fclose(pFile);
