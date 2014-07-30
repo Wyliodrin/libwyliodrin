@@ -276,7 +276,10 @@ result_t loadDeviceTree(const char *name) {
   char line      [256];
 
   if(strcmp(pathCapemgr, "") == 0) {
-    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
+    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
+      debug("Could not build path to bone_capemgr");
+      return ERROR;
+    }
   }
 
   snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
@@ -310,7 +313,10 @@ result_t unloadDeviceTree(const char *name) {
   char *colon;
 
   if(strcmp(pathCapemgr, "") == 0) {
-    buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr));
+    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
+      debug("Could not build path to bone_capemgr");
+      return ERROR;
+    }
   }
 
   snprintf(pathSlots, sizeof(pathSlots), "%s/slots", pathCapemgr);
@@ -822,7 +828,7 @@ result_t ledReset(const byte led) {
 /**
  * Checks if pin GPIO is a valid PWM
  */
-bool pwmIsValid(byte gpio) {
+bool pwmIsValid(const byte gpio) {
   switch(gpio) {
     case 23:  // P8_13
     case 22:  // P8_19
@@ -880,9 +886,9 @@ result_t pwmEnable(const char *key) {
     return SUCCESS;
   }
 
-  char slotsFragment   [16];
-  char pwmTestFragment [16];
-  char pathPwmTest     [64];
+  char slotsFragment[16];
+  char pwmTestFragment[16];
+  char pathPwmTest[64];
   pwmNode_t *aux;
   pwmNode_t *newNode;
 
@@ -935,10 +941,9 @@ result_t pwmDisable(const char *key) {
  */
 result_t pwmSetPeriod(const char *key, ulong period) {
   pwmNode_t *aux;
-  char buf[20];
+  char buf[16];
   char pathPeriod[64];
   int fdPeriod;
-  int len;
 
   if((aux = pwmGetPin(key)) == NULL) {
     debug("PWM %s not enabled yet", key);
@@ -946,36 +951,36 @@ result_t pwmSetPeriod(const char *key, ulong period) {
   }
 
   snprintf(pathPeriod, sizeof(pathPeriod), "%s/period", aux->pathPwmTest);
-  if((fdPeriod = open(pathPeriod, O_RDWR)) < 0) {
-    debug("Coul dnot open file %s", pathPeriod);
+  if((fdPeriod = open(pathPeriod, O_WRONLY)) < 0) {
+    debug("Could not open file %s", pathPeriod);
     return ERROR;
   }
 
-  len = snprintf(buf, sizeof(buf), "%lu", period);
-  write(fdPeriod, buf, len);
+  snprintf(buf, sizeof(buf), "%lu", period);
+  write(fdPeriod, buf, sizeof(buf));
 
   close(fdPeriod);
   return SUCCESS;
 }
 
 /**
- * Returns PWM period or 0 in case of failure
+ * Returns PWM period or 0xFF in case of failure
  */
 ulong pwmGetPeriod(const char *key) {
   pwmNode_t *aux;
-  char buf[20];
+  char buf[16];
   char pathPeriod[64];
   int fdPeriod;
 
   if((aux = pwmGetPin(key)) == NULL) {
     debug("PWM %s not enabled yet", key);
-    return 0;
+    return -1;
   }
 
   snprintf(pathPeriod, sizeof(pathPeriod), "%s/period", aux->pathPwmTest);
-  if((fdPeriod = open(pathPeriod, O_RDWR)) < 0) {
+  if((fdPeriod = open(pathPeriod, O_RDONLY)) < 0) {
     debug("Could not open file %s", pathPeriod);
-    return 0;
+    return -1;
   }
 
   read(fdPeriod, buf, sizeof(buf));
@@ -987,12 +992,11 @@ ulong pwmGetPeriod(const char *key) {
 /**
  * Sets PWM pin duty in nanoseconds
  */
-result_t pwmSetDuty(const char *key, ulong duty) {
+result_t pwmSetDuty(const char *key, const ulong duty) {
   pwmNode_t *aux;
-  char buf[20];
+  char buf[16];
   char pathDuty[64];
   int fdDuty;
-  int len;
 
   if((aux = pwmGetPin(key)) == NULL) {
     debug("PWM %s not enabled yet", key);
@@ -1000,32 +1004,50 @@ result_t pwmSetDuty(const char *key, ulong duty) {
   }
 
   snprintf(pathDuty, sizeof(pathDuty), "%s/duty", aux->pathPwmTest);
-  if((fdDuty = open(pathDuty, O_RDWR)) < 0) {
+  if((fdDuty = open(pathDuty, O_WRONLY)) < 0) {
     debug("Could not open file %s", pathDuty);
     return ERROR;
   }
 
-  len = snprintf(buf, sizeof(buf), "%lu", duty);
-  write(fdDuty, buf, len);
+  snprintf(buf, sizeof(buf), "%lu", duty);
+  write(fdDuty, buf, sizeof(buf));
 
   close(fdDuty);
   return SUCCESS;
 }
 
 /**
- * TODO
+ * Returns PWM duty or 0xFFFFFFFF in case of failure
  */
 ulong pwmGetDuty(const char *key) {
-  // TODO
-  return 0;
+  pwmNode_t *aux;
+  char buf[20];
+  char pathDuty[64];
+  int fdDuty;
+
+  if((aux = pwmGetPin(key)) == NULL) {
+    debug("PWM %s not enabled yet", key);
+    return -1;
+  }
+
+  snprintf(pathDuty, sizeof(pathDuty), "%s/duty", aux->pathPwmTest);
+  if((fdDuty = open(pathDuty, O_RDONLY)) < 0) {
+    debug("Could not open file %s", pathDuty);
+    return -1;
+  }
+
+  read(fdDuty, buf, sizeof(buf));
+
+  close(fdDuty);
+  return atol(buf);
 }
 
 /**
- * TODO
+ * Sets PWM Polarity
  */
-result_t pwmSetPolarity(const char *key, byte polarity) {
+result_t pwmSetPolarity(const char *key, const byte polarity) {
   pwmNode_t *aux;
-  char buf[20];
+  char buf[16];
   char pathPolarity[64];
   int fdPolarity;
   int len;
@@ -1036,32 +1058,50 @@ result_t pwmSetPolarity(const char *key, byte polarity) {
   }
 
   snprintf(pathPolarity, sizeof(pathPolarity), "%s/polarity", aux->pathPwmTest);
-  if((fdPolarity = open(pathPolarity, O_RDWR)) < 0) {
+  if((fdPolarity = open(pathPolarity, O_WRONLY)) < 0) {
     debug("Could not open file %s", pathPolarity);
     return ERROR;
   }
 
-  len = snprintf(buf, sizeof(buf), "%d", polarity);
-  write(fdPolarity, buf, len);
+  snprintf(buf, sizeof(buf), "%d", polarity);
+  write(fdPolarity, buf, sizeof(buf));
 
   close(fdPolarity);
   return SUCCESS;
 }
 
 /**
- * TODO
+ * Returns PWM polarity or oxFF in case of failure
  */
 byte pwmGetPolarity(const char *key) {
-  // TODO
-  return 0;
+  pwmNode_t *aux;
+  char buf[20];
+  char pathPolarity[64];
+  int fdPolarity;
+
+  if((aux = pwmGetPin(key)) == NULL) {
+    debug("PWM %s not enabled yet", key);
+    return -1;
+  }
+
+  snprintf(pathPolarity, sizeof(pathPolarity), "%s/polarity", aux->pathPwmTest);
+  if((fdPolarity = open(pathPolarity, O_RDONLY)) < 0) {
+    debug("Could not open file %s", pathPolarity);
+    return -1;
+  }
+
+  read(fdPolarity, buf, sizeof(buf));
+
+  close(fdPolarity);
+  return atoi(buf);
 }
 
 /**
- * TODO
+ * Sets PWM run
  */
-result_t pwmSetRun(const char* key, byte run) {
+result_t pwmSetRun(const char* key, const byte run) {
   pwmNode_t *aux;
-  char buf[20];
+  char buf[16];
   char pathRun[64];
   int fdRun;
   int len;
@@ -1085,11 +1125,29 @@ result_t pwmSetRun(const char* key, byte run) {
 }
 
 /**
- * TODO
+ * Returns PWM run or 0xFF in case of failure
  */
 byte pwmGetRun(const char* key) {
-  // TODO
-  return 0;
+  pwmNode_t *aux;
+  char buf[20];
+  char pathRun[64];
+  int fdRun;
+
+  if((aux = pwmGetPin(key)) == NULL) {
+    debug("PWM %s not enabled yet", key);
+    return -1;
+  }
+
+  snprintf(pathRun, sizeof(pathRun), "%s/run", aux->pathPwmTest);
+  if((fdRun = open(pathRun, O_RDONLY)) < 0) {
+    debug("Could not open file %s", pathRun);
+    return -1;
+  }
+
+  read(fdRun, buf, sizeof(buf));
+
+  close(fdRun);
+  return atoi(buf);
 }
 
 
@@ -1113,10 +1171,10 @@ void ainInit() {
 /**
  * Returns value of AIN pin
  */
-int ainGetValue(byte ain) {
+int ainGetValue(const byte ain) {
   int  fdAin;
-  char buf     [16];
-  char pathAin [128];
+  char buf[16];
+  char pathAin[128];
 
   snprintf(pathAin, sizeof(pathAin), "%s/AIN%d", pathHelper, ain);
 
@@ -1126,6 +1184,7 @@ int ainGetValue(byte ain) {
   }
 
   read(fdAin, buf, sizeof(buf));
+  close(fdAin);
   return atoi(buf);
 }
 

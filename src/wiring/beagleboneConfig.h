@@ -171,22 +171,22 @@ result_t ledReset      (const byte led);
  *************************************************************************************************/
 
 void       pwmInit        ();
-bool       pwmIsValid     (byte gpio);
+bool       pwmIsValid     (const byte gpio);
 pwmNode_t* pwmGetPin      (const char *key);
 
 result_t   pwmEnable      (const char *key);
 result_t   pwmDisable     (const char *key);
 
-result_t   pwmSetPeriod   (const char *key, ulong period);
+result_t   pwmSetPeriod   (const char *key, const ulong period);
 ulong      pwmGetPeriod   (const char *key);
 
-result_t   pwmSetDuty     (const char *key, ulong duty);
+result_t   pwmSetDuty     (const char *key, const ulong duty);
 ulong      pwmGetDuty     (const char *key);
 
-result_t   pwmSetPolarity (const char *key, byte polarity);
+result_t   pwmSetPolarity (const char *key, const byte polarity);
 byte       pwmGetPolarity (const char *key);
 
-result_t   pwmSetRun      (const char* key, byte run);
+result_t   pwmSetRun      (const char* key, const byte run);
 byte       pwmGetRun      (const char* key);
 
 
@@ -196,7 +196,7 @@ byte       pwmGetRun      (const char* key);
  *************************************************************************************************/
 
 void ainInit     ();
-int  ainGetValue (byte ain);
+int  ainGetValue (const byte ain);
 
 
 
