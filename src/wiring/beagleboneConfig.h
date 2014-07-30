@@ -64,8 +64,6 @@ extern "C" {
 #define DEFAULT_ON 10
 #define TRANSIENT  11
 
-#define isLed(gpio) (53 <= (gpio) && (gpio) <= 56)
-
 typedef unsigned char byte;
 typedef unsigned int  uint;
 typedef unsigned long ulong;
@@ -157,12 +155,14 @@ byte        gpioGetEdge      (const byte gpio);
  * 5.User LEDs
  *************************************************************************************************/
 
-result_t ledSetTrigger (const byte led, const byte trigger);
+bool     ledIsValid    (const byte gpio);
 
-result_t ledSetValue   (const byte led, const byte value);
-byte     ledGetValue   (const byte led);
+result_t ledSetTrigger (const byte gpio, const byte trigger);
 
-result_t ledReset      (const byte led);
+result_t ledSetValue   (const byte gpio, const byte value);
+byte     ledGetValue   (const byte gpio);
+
+result_t ledReset      (const byte gpio);
 
 
 

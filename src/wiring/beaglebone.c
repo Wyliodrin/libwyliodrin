@@ -46,7 +46,7 @@ int wiringSetup() {
  * Resets pin
  */
 void pinReset(int pin) {
-  if(isLed(pin)) {
+  if(ledIsValid(pin)) {
     ledReset(pin);
     return;
   }
