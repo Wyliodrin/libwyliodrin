@@ -703,7 +703,7 @@ result_t ledSetTrigger(const byte gpio, const byte trigger) {
       write(fd, "oneshot", 8);
       break;
     case HEARTBEAT:
-      write(fd, "hearbeat", 9);
+      write(fd, "heartbeat", 9);
       break;
     case BACKLIGHT:
       write(fd, "backlight", 10);

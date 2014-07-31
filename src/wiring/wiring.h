@@ -70,7 +70,8 @@ int wiringSetup ();
 void pinReset (int pin);
 
 // WIRING
-
+int getPinByName(const char* name);
+int getPinByKey(const char* key);
 void pinMode (int pin, int mode);
 void digitalWrite (int pin, int value);
 int digitalRead (int pin);
