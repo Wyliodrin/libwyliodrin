@@ -172,6 +172,7 @@ result_t ledReset      (const byte gpio);
 
 void       pwmInit        ();
 bool       pwmIsValid     (const byte gpio);
+bool       pwmIsEnabled   (const byte gpio);
 pwmNode_t* pwmGetPin      (const char *key);
 
 result_t   pwmEnable      (const char *key);

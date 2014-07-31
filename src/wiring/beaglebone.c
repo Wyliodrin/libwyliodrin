@@ -50,6 +50,11 @@ void pinReset(int pin) {
     return;
   }
 
+  if(pwmIsEnabled(pin)) {
+    pwmDisable(getKeyByGpio(pin));
+    return;
+  }
+
   gpioUnexport(pin);
 }
 
@@ -93,6 +98,21 @@ void pinMode(int pin, int mode) {
     return;
   }
 
+  // Handle case where pin is AIN 
+  if(ainIsValid(pin)) {
+    if(mode != INPUT) {
+      debug("pinMode only supports mode INPUT for AIN pins");
+    } else {
+      ainInit();
+    }
+  }
+
+  // Handle case where pin is PWM
+  if(pwmIsValid(pin)) {
+    pwmInit();
+    return;
+  }
+
   // Handle case where pin is allocated as a gpio-led
   if(ledIsValid(pin)) {
     if(mode != OUTPUT) {
@@ -117,7 +137,7 @@ void pinMode(int pin, int mode) {
 void digitalWrite(int pin, int value) {
   // Test valid pin
   if(!gpioIsValid(pin)) {
-    debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
+    debug("Invalid pin %d", pin);
     return;
   }
 
@@ -136,9 +156,9 @@ void digitalWrite(int pin, int value) {
   // Test if pin is exported
   if(!gpioIsExported(pin)) {
     gpioExport(pin);
+    gpioSetDir(pin, OUTPUT);
   }
 
-  gpioSetDir(pin, OUTPUT);
   gpioSetValue(pin, value);
 }
 
@@ -154,13 +174,8 @@ void digitalWrite(int pin, int value) {
 int digitalRead(int pin) {
   // Test valid pin
   if(!gpioIsValid(pin)) {
-    debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
+    debug("Invalid pin %d", pin);
     return;
-  }
-
-  // Test if pin is exported
-  if(!gpioIsExported(pin)) {
-    gpioExport(pin);
   }
 
   // Handle case where pin is allocated as a gpio-led
@@ -168,7 +183,12 @@ int digitalRead(int pin) {
     return ledGetValue(pin);
   }
 
-  gpioSetDir(pin, INPUT);
+  // Test if pin is exported
+  if(!gpioIsExported(pin)) {
+    gpioExport(pin);
+    gpioSetDir(pin, INPUT);
+  }
+
   return gpioGetValue(pin);
 }
 

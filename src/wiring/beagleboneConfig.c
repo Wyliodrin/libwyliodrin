@@ -859,6 +859,13 @@ bool pwmIsValid(const byte gpio) {
 }
 
 /**
+ * Checks if pwm pin is enabled
+ */
+bool pwmIsEnabled(const byte gpio) {
+  return pwmGetPin(getKeyByGpio(gpio)) != NULL;
+}
+
+/**
  * PWM Initialization
  */
 void pwmInit() {
@@ -940,11 +947,13 @@ result_t pwmEnable(const char *key) {
 }
 
 /**
- * TODO
+ * Disables PWM pin
  */
 result_t pwmDisable(const char *key) {
-  // TODO
-  return ERROR;
+  char fragment[16];
+
+  sprintf(fragment, "bone_pwm_%s", key);
+  return unloadDeviceTree(fragment);
 }
 
 /**
