@@ -128,14 +128,14 @@ pin_t pinTable[] = {
   {"SPI1_D1"   , "P9_30", 112, -1, -1,  0 },
   {"SPI1_SCLK" , "P9_31", 110,  1, -1,  1 },
   {"VDD_ADC"   , "P9_32", 0  , -1, -1, -1 },
-  {"AIN4"      , "P9_33", 0  , -1,  4, -1 },
+  {"AIN4"      , "P9_33", 204, -1,  4, -1 },
   {"GNDA_ADC"  , "P9_34", 0  , -1, -1, -1 },
-  {"AIN6"      , "P9_35", 0  , -1,  6, -1 },
-  {"AIN5"      , "P9_36", 0  , -1,  5, -1 },
-  {"AIN2"      , "P9_37", 0  , -1,  2, -1 },
-  {"AIN3"      , "P9_38", 0  , -1,  3, -1 },
-  {"AIN0"      , "P9_39", 0  , -1,  0, -1 },
-  {"AIN1"      , "P9_40", 0  , -1,  1, -1 },
+  {"AIN6"      , "P9_35", 206, -1,  6, -1 },
+  {"AIN5"      , "P9_36", 205, -1,  5, -1 },
+  {"AIN2"      , "P9_37", 202, -1,  2, -1 },
+  {"AIN3"      , "P9_38", 203, -1,  3, -1 },
+  {"AIN0"      , "P9_39", 200, -1,  0, -1 },
+  {"AIN1"      , "P9_40", 201, -1,  1, -1 },
   {"CLKOUT2"   , "P9_41", 20 , -1, -1,  0 },
   {"GPIO0_7"   , "P9_42", 7  ,  0, -1,  0 },
   {"DGND"      , "P9_43", 0  , -1, -1, -1 },
@@ -354,7 +354,7 @@ bool gpioIsValid(const byte gpio) {
   pin_t *aux;
 
   aux = pinTable;
-  for(i = 0; i < sizeof(pinTable)/sizeof(pinTable[0]); i++) {
+  for(i = 0; i < NO_PINS; i++) {
     if(aux->gpio == gpio) {
       return true;
     }
@@ -1178,12 +1178,12 @@ void ainInit() {
 /**
  * Returns value of AIN pin
  */
-int ainGetValue(const byte ain) {
+int ainGetValue(const byte gpio) {
   int  fdAin;
   char buf[16];
   char pathAin[128];
 
-  snprintf(pathAin, sizeof(pathAin), "%s/AIN%d", pathHelper, ain);
+  snprintf(pathAin, sizeof(pathAin), "%s/AIN%d", pathHelper, gpio - 200);
 
   if((fdAin = open(pathAin, O_RDONLY)) < 0) {
     debug("Could not open file %s", pathAin);

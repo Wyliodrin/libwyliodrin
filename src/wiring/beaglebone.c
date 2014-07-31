@@ -38,7 +38,6 @@ extern "C" {
  */
 int wiringSetup() {
   // TODO
-
   return 0;
 }
 
@@ -55,17 +54,17 @@ void pinReset(int pin) {
 }
 
 /**
- * TODO
+ * Returns PIN by name
  */
-int getPinByName() {
-  return 0;
+int getPinByName(const char* name) {
+  return getGpioByName(name);
 }
 
 /**
- * TODO
+ * Returns PIN by key
  */
-int getPinByKey() {
-  return 0;
+int getPinByKey(const char* key) {
+  return getGpioByKey(key);
 }
 
 
@@ -84,7 +83,7 @@ int getPinByKey() {
 void pinMode(int pin, int mode) {
   // Test valid pin
   if(!gpioIsValid(pin)) {
-    debug("Invalid pin %d. See pinTable in beagleboneConfig.c.", pin);
+    debug("Invalid pin %d", pin);
     return;
   }
 
@@ -224,8 +223,8 @@ void analogWrite(int pin, int value) {
  * value between 0 and 100 (coresponding to 1.8V)
  */
 int analogRead(int pin) {
-  if(!(0 <= pin && pin <= 7)) {
-    debug("Value of pin should be in [0, 7] interval");
+  if(!(200 <= pin && pin <= 206)) {
+    debug("Value of pin should be in [200, 206] interval");
     return -1;
   }
 
