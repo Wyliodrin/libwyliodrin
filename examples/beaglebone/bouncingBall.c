@@ -46,9 +46,12 @@ int main() {
     digitalWrite(USR1, LOW);
   }
 
+  delay(INITIAL_MILLIS);
+
   pinReset(USR0);
   pinReset(USR1);
   pinReset(USR2);
   pinReset(USR3);
+  
   return 0;
 }
