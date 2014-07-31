@@ -910,6 +910,9 @@ result_t pwmEnable(const char *key) {
     return ERROR;
   }
 
+  // Sleep some time for loadDeviceTree to take effect
+  usleep(300 * 1000);
+
   snprintf(pwmTestFragment, sizeof(pwmTestFragment), "pwm_test_%s", key);
   if(buildPath(pathOcp, pwmTestFragment, pathPwmTest, sizeof(pathPwmTest)) == ERROR) {
     debug("Could not build path to %s", pwmTestFragment);
@@ -931,11 +934,7 @@ result_t pwmEnable(const char *key) {
   while(aux->next != NULL) {
     aux = aux->next;
   }
-
   aux->next = newNode;
-
-  // Sleep some time for loadDeviceTree to take effect
-  usleep(5000);
 
   return SUCCESS;
 }
