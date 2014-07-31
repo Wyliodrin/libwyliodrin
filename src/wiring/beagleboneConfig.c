@@ -311,7 +311,7 @@ result_t unloadDeviceTree(const char *name) {
   char pathSlots    [128];
   char slotsDirPath [128];
   char line         [256];
-  char *colon;
+  char *p;
 
   if(strcmp(pathCapemgr, "") == 0) {
     if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
@@ -330,9 +330,18 @@ result_t unloadDeviceTree(const char *name) {
   while (fgets(line, sizeof(line), pFile)) {
     // Device is loaded, let's unload it
     if (strstr(line, name)) {
-      colon = strstr(line, ":");
-      colon = '\0';
-      fprintf(pFile, "-%s", line);
+      // Stop at first colon
+      p = strstr(line, ":");
+      strncpy(p, "\0", 1);
+
+      // Trim leading whitespace
+      p = line;
+      while(isspace(*p)) {
+        p++;
+      }
+
+      fprintf(pFile, "-%s", p);
+
       fclose(pFile);
       return SUCCESS;
     }

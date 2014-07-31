@@ -26,11 +26,11 @@ int main() {
   for(i = 0; i < NO_BLINKS; i++) {
     for(value = 0; value <= 255; value += 10) {
       analogWrite(P9_14, value);
-      delay(50);
+      delay(10);
     }
     for(value = 255; value >= 0; value -= 10) {
       analogWrite(P9_14, value);
-      delay(50);
+      delay(10);
     }
   }
 
