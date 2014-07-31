@@ -214,7 +214,7 @@ void analogWrite(int pin, int value) {
   }
 
   if(!(0 <= value && value <= 255)) {
-    debug("Value should be in [0, 255] interval");
+    debug("Invalid value %d. Value should be in [0, 255] interval", value);
     return;
   }
 

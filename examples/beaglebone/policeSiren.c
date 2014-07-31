@@ -12,7 +12,7 @@
 #include <Wyliodrin/wiring.h>
 #include <Wyliodrin/beagleboneConfig.h>
 
-#define NO_BLINKS 10;
+#define NO_BLINKS 10
 
 int main() {
   int i;
@@ -26,11 +26,11 @@ int main() {
   for(i = 0; i < NO_BLINKS; i++) {
     for(value = 0; value <= 255; value += 10) {
       analogWrite(P9_14, value);
-      delay(100);
+      delay(50);
     }
-    for(; value >= 0; value -= 10) {
+    for(value = 255; value >= 0; value -= 10) {
       analogWrite(P9_14, value);
-      delay(100);
+      delay(50);
     }
   }
 
