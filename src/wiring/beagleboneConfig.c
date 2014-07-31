@@ -25,6 +25,7 @@ extern "C" {
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "beagleboneConfig.h"
 
 // PWM Constants
@@ -932,6 +933,10 @@ result_t pwmEnable(const char *key) {
   }
 
   aux->next = newNode;
+
+  // Sleep some time for loadDeviceTree to take effect
+  usleep(5000);
+
   return SUCCESS;
 }
 
