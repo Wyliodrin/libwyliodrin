@@ -135,10 +135,10 @@ void digitalWrite(int pin, int value) {
 
   // Test if pin is exported
   if(!gpioIsExported(pin)) {
-    debug("Pin %d is not exported. pinMode should be called before digitalWrite.", pin);
-    return;
+    gpioExport(pin);
   }
 
+  gpioSetDir(pin, OUTPUT);
   gpioSetValue(pin, value);
 }
 
@@ -160,8 +160,7 @@ int digitalRead(int pin) {
 
   // Test if pin is exported
   if(!gpioIsExported(pin)) {
-    debug("pin %d is not exported. You should call pinMode before digitalRead", pin);
-    return -1;
+    gpioExport(pin);
   }
 
   // Handle case where pin is allocated as a gpio-led
@@ -169,6 +168,7 @@ int digitalRead(int pin) {
     return ledGetValue(pin);
   }
 
+  gpioSetDir(pin, INPUT);
   return gpioGetValue(pin);
 }
 
@@ -188,21 +188,21 @@ int digitalRead(int pin) {
  * same pin).
  */
 void analogWrite(int pin, int value) {
-  if(!(0 <= value && value <= 255)) {
-    debug("Value should be in [0, 255] interval");
-    return;
-  }
-
   if(!pwmIsValid(pin)) {
     debug("Pin %d is not a valid PWM pin", pin);
     return;
   }
 
-  char *key;
+  if(!(0 <= value && value <= 255)) {
+    debug("Value should be in [0, 255] interval");
+    return;
+  }
+
+  const char *key;
   ulong duty;
   ulong period;
 
-  key = strdup(getKeyByGpio(pin));
+  key = getKeyByGpio(pin);
   pwmEnable(key);
 
   period = pwmGetPeriod(key);
@@ -228,7 +228,6 @@ int analogRead(int pin) {
     return -1;
   }
 
-  ainInit();
   return ainGetValue(pin) / 18;
 }
 

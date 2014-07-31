@@ -196,6 +196,8 @@ byte       pwmGetRun      (const char* key);
  *************************************************************************************************/
 
 void ainInit     ();
+bool ainIsValid  (const byte gpio);
+
 int  ainGetValue (const byte gpio);
 
 

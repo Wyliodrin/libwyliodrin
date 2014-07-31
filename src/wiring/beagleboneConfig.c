@@ -1176,12 +1176,23 @@ void ainInit() {
 }
 
 /**
+ * Checks if gpio value represents an AIN pin
+ */
+bool ainIsValid(const byte gpio) {
+  return 200 <= gpio && gpio <= 206;
+}
+
+/**
  * Returns value of AIN pin
  */
 int ainGetValue(const byte gpio) {
   int  fdAin;
   char buf[16];
   char pathAin[128];
+
+  if(!ainInitialized) {
+    ainInit();
+  }
 
   snprintf(pathAin, sizeof(pathAin), "%s/AIN%d", pathHelper, gpio - 200);
 
