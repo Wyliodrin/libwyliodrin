@@ -5,6 +5,8 @@
  * Turns ON and OFF on-board led USR0 for 10 times at 0.5 secs interval
  *************************************************************************************************/
 
+#include <Wyliodrin/beagleboneConfig.h>
+
 #define NO_BLINKS 10
 
 int main() {
@@ -13,7 +15,7 @@ int main() {
 
   USR0 = getPinByKey("USR0");
 
-  pinMode(USR0, OUTPUT)
+  pinMode(USR0, OUTPUT);
 
   for(i = 0; i < NO_BLINKS; i++) {
     digitalWrite(USR0, HIGH);

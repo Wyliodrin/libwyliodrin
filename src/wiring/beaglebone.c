@@ -94,7 +94,7 @@ void pinMode(int pin, int mode) {
   }
 
   // Handle case where pin is allocated as a gpio-led
-  if(isLed(pin)) {
+  if(ledIsValid(pin)) {
     if(mode != OUTPUT) {
       debug("pinMode only supports mode OUTPUT for LEDs");
     } else {
@@ -128,7 +128,7 @@ void digitalWrite(int pin, int value) {
   }
 
   // Handle case where pin is allocated as a gpio-led
-  if(isLed(pin)) {
+  if(ledIsValid(pin)) {
     ledSetValue(pin, value);
     return;
   }
@@ -164,7 +164,7 @@ int digitalRead(int pin) {
   }
 
   // Handle case where pin is allocated as a gpio-led
-  if(isLed(pin)) {
+  if(ledIsValid(pin)) {
     return ledGetValue(pin);
   }
 
