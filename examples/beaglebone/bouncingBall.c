@@ -8,7 +8,8 @@
 #include <Wyliodrin/wiring.h>
 #include <Wyliodrin/beagleboneConfig.h>
 
-#define MILLIS 500
+#define INITIAL_MILLIS 500
+#define STEP           50
 
 int main() {
   int millis;
@@ -24,7 +25,7 @@ int main() {
   pinMode(USR2, OUTPUT);
   pinMode(USR3, OUTPUT);
 
-  for(millis = 500; millis > 0; millis -= 25) {
+  for(millis = INITIAL_MILLIS; millis > 0; millis -= STEP) {
     digitalWrite(USR0, HIGH);
     delay(millis);
     digitalWrite(USR0, LOW);
