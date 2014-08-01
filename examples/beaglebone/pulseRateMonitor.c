@@ -16,6 +16,7 @@
 #define SECONDS    60
 #define LOW_LIMIT  10
 #define HIGH_LIMIT 90
+#define DELAY      100
 
 int main() {
   clock_t tStart;
@@ -32,7 +33,7 @@ int main() {
   cnt = 0;
   isUp = false;
   tStart = clock();
-  while(100 * (clock() - tStart) / CLOCKS_PER_SEC < SECONDS) {
+  while(DELAY * (clock() - tStart) / CLOCKS_PER_SEC < SECONDS) {
     value = analogRead(AIN1);
     if(!isUp && value > HIGH_LIMIT) {
       printf("TIC\n");
@@ -43,7 +44,7 @@ int main() {
       isUp = false;
       cnt++;
     }
-    delay(100);
+    delay(DELAY);
   }
 
   printf("Pulse rate: %d beats per minute\n", cnt);

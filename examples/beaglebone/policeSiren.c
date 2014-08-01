@@ -14,7 +14,7 @@
 
 #define NO_BLINKS 10
 #define STEP      10
-#define SLEEP     10
+#define DELAY     10
 
 int main() {
   int i;
@@ -28,11 +28,11 @@ int main() {
   for(i = 0; i < NO_BLINKS; i++) {
     for(value = 0; value <= 255; value += STEP) {
       analogWrite(P9_14, value);
-      delay(SLEEP);
+      delay(DELAY);
     }
     for(value = 255; value >= 0; value -= STEP) {
       analogWrite(P9_14, value);
-      delay(SLEEP);
+      delay(DELAY);
     }
   }
 

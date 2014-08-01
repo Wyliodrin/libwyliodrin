@@ -2,13 +2,14 @@
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
  * Date last modified: July 2014
  *
- * Turns ON and OFF on-board led USR0 for 10 times at 0.5 secs interval
+ * Turns ON and OFF on-board led USR0 for NO_BLINKS times at DELAY millis interval
  *************************************************************************************************/
 
 #include <Wyliodrin/wiring.h>
 #include <Wyliodrin/beagleboneConfig.h>
 
 #define NO_BLINKS 10
+#define DELAY     500
 
 int main() {
   int i;
@@ -20,9 +21,9 @@ int main() {
 
   for(i = 0; i < NO_BLINKS; i++) {
     digitalWrite(USR0, HIGH);
-    delay(500);
+    delay(DELAY);
     digitalWrite(USR0, LOW);
-    delay(500);
+    delay(DELAY);
   }
 
   pinReset(USR0);

@@ -2,7 +2,7 @@
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
  * Date last modified: July 2014
  *
- * Turns ON and OFF an external led for 10 times at 0.5 secs interval
+ * Turns ON and OFF an external led for NO_BLINKS times at DELAY millis interval
  *
  * CIRCUIT: GND connected to one end of 10 kohm resistance
  *          the other end of resistance connected to led's cathode (-) (shorted leg)
@@ -13,6 +13,7 @@
 #include <Wyliodrin/beagleboneConfig.h>
 
 #define NO_BLINKS 10
+#define DELAY     500
 
 int main() {
   int i;
@@ -24,9 +25,9 @@ int main() {
 
   for(i = 0; i < NO_BLINKS; i++) {
     digitalWrite(pin, HIGH);
-    delay(500);
+    delay(DELAY);
     digitalWrite(pin, LOW);
-    delay(500);
+    delay(DELAY);
   }
 
   pinReset(pin);
