@@ -1,4 +1,9 @@
-all: blinkUserLed bouncingBall policeSiren pulseRateMonitor
+all: blink blinkUserLed bouncingBall policeSiren pulseRateMonitor
+.PHONY: all
+
+blink: blink.c
+	gcc -Wall blink.c -o blink -lwyliodrin
+.PHONY: blink
 
 blinkUserLed: blinkUserLed.c
 	gcc -Wall blinkUserLed.c -o blinkUserLed -lwyliodrin
@@ -17,5 +22,5 @@ pulseRateMonitor: pulseRateMonitor.c
 .PHONY: pulseRateMonitor
 
 clean:
-	rm blinkUserLed bouncingBall policeSiren pulseRateMonitor
+	rm blink blinkUserLed bouncingBall policeSiren pulseRateMonitor
 .PHONY: clean
