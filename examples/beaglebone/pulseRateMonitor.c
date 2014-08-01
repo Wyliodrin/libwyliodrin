@@ -26,13 +26,13 @@ int main() {
 
   printf("*** Pulse Rate Monitor ***\n");
 
-  AIN1 = getPinByKey("AIN1");
+  AIN1 = getPinByName("AIN1");
   pinMode(AIN1, INPUT);
 
   cnt = 0;
   isUp = false;
   tStart = clock();
-  while((clock() - tStart) / CLOCKS_PER_SEC < SECONDS) {
+  while(100 * (clock() - tStart) / CLOCKS_PER_SEC < SECONDS) {
     value = analogRead(AIN1);
     if(!isUp && value > HIGH_LIMIT) {
       printf("TIC\n");

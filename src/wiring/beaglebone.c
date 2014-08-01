@@ -109,6 +109,7 @@ void pinMode(int pin, int mode) {
     } else {
       ainInit();
     }
+    return;
   }
 
   // Handle case where pin is PWM
