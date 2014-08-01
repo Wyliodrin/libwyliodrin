@@ -6,7 +6,7 @@
  *
  * CIRCUIT: GND connected to one end of 10 kohm resistance
  *          the other end of resistance connected to led's cathode (-) (shorted leg)
- *          the led's anode (+) (the longer leg) connected to P8_3
+ *          the led's anode (+) (the longer leg) connected to P9_12
  *************************************************************************************************/
 
 #include <Wyliodrin/wiring.h>
@@ -19,7 +19,7 @@ int main() {
   int i;
   int pin;
 
-  pin = getPinByKey("P8_3");
+  pin = getPinByKey("P9_12");
 
   pinMode(pin, OUTPUT);
 
