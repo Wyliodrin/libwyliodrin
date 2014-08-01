@@ -55,6 +55,10 @@ void pinReset(int pin) {
     return;
   }
 
+  if(ainIsValid(pin)) {
+    return;
+  }
+
   gpioUnexport(pin);
 }
 
