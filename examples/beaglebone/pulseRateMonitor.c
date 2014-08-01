@@ -14,15 +14,15 @@
 #include <Wyliodrin/beagleboneConfig.h>
 
 #define SECONDS    60
-#define LOW_LIMIT  50
-#define HIGH_LIMIT 50
+#define LOW_LIMIT  10
+#define HIGH_LIMIT 90
 
 int main() {
   clock_t tStart;
-  int cnt;
   bool isUp;
   int value;
   int AIN1;
+  int cnt;
 
   printf("*** Pulse Rate Monitor ***\n");
 
