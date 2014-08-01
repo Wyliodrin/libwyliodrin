@@ -2,7 +2,11 @@
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
  * Date last modified: July 2014
  *
- * Turns ON and OFF on-board led USR0 for 10 times at 0.5 secs interval
+ * Turns ON and OFF an external led for 10 times at 0.5 secs interval
+ *
+ * CIRCUIT: GND connected to one end of 10 kohm resistance
+ *          the other end of resistance connected to led's cathode (-) (shorted leg)
+ *          the led's anode (+) (the longer leg) connected to P8_3
  *************************************************************************************************/
 
 #include <Wyliodrin/wiring.h>
@@ -12,19 +16,19 @@
 
 int main() {
   int i;
-  int USR0;
+  int pin;
 
-  USR0 = getPinByKey("USR0");
+  pin = getPinByKey("P8_3");
 
-  pinMode(USR0, OUTPUT);
+  pinMode(pin, OUTPUT);
 
   for(i = 0; i < NO_BLINKS; i++) {
-    digitalWrite(USR0, HIGH);
+    digitalWrite(pin, HIGH);
     delay(500);
-    digitalWrite(USR0, LOW);
+    digitalWrite(pin, LOW);
     delay(500);
   }
 
-  pinReset(USR0);
+  pinReset(pin);
   return 0;
 }
