@@ -128,7 +128,7 @@ udooPin_t pinTable[] = {
     {"J15",  "CANTX",   "PA1",         "CANTX",       0 }};
 
 
-analogPin[] = {
+extern const analogPinDescription analogPin[] = {
     // 0 .. 53 - Digital pins
     // ----------------------
     // 0/1 - UART (Serial)

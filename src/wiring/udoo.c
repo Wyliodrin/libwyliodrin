@@ -117,6 +117,11 @@ void analogReference (eAnalogReference arefMode)
     analog_reference = arefMode;
 }
 
+/*
+ * \brief Reads the value from the specified analog pin.
+ * \param ulPin
+ * \return Read value from selected pin, if no error.
+ */
 uint32_t analogRead (uint32_t myPin)
 {
     uint32_t myPinValue = 0;

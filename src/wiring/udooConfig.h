@@ -5,10 +5,10 @@
  *     https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
  * 
  * CONTENT:
- * 1. Constants, Flags and Structures
- * 2. GPIO
- * 3. Debug
- * 4. Includes
+ * 1. Includes 
+ * 2. Constants, Flags and Structures
+ * 3. GPIO
+ * 4. Debug
  *************************************************************************************************/
 
 
@@ -21,7 +21,25 @@ extern "C" {
 
 
 /**************************************************************************************************
- * 1. Constants, Flags and Structures
+ * 1. Includes
+ *************************************************************************************************/
+
+/**
+ * All the required libraries in most of cases
+ * Particular libraries are included separately in the c files
+ */
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+
+
+/**************************************************************************************************
+ * 2. Constants, Flags and Structures
  *************************************************************************************************/
 
 
@@ -74,7 +92,7 @@ typedef enum _EAnalogChannel {
     ADC10,
     ADC11,
     ADC12,
-    ADC13
+    ADC13,
     ADC14,
     ADC15,
     DA0,
@@ -122,7 +140,7 @@ typedef struct {
 } udooPin_t;
 
 /**************************************************************************************************
- * 2. GPIO
+ * 3. GPIO
  *************************************************************************************************/
 
 
@@ -167,7 +185,7 @@ int irqToGpio           (byte gpio);
 
 
 /**************************************************************************************************
- * 3. Debug
+ * 4. Debug
  *************************************************************************************************/
 
 /**
@@ -185,24 +203,6 @@ int irqToGpio           (byte gpio);
     }                                                                              \
   } while (0)                                                                      \
 
-
-
-/**************************************************************************************************
- * 4. Includes
- *************************************************************************************************/
-
-/**
- * All the required libraries in most of cases
- * Particular libraries are included separately in the c files
- */
-
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
 
 
 #ifdef __cplusplus
