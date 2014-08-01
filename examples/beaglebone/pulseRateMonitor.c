@@ -43,6 +43,7 @@ int main() {
       isUp = false;
       cnt++;
     }
+    delay(100);
   }
 
   printf("Pulse rate: %d beats per minute\n", cnt);
