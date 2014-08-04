@@ -66,9 +66,12 @@ extern "C" {
 #define PIN_INVALID_ERROR -134    // pin is invalid
 #define UNKNOWN_VALUE_ERROR -135
 #define NOT_ANALOG_PIN_ERROR -136
+#define CLOCK_TIME_ERROR -137
 
 #define ADC_RESOLUTION 12
-
+#define LSBFIRST 0
+#define MSBFIRST 1
+ 
 // Edge
 enum whatEdge {
     NONE,
@@ -122,8 +125,8 @@ static const uint8_t CANRX = 68;
 static const uint8_t CANTX = 69;
 
 typedef struct _AnalogPinDescription {
-    uint32_t analogChannel;       // Analog pin in the Arduino context (label on the board)
-    uint32_t ADCChannelNumber;    // ADC Channel number in the SAM device
+    EAnalogChannel analogChannel;       // Analog pin in the Arduino context (label on the board)
+    EAnalogChannel ADCChannelNumber;    // ADC Channel number in the SAM device
 } analogPinDescription;
 
 // Pins table to be instanciated into other sources
