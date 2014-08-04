@@ -11,20 +11,20 @@
  * 1.  General configuration
  * 2.  Digital I/O
  * 3.  Analog I/O
- * 3.  Advanced I/O
- * 4.  Time
- * 5.  Communication (Serial, Stream)
- * 6.  UARTs: uart1, uart3, uart4, uart5
- * 7.  SD1
- * 8.  SPIs: spi1, spi2, spi5
- * 9.  I2C1
- * 10. Spdif
- * 11. Timer capture
- * 12. Timer compare
- * 13. WATCHDOG FUNCTIONALITIES: watchdog reset, watchdog out
- * 14. Clock out
- * 15. PWMs: pwm1, pwm2, pwm3, pwm4
- * 16. Digital audio 
+ * 4.  Advanced I/O
+ * 5.  Time
+ * 6.  Communication (Serial, Stream)
+ * 7.  UARTs: uart1, uart3, uart4, uart5
+ * 8.  SD1
+ * 9.  SPIs: spi1, spi2, spi5
+ * 10. I2C1
+ * 11. Spdif
+ * 12. Timer capture
+ * 13. Timer compare
+ * 14. WATCHDOG FUNCTIONALITIES: watchdog reset, watchdog out
+ * 15. Clock out
+ * 16. PWMs: pwm1, pwm2, pwm3, pwm4
+ * 17. Digital audio 
  *************************************************************************************************/
 
 #ifdef UDOO
@@ -118,7 +118,7 @@ void analogReference (eAnalogReference arefMode)
 }
 
 /*
- * \brief Reads the value from the specified analog pin.
+ * \brief Reads the value from the specified analog pin.    
  * \param ulPin
  * \return Read value from selected pin, if no error.
  */
@@ -176,6 +176,102 @@ uint32_t analogRead (uint32_t myPin)
     }
     return myPinValue;
 }
+
+
+/**************************************************************************************************
+ * 4. Advanced I/O
+ *************************************************************************************************/
+
+/*
+ * Shifts in a byte of data one bit at a time.
+ * Starts either from the most or least significant bit.
+ * For each bit the clock pin is pulled high, the next bit is read from the data line, and then
+ * the clock pin is taken low. 
+ */
+uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
+{
+    uint8_t value = 0;
+    uint8_t i;
+    for (i = 0; i < 8; i++) {
+        digitalWrite(clockPin, HIGH);
+        // TODO: handle case if digitalRead() returns error codes
+        if (bitOrder == LSBFIRST) {
+            value |= digitalRead(dataPin) << i;
+        } else {
+            value |= digitalRead(dataPin) << (7 - i);
+        }
+        digitalWrite(clockPin, LOW);
+    }
+    return value;
+}
+
+/*
+ * Shifts data out to a clocked source
+ * Each bit is written in turn to a data pin after wich a clock pin is pulsed (taken high, 
+ * the low), to indicate that the bit is available.
+ */
+void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val)
+{
+    uint8_t i;
+    for (i = 0; i < 8; i++) {
+        if (bitOrder == LSBFIRST) {
+            digitalWrite(dataPin, !!(val & (1 << i)));
+        } else {
+            digitalWrite(dataPin, !!(val & (1 << (7 - i))));
+        }
+        digitalWrite(clockPin, HIGH);
+        digitalWrite(clockPin, LOW);
+    }
+}
+
+
+
+/**************************************************************************************************
+ * 5. Time
+ *************************************************************************************************/
+
+/*
+ * Pauses the program for the amount of time (in milliseconds) specified as parameter
+ * There are 1000 milliseconds in 1 second
+ */
+void delay (unsigned int ms)
+{
+/*
+ * Suspend execution of the calling thread for (at least) ms microseconds
+ */
+    usleep(ms * 1000);
+}
+
+/*
+ * Pauses the program for the amount of time (in microseconds) specified
+ * as parameter
+ */
+void delayMicroseconds (unsigned int mcs)
+{
+    usleep(mcs);
+}
+
+/*
+ * Returns the number of microseconds since the UDOO board began running the current program
+ * This number will go back to zero after some time.
+ * Note: there are 1000 microseconds in 1 millisecond and 1000000 microseconds in 1 second
+ */
+unsigned long micros (void)
+{
+    struct timespec tm;
+    int ret = clock_gettime(CLOCK_REALTIME, &tm);
+    if (ret == -1) {
+        debug("Clock Time error");
+        return CLOCK_TIME_ERROR;
+    }
+    return (unsigned long)(tm.tv_sec * 1000000L + tm.tv_nsec / 1000L);
+}
+
+unsigned long milis (void)
+{
+    return micros() / 1000;
+}
+
 
 #ifdef __cplusplus
 }
