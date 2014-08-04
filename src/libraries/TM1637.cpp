@@ -142,7 +142,7 @@ void TM1637::set(uint8_t brightness,uint8_t SetData,uint8_t SetAddr)
 
 //Whether to light the clock point ":".
 //To take effect the next time it displays.
-void TM1637::point(boolean PointFlag)
+void TM1637::point(bool PointFlag)
 {
   _PointFlag = PointFlag;
 }
