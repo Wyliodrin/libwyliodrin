@@ -29,6 +29,16 @@ static mraa_i2c_context i2c_buses[MAX_I2C_BUSES];
 pthread_mutex_t lockspi;
 pthread_mutex_t locki2c;
 
+int getSerialId()
+{
+	return -1;
+}
+
+void releaseSerial(int id)
+{
+	
+}
+
 int getSPIId ()
 {
 	int i;
@@ -387,5 +397,42 @@ int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 	return -1;
 }
 
+int serial_openadapter(char *serial_bus)
+{
+	return -1;
+
+}
+int serial_set_speed(int serial_id, int baud)
+{
+	return 0;
+}
+int serial_bytes_available(int serial_id)
+{
+	return 0;
+}
+int serial_closeadapter(int serial_id)
+{
+	return 0;
+}
+int serial_writebyte(int serial_id, uint8_t byte)
+{
+	return 0;
+}
+int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length)
+{
+	return 0;
+}
+uint8_t serial_readbyte(int serial_id)
+{
+	return -1;
+}
+int serial_readbytes(int serial_id, uint8_t *buf, int length)
+{
+	return 0;
+}
+int serial_flush(int serial_id)
+{
+	return 0;
+}
 #endif
 
