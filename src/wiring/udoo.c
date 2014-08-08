@@ -27,12 +27,12 @@
  * 17. Digital audio 
  *************************************************************************************************/
 
-#ifdef UDOO
+//#ifdef UDOO
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
 #endif
-
+*/
 
 #include <time.h>
 #include "wiring.h"
@@ -89,8 +89,17 @@ int digitalRead (int pin)
 
 
 /**************************************************************************************************
- 3. Analog I/O
+ *  3. Analog I/O 
+ * 16. PWMs: pwm1, pwm2, pwm3, pwm4
  *************************************************************************************************/
+
+
+int analogRead (int pin)
+{
+    firmata_pinMode(firmata, pin, MODE_ANALOG);
+    firmata_pull(firmata);
+    return firmata->pins[pin].value;
+}
 
 void analogWrite (int pin, int value)
 {
@@ -100,7 +109,7 @@ void analogWrite (int pin, int value)
     firmata = firmata_new(str);     // init Firmata
     while (!firmata->isReady)       // wait until device is up
         firmata_pull(firmata);
-    firmata_pinMode(firmata, pin, MODE_ANALOG);
+    firmata_pinMode(firmata, pin, MODE_PWM);
     firmata_analogWrite(firmata, pin, value);
 }
 
@@ -183,6 +192,7 @@ void delayMicroseconds (unsigned int mcs)
  * This number will go back to zero after some time.
  * Note: there are 1000 microseconds in 1 millisecond and 1000000 microseconds in 1 second
  */
+/*
 unsigned long micros (void)
 {
     struct timespec tm;
@@ -198,10 +208,12 @@ unsigned long milis (void)
 {
     return micros() / 1000;
 }
+*/
 
-
+/*
 #ifdef __cplusplus
 }
 #endif
+*/
 
-#endif /* UDOO */
+//#endif /* UDOO */
