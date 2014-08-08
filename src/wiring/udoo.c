@@ -41,6 +41,30 @@ extern "C" {
 
 
 /**************************************************************************************************
+ * 1. General configuration
+ *************************************************************************************************/
+
+t_firmata *firmata;
+
+t_firmata *initFirmata (t_firmata *firmata)
+{
+    int i = 0;
+    char str[] = "/dev/ttymxc3";
+    firmata = firmata_new(str);     // init Firmata
+    while (!firmata->isReady)       // wait until device is up
+        firmata_pull(firmata);
+    return firmata;
+}
+
+int wiringSetup ()
+{
+    initFirmata(firmata);
+    // TODO
+    return 0;
+}
+
+
+/**************************************************************************************************
  * 2. Digital I/O
  *************************************************************************************************/
 
@@ -100,12 +124,6 @@ int analogRead (int pin)
 
 void analogWrite (int pin, int value)
 {
-    t_firmata *firmata;
-    int i = 0;
-    char str[] = "/dev/ttymxc3";
-    firmata = firmata_new(str);     // init Firmata
-    while (!firmata->isReady)       // wait until device is up
-        firmata_pull(firmata);
     firmata_pinMode(firmata, pin, MODE_PWM);
     firmata_analogWrite(firmata, pin, value);
 }
