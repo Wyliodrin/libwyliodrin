@@ -72,6 +72,7 @@ void pinMode (int pin, int mode)
 
 void digitalWrite (int pin, int value)
 {
+    pinMode(pin, OUTPUT);
     gpioSetValue(pin, value);
 }
 
