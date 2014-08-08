@@ -44,7 +44,6 @@ extern "C" {
  * 1. General configuration
  *************************************************************************************************/
 
-t_firmata *firmata;
 
 t_firmata *initFirmata (t_firmata *firmata)
 {
@@ -56,9 +55,10 @@ t_firmata *initFirmata (t_firmata *firmata)
     return firmata;
 }
 
+t_firmata *firmata = initFirmata(firmata);
+
 int wiringSetup ()
 {
-    initFirmata(firmata);
     // TODO
     return 0;
 }
@@ -114,17 +114,28 @@ int digitalRead (int pin)
  * 16. PWMs: PWM1, PWM2, PWM3, PWM4
  *************************************************************************************************/
 
-
+/*
+ * Reads the value from the specified analog pin
+ * UDOO board contains 11 analog pins: A0 ... A11
+ */
 int analogRead (int pin)
 {
-    firmata_pinMode(firmata, pin, MODE_ANALOG);
+    if (firmata->pins[pin].mode != MODE_ANALOG)
+        firmata_pinMode(firmata, pin, MODE_ANALOG);
     firmata_pull(firmata);
     return firmata->pins[pin].value;
 }
 
+/*
+ * Writes an analog value (PWM wave) to a pin
+ * Can be used to light a LED at varying brightnesses or drive a motor at various speed
+ * After a call to analogWrite(), the pin will generate a steady square wave of the specified 
+ * duty cycle until the next call to analogWrite().
+ */
 void analogWrite (int pin, int value)
 {
-    firmata_pinMode(firmata, pin, MODE_PWM);
+    if (firmata->pins[pin].mode != MODE_PWM)
+        firmata_pinMode(firmata, pin, MODE_PWM);
     firmata_analogWrite(firmata, pin, value);
 }
 
