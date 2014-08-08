@@ -29,6 +29,10 @@
 #define MODE_SHIFT	0x05
 #define MODE_I2C	0x06
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 45083e654333cd3f28691095aba5ce06a5d4b16a
 #define FIRMATA_START_SYSEX		0xF0 // start a MIDI Sysex message                                                   
 #define FIRMATA_END_SYSEX		0xF7 // end a MIDI Sysex message                                                     
 #define FIRMATA_PIN_MODE_QUERY		0x72 // ask for current and supported pin modes                                      

@@ -5,9 +5,10 @@
  *     https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
  * 
  * CONTENT:
- * 1. Constants & Flags
- * 2. GPIO
- * 3. Debug
+ * 1. Includes 
+ * 2. Constants, Flags and Structures
+ * 3. GPIO
+ * 4. Debug
  *************************************************************************************************/
 
 
@@ -20,7 +21,25 @@ extern "C" {
 
 
 /**************************************************************************************************
- * 1. Constants
+ * 1. Includes
+ *************************************************************************************************/
+
+/**
+ * All the required libraries in most of cases
+ * Particular libraries are included separately in the c files
+ */
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+
+
+/**************************************************************************************************
+ * 2. Constants, Flags and Structures
  *************************************************************************************************/
 
 
@@ -46,39 +65,95 @@ extern "C" {
 #define PIN_EXPORTED_ERROR -133   // pin is exported
 #define PIN_INVALID_ERROR -134    // pin is invalid
 #define UNKNOWN_VALUE_ERROR -135
+#define NOT_ANALOG_PIN_ERROR -136
+#define CLOCK_TIME_ERROR -137
 
+#define ADC_RESOLUTION 12
+#define LSBFIRST 0
+#define MSBFIRST 1
+ 
 // Edge
 enum whatEdge {
-	NONE,
-	RISING,
-	FALLING, 
-	BOTH
+    NONE,
+    RISING,
+    FALLING, 
+    BOTH
 };
+
+typedef enum _EAnalogChannel {
+    NO_ADC = -1,
+    ADC0 = 0,
+    ADC1,
+    ADC2,
+    ADC3,
+    ADC4,
+    ADC5,
+    ADC6,
+    ADC7,
+    ADC8,
+    ADC9,
+    ADC10,
+    ADC11,
+    ADC12,
+    ADC13,
+    ADC14,
+    ADC15,
+    DA0,
+    DA1
+} EAnalogChannel;
+
+typedef enum _eAnalogReference {
+    AR_DEFAULT = 5,
+} eAnalogReference;
+
+// Analog Pins
+static const uint8_t A0    = 54;
+static const uint8_t A1    = 55;
+static const uint8_t A2    = 56;
+static const uint8_t A3    = 57;
+static const uint8_t A4    = 58;
+static const uint8_t A5    = 59;
+static const uint8_t A6    = 60;
+static const uint8_t A7    = 61;
+static const uint8_t A8    = 62;
+static const uint8_t A9    = 63;
+static const uint8_t A10   = 64;
+static const uint8_t A11   = 65;
+static const uint8_t DAC0  = 66;
+static const uint8_t DAC1  = 67;
+static const uint8_t CANRX = 68;
+static const uint8_t CANTX = 69;
+
+typedef struct _AnalogPinDescription {
+    EAnalogChannel analogChannel;       // Analog pin in the Arduino context (label on the board)
+    EAnalogChannel ADCChannelNumber;    // ADC Channel number in the SAM device
+} analogPinDescription;
+
+// Pins table to be instanciated into other sources
+extern const analogPinDescription analogPin[];
 
 typedef unsigned char byte;
 
 typedef struct {
-	const char *bank;
-	const char *key;             // the pin as it appears on the board
-	const char *name;
-	const char *ardFunction;     // Arduino Function
-	byte gpio;
+    const char *bank;
+    const char *key;             // the pin as it appears on the board
+    const char *name;
+    const char *ardFunction;     // Arduino Function
+    byte gpio;
 } udooPin_t;
 
-
-
 /**************************************************************************************************
- * 2. GPIO
+ * 3. GPIO
  *************************************************************************************************/
 
 
 void boardTest          (const char* message);
 
-byte getGpioByName      (const char* name);
+int getGpioByName      (const char* name);
 
-byte getGpioByArdFunc   (const char* ardFunction);
+int getGpioByArdFunc   (const char* ardFunction);
 
-byte getGpioByKey       (const char* key);
+int getGpioByKey       (const char* key);
 
 // test if some number could reference a correct GPIO.
 byte gpioIsValid        (byte gpio);
@@ -95,8 +170,8 @@ int gpioGetDir          (byte gpio);
 int gpioGetValue        (byte gpio);
 int gpioSetValue        (byte gpio, byte value);
 
-void gpioExport         (byte gpio); 
-void gpioUnexport       (byte gpio);
+int gpioExport         (byte gpio); 
+int gpioUnexport       (byte gpio);
 
 void gpioSetEdge        (byte gpio, byte edge);
 byte gpioGetEdge        (byte gpio);
@@ -113,11 +188,12 @@ int irqToGpio           (byte gpio);
 
 
 /**************************************************************************************************
- * 3. Debug
+ * 4. Debug
  *************************************************************************************************/
 
 /**
- * Took this from Matei. It's a nice macro that does all the work good.
+ * Took this from Matei. 
+ * It's a nice macro that does all the work good.
  */
 
 #define DEBUG 1
@@ -129,6 +205,7 @@ int irqToGpio           (byte gpio);
       fprintf(stderr, "\n");                                                       \
     }                                                                              \
   } while (0)                                                                      \
+
 
 
 #ifdef __cplusplus

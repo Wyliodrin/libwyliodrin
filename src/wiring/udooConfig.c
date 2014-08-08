@@ -7,30 +7,24 @@
  *  https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
  *
  * CONTENT:
- * 1. UDOO Pin Table
+ * 1. UDOO Pin Table && Analog Pin Description
  * 2. GPIO functions extend definitions
  *
  *************************************************************************************************/
 
 
-#ifdef UDOO
+//#ifdef UDOO
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
 #include "udooConfig.h"
 
 
 
 /**************************************************************************************************
- * 1. UDOO Pin Table
+ * 1. UDOO Pin Table && Analog Pin Description
  * Based on http://udoo.org/download/files/pinout/UDOO_pinout_alternate_table.pdf
  *  and on http://www.udoo.org/ProjectsAndTutorials/linux-gpio-manipulation/?portfolioID=1394
  *************************************************************************************************/
@@ -134,6 +128,105 @@ udooPin_t pinTable[] = {
     {"J15",  "CANTX",   "PA1",         "CANTX",       0 }};
 
 
+extern const analogPinDescription analogPin[] = {
+    // 0 .. 53 - Digital pins
+    // ----------------------
+    // 0/1 - UART (Serial)
+    {NO_ADC, NO_ADC},  // URXD
+    {NO_ADC, NO_ADC},  // UTXD
+
+    // 2
+    {NO_ADC, NO_ADC},  // TIOA0
+    {NO_ADC, NO_ADC},  // TIOA7
+    {NO_ADC, NO_ADC},  // TIOB6
+
+    // 5
+    {NO_ADC, NO_ADC},  // TIOA6
+    {NO_ADC, NO_ADC},  // PWML7
+    {NO_ADC, NO_ADC},  // PWML6
+    {NO_ADC, NO_ADC},  // PWML5
+    {NO_ADC, NO_ADC},  // PWML4
+    // 10
+    {NO_ADC, NO_ADC},  // TIOB7
+    {NO_ADC, NO_ADC},  // TIOA8
+    {NO_ADC, NO_ADC},  // TIOB8
+
+    // 13 - AMBER LED
+    {NO_ADC, NO_ADC},  // TIOB0
+
+    // 14/15 - USART3 (Serial3)
+    {NO_ADC, NO_ADC},  // TXD3
+    {NO_ADC, NO_ADC},  // RXD3
+
+    // 16/17 - USART1 (Serial2)
+    {NO_ADC, NO_ADC},  // TXD1
+    {NO_ADC, NO_ADC},  // RXD1
+
+    // 18/19 - USART0 (Serial1)
+    {NO_ADC, NO_ADC},  // TXD0
+    {NO_ADC, NO_ADC},  // RXD0
+
+    // 20/21 - TWI1
+    {NO_ADC, NO_ADC},  // TWD1 - SDA0
+    {NO_ADC, NO_ADC},  // TWCK1 - SCL0
+
+    // 22
+    {NO_ADC, NO_ADC},  // PIN22
+    {NO_ADC, NO_ADC},  // PIN23
+    {NO_ADC, NO_ADC},  // PIN24
+    {NO_ADC, NO_ADC},  // PIN25
+    {NO_ADC, NO_ADC},  // PIN26
+    {NO_ADC, NO_ADC},  // PIN27
+    {NO_ADC, NO_ADC},  // PIN28
+    {NO_ADC, NO_ADC},  // PIN29
+    {NO_ADC, NO_ADC},  // PIN30
+    {NO_ADC, NO_ADC},  // PIN31
+    {NO_ADC, NO_ADC},  // PIN32
+    {NO_ADC, NO_ADC},  // PIN33
+    {NO_ADC, NO_ADC},  // PIN34
+    {NO_ADC, NO_ADC},  // PIN35
+    {NO_ADC, NO_ADC},  // PIN36
+    {NO_ADC, NO_ADC},  // PIN37
+    {NO_ADC, NO_ADC},  // PIN38
+    {NO_ADC, NO_ADC},  // PIN39
+    {NO_ADC, NO_ADC},  // PIN40
+    {NO_ADC, NO_ADC},  // PIN41
+    {NO_ADC, NO_ADC},  // PIN42
+    {NO_ADC, NO_ADC},  // PIN43
+    {NO_ADC, NO_ADC},  // PIN44
+    {NO_ADC, NO_ADC},  // PIN45
+    {NO_ADC, NO_ADC},  // PIN46
+    {NO_ADC, NO_ADC},  // PIN47
+    {NO_ADC, NO_ADC},  // PIN48
+    {NO_ADC, NO_ADC},  // PIN49
+    {NO_ADC, NO_ADC},  // PIN50
+    {NO_ADC, NO_ADC},  // PIN51
+    {NO_ADC, NO_ADC},  // PIN52
+    {NO_ADC, NO_ADC},  // PIN53
+
+    // 54 .. 65 - Analog pins 
+    // ----------------------
+    {ADC0, ADC7},      // AD0
+    {ADC1, ADC6},      // AD1
+    {ADC2, ADC5},      // AD2
+    {ADC3, ADC4},      // AD3
+    {ADC4, ADC3},      // AD4
+    {ADC5, ADC2},      // AD5
+    {ADC6, ADC1},      // AD6
+    {ADC7, ADC0},      // AD7
+    {ADC8, ADC10},     // AD8
+    {ADC9, ADC11},     // AD9
+    {ADC10, ADC12},    // AD10
+    {ADC11, ADC13},    // AD11
+
+    // 66/67 - DAC0/DAC1
+    {ADC12, DA0},      // DAC0
+    {ADC13, DA1},      // DAC1
+
+    // 68/69 - CANRX0/CANTX0
+    {ADC14, NO_ADC},   // CANRX
+    {ADC15, NO_ADC},   // CANTX
+};
 
 /**************************************************************************************************
  * 2. GPIO functions [extend definitions]
@@ -161,7 +254,7 @@ void boardTest(const char* message)
  * In case of -1 returned, the given name doesn't exist
  */
 
-byte getGpioByName (const char* name)
+int getGpioByName (const char* name)
 {   
     int i;
     udooPin_t *tmpTable = pinTable;
@@ -174,7 +267,7 @@ byte getGpioByName (const char* name)
     return -1;
 }
 
-byte getGpioByArdFunc (const char* ardFunction)
+int getGpioByArdFunc (const char* ardFunction)
 {
     int i;
     udooPin_t *tmpTable = pinTable;
@@ -187,13 +280,13 @@ byte getGpioByArdFunc (const char* ardFunction)
     return -1;
 }
 
-byte getGpioByKey (const char* key)
+int getGpioByKey (const char* key)
 {
     int i;
     udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->key, key) == 0)
-            return tmpTable->key;
+            return tmpTable->gpio;
         tmpTable++;
     }
     debug("There is no pin on the board with key %s", key);
@@ -209,6 +302,7 @@ byte gpioIsValid (byte gpio)
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (tmpTable->gpio == gpio)
             return 1;
+        tmpTable++;
     }
     return 0;
 }
@@ -217,7 +311,7 @@ byte gpioIsExported (byte gpio)
 {
     char buffer[64];
     snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
-    int canOpenFile = open(buffer, O_WRONLY);
+    int canOpenFile = open(buffer, O_RDONLY);
     if (canOpenFile == -1)
         return 0;
     close(canOpenFile);
@@ -276,13 +370,13 @@ int gpioGetDir (byte gpio)
     } else {
         char buffer[64];
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/direction", gpio);
-        int fo = open(buffer, O_WRONLY);
+        int fo = open(buffer, O_RDONLY);
         memset(buffer, 0, 64);
         read(fo, buffer, 64);
         close(fo);
-        if (strncmp(buffer, 2, GPIOF_DIR_IN) == 0) {
+        if (strncmp(buffer, GPIOF_DIR_IN, 2) == 0) {
             return INPUT;
-        } else if (strncmp(buffer, 3, GPIOF_DIR_OUT) == 0)
+        } else if (strncmp(buffer, GPIOF_DIR_OUT, 3) == 0)
             return OUTPUT;
     }
 }
@@ -305,9 +399,9 @@ int gpioSetValue (byte gpio, byte value)
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
         int fo = open(buffer, O_WRONLY);
         if (value == LOW) {
-            write(fo, LOW, 3);
+            write(fo, "0", 2);
         } else if (value == HIGH) {
-            write(fo, HIGH, 4);
+            write(fo, "1", 2);
         } else {
             debug("Value can be either LOW or HIGH");
             close(fo);
@@ -329,8 +423,8 @@ int gpioGetValue (byte gpio)
     } else {
         char buffer[64], value;
         snprintf(buffer, 64, GPIO_FILE_PREFIX "gpio%d/value", gpio);
-        int fo = open(buffer, O_WRONLY);
-        read(fo, value, 1);
+        int fo = open(buffer, O_RDONLY);
+        read(fo, &value, 1);
         close(fo);
         if (value == '0') {
             return LOW;
@@ -339,6 +433,12 @@ int gpioGetValue (byte gpio)
         }
     }
 }
+
+
+/**
+ * Export/Unexport a specified pin
+ * Functions return 0 if operation succeeded
+ */
 
 int gpioExport (byte gpio)
 {
@@ -380,4 +480,4 @@ int gpioUnexport (byte gpio)
 }
 #endif
 
-#endif /* UDOO */
+//#endif /* UDOO */
