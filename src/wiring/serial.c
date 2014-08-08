@@ -36,7 +36,7 @@ t_serial	*serial_new()
 {
   t_serial	*res;
 
-  res = malloc(sizeof(t_serial));
+  res = (t_serial*)malloc(sizeof(t_serial));
   if (!res)
     {
       return (NULL);
@@ -252,7 +252,7 @@ int		serial_waitInput(t_serial *serial, int msec)
 
 int		serial_discardInput(t_serial *serial)
 {
-  if (!serial->port_is_open) return;
+  if (!serial->port_is_open) return 0;
   // does this really work properly (and is it thread safe) on Linux??                                         
   tcflush(serial->port_fd, TCIFLUSH);
 
