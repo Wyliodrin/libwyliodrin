@@ -124,14 +124,6 @@ static const uint8_t DAC1  = 67;
 static const uint8_t CANRX = 68;
 static const uint8_t CANTX = 69;
 
-typedef struct _AnalogPinDescription {
-    EAnalogChannel analogChannel;       // Analog pin in the Arduino context (label on the board)
-    EAnalogChannel ADCChannelNumber;    // ADC Channel number in the SAM device
-} analogPinDescription;
-
-// Pins table to be instanciated into other sources
-extern const analogPinDescription analogPin[];
-
 typedef unsigned char byte;
 
 typedef struct {
