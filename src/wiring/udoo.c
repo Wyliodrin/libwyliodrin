@@ -79,11 +79,12 @@ void pinMode (int pin, int mode)
         debug("Mode can be either INPUT or OUTPUT");
         return;
     }
-    gpioExport(pin);
+    int gpioPin = pinTable[pin].gpio;
+    gpioExport(gpioPin);
     if (mode == INPUT) {
-        gpioSetDirInput(pin);
+        gpioSetDirInput(gpioPin);
     } else {
-        gpioSetDirOutput(pin);
+        gpioSetDirOutput(gpioPin);
     }
 }
 
@@ -94,8 +95,9 @@ void pinMode (int pin, int mode)
  */
 void digitalWrite (int pin, int value)
 {
-    pinMode(pin, OUTPUT);
-    gpioSetValue(pin, value);
+    int gpioPin = pinTable[pin].gpio;
+    pinMode(gpioPin, OUTPUT);
+    gpioSetValue(gpioPin, value);
 }
 
 /** 
@@ -104,8 +106,9 @@ void digitalWrite (int pin, int value)
  */
 int digitalRead (int pin)
 {
+    int gpioPin = pinTable[pin].gpio;
     // See defined error values in udooConfig.h for invalid/unexported pin that can be returned 
-    return gpioGetValue(pin);
+    return gpioGetValue(gpioPin);
 }
 
 
@@ -120,6 +123,10 @@ int digitalRead (int pin)
  */
 int analogRead (int pin)
 {
+    if (pin < A0 || pin > CANTX) {
+        debug("Pin %d is not analog", pin);
+        return NOT_ANALOG_PIN_ERROR;
+    }
     if (firmata->pins[pin].mode != MODE_ANALOG)
         firmata_pinMode(firmata, pin, MODE_ANALOG);
     firmata_pull(firmata);
