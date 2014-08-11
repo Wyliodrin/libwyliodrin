@@ -118,7 +118,7 @@ void Servo::write(int val)
     #ifdef ARDUINOGALILEO
       int period = (max - min) / 180;
       
-      int cycles = (int)(100.0 * (abs (m_currentAngle - val) / 180));
+      int cycles = (int)(100.0 * ((float)abs (m_currentAngle - val) / 180));
 
       // int cycles = (int)(100.0 * ((float)angle / (float)m_maxAngle));
 
