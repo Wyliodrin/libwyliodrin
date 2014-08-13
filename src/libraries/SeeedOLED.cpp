@@ -19,8 +19,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <Wyliodrin.h>
-#include <Wyliodrin/Wire.h>
+#include "../wiring/wiring.h"
+#include "Wire.h"
 #include "SeeedOLED.h"
 
 
@@ -132,6 +132,7 @@ const unsigned char BasicFont[][8] =
 
 void SeeedOLED::init(void)
 {
+    Wire.begin ()
     sendCommand(SeeedOLED_Display_Off_Cmd); 	//display off
     delay(5); 
     sendCommand(SeeedOLED_Display_On_Cmd); 	//display on
