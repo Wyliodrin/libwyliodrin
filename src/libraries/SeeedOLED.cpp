@@ -132,7 +132,7 @@ const unsigned char BasicFont[][8] =
 
 void SeeedOLED::init(void)
 {
-    Wire.begin ()
+    Wire.begin ();
     sendCommand(SeeedOLED_Display_Off_Cmd); 	//display off
     delay(5); 
     sendCommand(SeeedOLED_Display_On_Cmd); 	//display on
