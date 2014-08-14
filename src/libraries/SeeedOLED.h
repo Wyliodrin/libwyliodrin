@@ -24,7 +24,7 @@
 
 // SeeedOLED Instruction set addresses
 
-#include <Wyliodrin/Wire.h>
+#include "Wire.h"
 
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
