@@ -198,6 +198,7 @@ int analogRead (int pin)
 		aio_pins[pin] = mraa_aio_init (pin);
 	}
 	int adc = mraa_aio_read (aio_pins[pin]);
+	printf ("%d\n", mraa_adc_raw_bits());
 	printf ("%d\n", mraa_adc_supported_bits());
 	if (mraa_adc_supported_bits() == 12)
 	{
