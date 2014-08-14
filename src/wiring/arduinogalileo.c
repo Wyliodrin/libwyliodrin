@@ -204,7 +204,6 @@ int analogRead (int pin)
 		aio_pins[pin] = mraa_aio_init (pin);
 	}
 	int adc = mraa_aio_read (aio_pins[pin]);
-	printf ("%d\n", adc);
 	if (adc_raw_bits != 10)
 	{
 		return (int)((float)adc*1023/adc_power);
