@@ -197,7 +197,13 @@ int analogRead (int pin)
 		resetPin (pin);
 		aio_pins[pin] = mraa_aio_init (pin);
 	}
-	return mraa_aio_read (aio_pins[pin]);
+	int adc = mraa_aio_read (aio_pins[pin]);
+	printf ("%d\n", mraa_adc_supported_bits());
+	if (mraa_adc_supported_bits() == 12)
+	{
+		return (int)(float)adc*1023/4095;
+	}
+	return adc;
 }
 
 void delay (unsigned int milliseconds)
