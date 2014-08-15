@@ -52,13 +52,14 @@ void LED_Bar::latchData()
 
 void LED_Bar::send16bitData(unsigned int data)
 {
+    int value = 0;
     for(int i=0; i<16; i++)
     {
         unsigned int state = data&0x8000 ? HIGH : LOW;
         digitalWrite(__pinDta, state);
 
-        state = digitalRead(__pinClk) ? LOW : HIGH;
-        digitalWrite(__pinClk, state);
+        value = 1-value;
+        digitalWrite(__pinClk, value);
 
         data <<= 1;
     }
