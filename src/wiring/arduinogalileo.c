@@ -3,6 +3,7 @@
 
 #include "wiring.h"
 #include <pthread.h>
+#include <math.h>
 
 static mraa_gpio_context gpio_pins[MAX_GPIO_PINS];
 static mraa_aio_context aio_pins[MAX_AIO_PINS];
@@ -28,6 +29,9 @@ static mraa_i2c_context i2c_buses[MAX_I2C_BUSES];
 
 pthread_mutex_t lockspi;
 pthread_mutex_t locki2c;
+
+int adc_raw_bits = 0;
+int adc_power = 1;
 
 int getSerialId()
 {
@@ -93,6 +97,8 @@ void pwmReset (int pin);
 int wiringSetup ()
 {
 	mraa_init ();
+	adc_raw_bits = mraa_adc_raw_bits();
+	adc_power = pow (2, adc_raw_bits)-1;
 	pthread_mutex_init(&lockspi, NULL);
 	pthread_mutex_init(&locki2c, NULL);
 }
@@ -197,7 +203,12 @@ int analogRead (int pin)
 		resetPin (pin);
 		aio_pins[pin] = mraa_aio_init (pin);
 	}
-	return mraa_aio_read (aio_pins[pin]);
+	int adc = mraa_aio_read (aio_pins[pin]);
+	if (adc_raw_bits != 10)
+	{
+		return (int)((float)adc*1023/adc_power);
+	}
+	return adc;
 }
 
 void delay (unsigned int milliseconds)

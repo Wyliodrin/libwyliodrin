@@ -20,6 +20,7 @@
     #include "libraries/Adafruit_PCD8544.h"
     #include "libraries/Adafruit_ST7735.h"
     #include "libraries/TM1637.h"
+    #include "libraries/SeeedOLED.h"
 %}
 
 %init %{
@@ -49,5 +50,6 @@
 %include "libraries/Adafruit_PCD8544.h"
 %include "libraries/Adafruit_ST7735.h"
 %include "libraries/TM1637.h"
+%include "libraries/SeeedOLED.h"
 
 %template(Pixy) TPixy<LinkSPI>;
