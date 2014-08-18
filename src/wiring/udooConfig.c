@@ -150,7 +150,7 @@ void boardTest(const char* message)
 int getGpioByName (const char* name)
 {   
     int i;
-    udooPin_t *tmpTable = pinTable;
+    const udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->name, name) == 0)
             return tmpTable->gpio;
@@ -163,7 +163,7 @@ int getGpioByName (const char* name)
 int getGpioByArdFunc (const char* ardFunction)
 {
     int i;
-    udooPin_t *tmpTable = pinTable;
+    const udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->ardFunction, ardFunction) == 0)
             return tmpTable->gpio;
@@ -176,7 +176,7 @@ int getGpioByArdFunc (const char* ardFunction)
 int getGpioByKey (const char* key)
 {
     int i;
-    udooPin_t *tmpTable = pinTable;
+    const udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (strcmp(tmpTable->key, key) == 0)
             return tmpTable->gpio;
@@ -191,7 +191,7 @@ byte gpioIsValid (byte gpio)
     if (gpio == 0)
         return 0;
     int i;
-    udooPin_t *tmpTable = pinTable;
+    const udooPin_t *tmpTable = pinTable;
     for (i = 0; i < (sizeof(pinTable) / sizeof(pinTable[0])); i++) {
         if (tmpTable->gpio == gpio)
             return 1;
