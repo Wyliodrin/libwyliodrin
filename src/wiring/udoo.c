@@ -107,6 +107,7 @@ void digitalWrite (int pin, int value)
 int digitalRead (int pin)
 {
     int gpioPin = pinTable[pin].gpio;
+    pinMode(gpioPin, INPUT);
     // See defined error values in udooConfig.h for invalid/unexported pin that can be returned 
     return gpioGetValue(gpioPin);
 }
