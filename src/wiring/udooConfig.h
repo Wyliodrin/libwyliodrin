@@ -15,6 +15,9 @@
 #ifndef __UDOO_CONFIG_H__
 #define __UDOO_CONFIG_H__
 
+#ifndef __FIRMATA__
+#define __FIRMATA__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -205,5 +208,5 @@ int irqToGpio           (byte gpio);
 }
 #endif
 
-
+#endif /* __FIRMATA__ */
 #endif /* __UDOO_CONFIG_H__ */

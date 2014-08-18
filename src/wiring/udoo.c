@@ -37,14 +37,17 @@ extern "C" {
 #include <time.h>
 #include "wiring.h"
 #include "udooConfig.h"
+
+#ifdef __FIRMATA__
 #include "firmata.h"
+#endif
 
 
 /**************************************************************************************************
  * 1. General configuration
  *************************************************************************************************/
 
-
+#ifdef __FIRMATA__
 t_firmata *initFirmata (t_firmata *firmata)
 {
     int i = 0;
@@ -56,6 +59,7 @@ t_firmata *initFirmata (t_firmata *firmata)
 }
 
 t_firmata *firmata = initFirmata(firmata);
+#endif
 
 int wiringSetup ()
 {
@@ -96,7 +100,7 @@ void pinMode (int pin, int mode)
 void digitalWrite (int pin, int value)
 {
     int gpioPin = pinTable[pin].gpio;
-    pinMode(gpioPin, OUTPUT);
+    pinMode(pin, OUTPUT);
     gpioSetValue(gpioPin, value);
 }
 
@@ -122,6 +126,7 @@ int digitalRead (int pin)
  * Reads the value from the specified analog pin
  * UDOO board contains 11 analog pins: A0 ... A11
  */
+#ifdef __FIRMATA__
 int analogRead (int pin)
 {
     if (pin < A0 || pin > CANTX) {
@@ -142,11 +147,14 @@ int analogRead (int pin)
  */
 void analogWrite (int pin, int value)
 {
-    if (firmata->pins[pin].mode != MODE_PWM)
-        firmata_pinMode(firmata, pin, MODE_PWM);
-    firmata_analogWrite(firmata, pin, value);
+    if (value > 255)
+        value = 255;
+    else if (value < 0)
+        value = 0;
+    firmata_pinMode(firmata, pin, MODE_PWM);
+    firmata_analogWrite(firmata, pin, LOW);
 }
-
+#endif
 
 /**************************************************************************************************
  * 4. Advanced I/O
