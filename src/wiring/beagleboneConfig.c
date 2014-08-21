@@ -1238,8 +1238,8 @@ int ainGetValue(const byte gpio) {
 /**
  * Enables I2C-2 Bus
  */
-void i2cEnableI2C2() {
-  loadDeviceTree("BB-I2C1");
+result_t i2cEnableI2C2() {
+  return loadDeviceTree("BB-I2C1");
 }
 
 /**
@@ -1248,7 +1248,7 @@ void i2cEnableI2C2() {
 int i2cOpenBus(byte bus) {
   if(!(0 <= bus && bus <= 2)) {
     debug("Wrong bus value: %d. <bus> value must be in [0, 2] interval", bus);
-    return ERROR;
+    return -1;
   }
 
   int fd;
@@ -1258,7 +1258,7 @@ int i2cOpenBus(byte bus) {
 
   if((fd = open(filename, O_RDWR)) < 0) {
     debug("Could not open file %s", filename);
-    return ERROR;
+    return -1;
   }
 
   return fd;

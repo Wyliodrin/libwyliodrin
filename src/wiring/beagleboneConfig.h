@@ -213,8 +213,8 @@ int  ainGetValue (const byte gpio);
  * 8.I2C
  *************************************************************************************************/
 
-void i2cEnableI2C2 ();
-int  i2cOpenBus    (byte bus);
+result_t i2cEnableI2C2 ();
+int      i2cOpenBus    (byte bus);
 
 
 
