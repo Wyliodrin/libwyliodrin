@@ -65,6 +65,11 @@ extern "C" {
 #define DEFAULT_ON 10
 #define TRANSIENT  11
 
+// I2C Buses
+#define I2C_0 0
+#define I2C_1 1
+#define I2C_2 2
+
 typedef unsigned char byte;
 typedef unsigned int  uint;
 typedef unsigned long ulong;
@@ -209,6 +214,7 @@ int  ainGetValue (const byte gpio);
  *************************************************************************************************/
 
 void i2cEnableI2C2 ();
+int  i2cOpenBus    (byte bus);
 
 
 
