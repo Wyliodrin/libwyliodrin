@@ -27,6 +27,8 @@ extern "C" {
 #include <stdlib.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
 #include "beagleboneConfig.h"
 
 // PWM Constants
@@ -1262,6 +1264,18 @@ int i2cOpenBus(byte bus) {
   }
 
   return fd;
+}
+
+/**
+ * Initialize Communication
+ */
+result_t i2cInitComm(int fd, int address) {
+  if(ioctl(fd, I2C_SLAVE, address) < 0) {
+    debug("Error initializing communication with device");
+    return ERROR;
+  }
+
+  return SUCCESS;
 }
 
 

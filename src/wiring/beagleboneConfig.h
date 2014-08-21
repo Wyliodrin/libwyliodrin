@@ -215,6 +215,7 @@ int  ainGetValue (const byte gpio);
 
 result_t i2cEnableI2C2 ();
 int      i2cOpenBus    (byte bus);
+result_t i2cInitComm   (int fd, int address);
 
 
 
