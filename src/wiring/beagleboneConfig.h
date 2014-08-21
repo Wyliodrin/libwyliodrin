@@ -217,6 +217,7 @@ result_t i2cEnableI2C2 ();
 int      i2cOpenBus    (byte bus);
 result_t i2cInitComm   (int fd, int address);
 result_t i2cRead       (int fd, char *data, int length);
+result_t i2cWrite      (int fd, char *data, int length);
 
 
 

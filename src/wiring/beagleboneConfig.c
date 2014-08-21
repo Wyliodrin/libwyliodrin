@@ -1290,6 +1290,20 @@ result_t i2cRead(int fd, char *data, int length) {
   return SUCCESS;
 }
 
+/**
+ * Write to I2C bus
+ */
+result_t i2cWrite(int fd, char *data, int length) {
+  if(write(fd, data, length) != length) {
+    debug("Could not write to I2C bus");
+    return ERROR;
+  }
+
+  return SUCCESS;
+}
+
+
+
 #ifdef __cplusplus
 }
 #endif
