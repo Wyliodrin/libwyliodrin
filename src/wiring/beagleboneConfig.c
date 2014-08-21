@@ -1278,6 +1278,17 @@ result_t i2cInitComm(int fd, int address) {
   return SUCCESS;
 }
 
+/**
+ * Reads from I2C bus
+ */
+result_t i2cRead(int fd, char *data, int length) {
+  if(read(fd, data, length) != length) {
+    debug("Could not read from I2C bus");
+    return ERROR;
+  }
+
+  return SUCCESS;
+}
 
 #ifdef __cplusplus
 }
