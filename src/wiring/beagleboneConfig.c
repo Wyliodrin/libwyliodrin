@@ -1374,7 +1374,7 @@ byte spiGetMode(int fd) {
  */
 result_t spiSetBitsPerWord(int fd, byte bits) {
   if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0) {
-    debug("Could not set bits %d on bus with file descriptor %d", bits, fd);
+    debug("Could not set bits per word %d on bus with file descriptor %d", bits, fd);
     return ERROR;
   }
 
@@ -1393,6 +1393,29 @@ byte spiGetBitsPerWord(int fd) {
   }
 
   return bits;
+}
+
+/**
+ * Sets SPI Max Speed
+ */
+result_t spiSetMaxSpeed(int fd, uint speed) {
+  if(ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0) {
+    debug("Could not set max speed %d on bus with file descriptor %d", speed, fd);
+    return ERROR;
+  }
+
+  return SUCCESS;
+}
+
+uint spiGetMaxSpeed(int fd) {
+  uint speed;
+
+  if(ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &speed) < 0) {
+    debug("Could not get max speed on bus with file descriptor %d", fd);
+    return -1;
+  }
+
+  return speed;
 }
 
 

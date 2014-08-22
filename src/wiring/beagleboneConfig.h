@@ -239,6 +239,9 @@ byte     spiGetMode        (int fd);
 result_t spiSetBitsPerWord (int fd, byte bits);
 byte     spiGetBitsPerWord (int fd);
 
+result_t spiSetMaxSpeed    (int fd, uint speed);
+uint     spiGetMaxSpeed    (int fd);
+
 
 #ifdef __cplusplus
 }
