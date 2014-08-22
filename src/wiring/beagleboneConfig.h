@@ -233,6 +233,9 @@ result_t spiEnableSPIDEV0 ();
 result_t spiEnableSPIDEV1 ();
 int      spiOpenBus       (byte bus, byte chipselect);
 
+result_t spiSetMode       (int fd, byte mode);
+byte     spiGetMode       (int fd);
+
 
 #ifdef __cplusplus
 }

@@ -29,7 +29,9 @@ extern "C" {
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <linux/types.h>
 #include <linux/i2c-dev.h>
+#include <linux/spi/spidev.h>
 #include "beagleboneConfig.h"
 
 // PWM Constants
@@ -1339,6 +1341,32 @@ int spiOpenBus(byte bus, byte chipselect) {
   }
 
   return fd;
+}
+
+/**
+ * Sets SPI mode
+ */
+result_t spiSetMode(int fd, byte mode) {
+  if(ioctl(fd, SPI_IOC_WR_MODE, &mode) < 0) {
+    debug("Could not set mode %d on bus with file descriptor %d", mode, fd);
+    return ERROR;
+  }
+
+  return SUCCESS;
+}
+
+/**
+ * Returns SPI mode
+ */
+byte spiGetMode(int fd) {
+  byte mode;
+
+  if(ioctl(fd, SPI_IOC_RD_MODE, &mode) < 0) {
+    debug("Could not get mode on bus with file descriptor %d", fd);
+    return -1;
+  }
+
+  return mode;
 }
 
 
