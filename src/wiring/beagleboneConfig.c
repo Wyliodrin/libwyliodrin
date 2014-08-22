@@ -1369,6 +1369,32 @@ byte spiGetMode(int fd) {
   return mode;
 }
 
+/**
+ * Sets SPI bits per word
+ */
+result_t spiSetBitsPerWord(int fd, byte bits) {
+  if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0) {
+    debug("Could not set bits %d on bus with file descriptor %d", bits, fd);
+    return ERROR;
+  }
+
+  return SUCCESS;
+}
+
+/**
+ * Sets SPI bits per word
+ */
+byte spiGetBitsPerWord(int fd) {
+  byte bits;
+
+  if(ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits) < 0) {
+    debug("Could not get bits per word on bus with file descriptor %d", fd);
+    return -1;
+  }
+
+  return bits;
+}
+
 
 #ifdef __cplusplus
 }

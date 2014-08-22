@@ -229,12 +229,15 @@ result_t i2cWrite      (int fd, char *data, int length);
 /**************************************************************************************************
  * 9.SPI
  *************************************************************************************************/
-result_t spiEnableSPIDEV0 ();
-result_t spiEnableSPIDEV1 ();
-int      spiOpenBus       (byte bus, byte chipselect);
+result_t spiEnableSPIDEV0  ();
+result_t spiEnableSPIDEV1  ();
+int      spiOpenBus        (byte bus, byte chipselect);
 
-result_t spiSetMode       (int fd, byte mode);
-byte     spiGetMode       (int fd);
+result_t spiSetMode        (int fd, byte mode);
+byte     spiGetMode        (int fd);
+
+result_t spiSetBitsPerWord (int fd, byte bits);
+byte     spiGetBitsPerWord (int fd);
 
 
 #ifdef __cplusplus
