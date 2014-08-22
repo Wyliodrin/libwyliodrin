@@ -1,6 +1,6 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
- * Date last modified: July 2014
+ * Date last modified: August 2014
  *
  * This file contains the declarations of all configuration functions for the BeagleBone Black.
  *
@@ -13,6 +13,7 @@
  * 6.PWM
  * 7.AIN
  * 8.I2C
+ * 9.SPI
  *************************************************************************************************/
 
 #ifndef BEAGLEBONE_CONFIG_H
@@ -219,6 +220,13 @@ result_t i2cInitComm   (int fd, int address);
 result_t i2cRead       (int fd, char *data, int length);
 result_t i2cWrite      (int fd, char *data, int length);
 
+
+
+/**************************************************************************************************
+ * 9.SPI
+ *************************************************************************************************/
+result_t spiEnableSPIDEV0 ();
+result_t spiEnableSPIDEV1 ();
 
 
 #ifdef __cplusplus

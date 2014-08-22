@@ -1,6 +1,6 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
- * Date last modified: July 2014
+ * Date last modified: August 2014
  *
  * This file contains the definitions of all configuration functions for the BeagleBone Black.
  *
@@ -13,6 +13,7 @@
  * 6.PWM
  * 7.AIN
  * 8.I2C
+ * 9.SPI
  *************************************************************************************************/
 
 #ifdef BEAGLEBONE
@@ -1300,6 +1301,27 @@ result_t i2cWrite(int fd, char *data, int length) {
   }
 
   return SUCCESS;
+}
+
+
+
+/**************************************************************************************************
+ * 9.SPI
+ *************************************************************************************************/
+
+/**
+ * Enable SPIDEV0
+ */
+result_t spiEnableSPIDEV0() {
+  return loadDeviceTree("BB-SPIDEV0");
+}
+
+/**
+ * Enable SPIDEV1
+ * Warning: YOU CANNNOT USE SPI1 WITHOUT DISABLING THE HDMI INTERFACE
+ */
+result_t spiEnableSPIDEV1() {
+  return loadDeviceTree("BB-SPIDEV1");
 }
 
 
