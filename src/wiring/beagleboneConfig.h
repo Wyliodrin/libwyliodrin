@@ -32,7 +32,7 @@ extern "C" {
  *************************************************************************************************/
 
 #define MAX_BUF 128
-#define NO_PINS sizeof(pinTable)/sizeof(pinTable[0])
+#define NO_PINS sizeof(pinTable) / sizeof(pinTable[0])
 
 // Paths
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
@@ -70,6 +70,10 @@ extern "C" {
 #define I2C_0 0
 #define I2C_1 1
 #define I2C_2 2
+
+// SPI
+#define SPI_0 0
+#define SPI_1 1
 
 typedef unsigned char byte;
 typedef unsigned int  uint;
@@ -227,6 +231,7 @@ result_t i2cWrite      (int fd, char *data, int length);
  *************************************************************************************************/
 result_t spiEnableSPIDEV0 ();
 result_t spiEnableSPIDEV1 ();
+int      spiOpenBus       (byte bus, byte chipselect);
 
 
 #ifdef __cplusplus

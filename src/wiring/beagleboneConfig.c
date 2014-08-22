@@ -1324,6 +1324,22 @@ result_t spiEnableSPIDEV1() {
   return loadDeviceTree("BB-SPIDEV1");
 }
 
+/**
+ * Opens SPI bus and returns the associated file descriptor
+ */
+int spiOpenBus(byte bus, byte chipselect) {
+  int fd;
+  char filename[16];
+
+  sprintf(filename, "/dev/spidev%d.%d", bus, chipselect);
+
+  if((fd = open(filename, O_RDWR)) < 0) {
+    debug("Could not open file %s", filename);
+    return -1;
+  }
+
+  return fd;
+}
 
 
 #ifdef __cplusplus
