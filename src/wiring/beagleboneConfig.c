@@ -1407,6 +1407,9 @@ result_t spiSetMaxSpeed(int fd, uint speed) {
   return SUCCESS;
 }
 
+/**
+ * Gets SPI max speed
+ */
 uint spiGetMaxSpeed(int fd) {
   uint speed;
 
@@ -1417,6 +1420,7 @@ uint spiGetMaxSpeed(int fd) {
 
   return speed;
 }
+
 
 
 #ifdef __cplusplus
