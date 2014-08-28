@@ -151,8 +151,9 @@ void analogWrite (int pin, int value)
         value = 255;
     else if (value < 0)
         value = 0;
-    firmata_pinMode(firmata, pin, MODE_PWM);
-    firmata_analogWrite(firmata, pin, LOW);
+    if (firmata->pins[pin].mode != MODE_PWM)
+        firmata_pinMode(firmata, pin, MODE_PWM);
+    firmata_analogWrite(firmata, pin, value);
 }
 #endif
 
