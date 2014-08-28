@@ -64,7 +64,7 @@ t_firmata *firmata = initFirmata(firmata);
 
 // how servo should be called
 // t_servo *servo;
-// servo = servo_attach(firmata, pin)
+// servo = servo_attach(pin)
 // servo_write(servo, value)
 
 #endif
@@ -168,7 +168,7 @@ void analogWrite (int pin, int value)
 #endif
 
 /**************************************************************************************************
- * 4. Advanced I/O
+ * 5. Advanced I/O
  *************************************************************************************************/
 
 /*
@@ -216,7 +216,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val)
 
 
 /**************************************************************************************************
- * 5. Time
+ * 6. Time
  *************************************************************************************************/
 
 /*
@@ -262,6 +262,29 @@ unsigned long milis (void)
     return micros() / 1000;
 }
 */
+
+
+/**************************************************************************************************
+ * 7. Servo
+ *************************************************************************************************/
+
+t_servo servo_attach (int pin)
+{
+    t_servo *myServo;
+    if (!firmata || !firmata->isReady) {
+        perror("servo_new: Firmata is not ready\n");
+        return NULL;
+    }
+    myServo = (t_servo*)malloc(sizeof(t_servo));
+    if (!myServo) {
+        perror("servo_new: malloc failed\n");
+        return NULL;
+    }
+    myServo->firmata = firmata;
+    myServo->pin = pin;
+    firmata_pinMode(myServo->firmata, pin, MODE_SERVO);
+    return myServo;
+}
 
 
 /*
