@@ -297,6 +297,19 @@ int servo_write (t_servo *servo, int value)
 
 #endif
 
+/**************************************************************************************************
+ * 8. I2C
+ *************************************************************************************************/
+
+int i2c_openadapter(uint8_t i2c_bus);
+int i2c_setslave(int i2c_id, uint8_t addr);
+int i2c_writebyte(int i2c_id, uint8_t byte);
+int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length);
+int i2c_readbyte(int i2c_id);
+int i2c_readbytes(int i2c_id, uint8_t *buf, int length);
+int i2c_closeadapter(int i2c_id);
+
+
 /*
 #ifdef __cplusplus
 }
