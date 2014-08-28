@@ -286,6 +286,11 @@ t_servo servo_attach (int pin)
     return myServo;
 }
 
+int servo_write (t_servo *servo, int value)
+{
+    return (firmata_analogWrite(servo->firmata, servo->pin, value));
+}
+
 
 /*
 #ifdef __cplusplus
