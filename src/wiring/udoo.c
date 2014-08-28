@@ -14,7 +14,7 @@
  * 4.  PWMs: pwm1, pwm2, pwm3, pwm4
  * 5.  Advanced I/O
  * 6.  Time
- * 7.  Servo   // TODO
+ * 7.  Servo
  * 8.  I2C     // TODO
  * 9.  SPIs: spi1, spi2, spi5   // TODO
  * 10. Communication (Serial, Stream)   // TODO
@@ -61,11 +61,6 @@ t_firmata *initFirmata (t_firmata *firmata)
 }
 
 t_firmata *firmata = initFirmata(firmata);
-
-// how servo should be called
-// t_servo *servo;
-// servo = servo_attach(pin)
-// servo_write(servo, value)
 
 #endif
 
@@ -130,12 +125,13 @@ int digitalRead (int pin)
  * 4. PWMs: PWM1, PWM2, PWM3, PWM4
  *************************************************************************************************/
 
+
+#ifdef __FIRMATA__
+
 /*
  * Reads the value from the specified analog pin
  * UDOO board contains 11 analog pins: A0 ... A11
  */
-#ifdef __FIRMATA__
-
 int analogRead (int pin)
 {
     if (pin < A0 || pin > CANTX) {
@@ -268,7 +264,15 @@ unsigned long milis (void)
  * 7. Servo
  *************************************************************************************************/
 
-t_servo servo_attach (int pin)
+#ifdef __FIRMATA__
+
+/* IMPORTANT!!!
+ * how servo should be called:
+ * t_servo *servo = servo_attach(pin)
+ * servo_write(servo, value)
+ */
+
+t_servo *servo_attach (int pin)
 {
     t_servo *myServo;
     if (!firmata || !firmata->isReady) {
@@ -291,6 +295,7 @@ int servo_write (t_servo *servo, int value)
     return (firmata_analogWrite(servo->firmata, servo->pin, value));
 }
 
+#endif
 
 /*
 #ifdef __cplusplus
