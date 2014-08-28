@@ -11,20 +11,21 @@
  * 1.  General configuration
  * 2.  Digital I/O
  * 3.  Analog I/O
- * 4.  Advanced I/O
- * 5.  Time
- * 6.  Communication (Serial, Stream)
- * 7.  UARTs: uart1, uart3, uart4, uart5
- * 8.  SD1
- * 9.  SPIs: spi1, spi2, spi5
- * 10. I2C1
- * 11. Spdif
- * 12. Timer capture
- * 13. Timer compare
- * 14. WATCHDOG FUNCTIONALITIES: watchdog reset, watchdog out
- * 15. Clock out
- * 16. PWMs: pwm1, pwm2, pwm3, pwm4
- * 17. Digital audio 
+ * 4.  PWMs: pwm1, pwm2, pwm3, pwm4
+ * 5.  Advanced I/O
+ * 6.  Time
+ * 7.  Servo   // TODO
+ * 8.  I2C     // TODO
+ * 9.  SPIs: spi1, spi2, spi5   // TODO
+ * 10. Communication (Serial, Stream)   // TODO
+ * 11. UARTs: uart1, uart3, uart4, uart5   // TODO
+ * 12. SD1   // TODO
+ * 13. Spdif   // TODO
+ * 14. Timer capture   // TODO
+ * 15. Timer compare   // TODO
+ * 16. WATCHDOG FUNCTIONALITIES: watchdog reset, watchdog out   // TODO
+ * 17. Clock out   // TODO
+ * 18. Digital audio   // TODO 
  *************************************************************************************************/
 
 //#ifdef UDOO
@@ -48,6 +49,7 @@ extern "C" {
  *************************************************************************************************/
 
 #ifdef __FIRMATA__
+
 t_firmata *initFirmata (t_firmata *firmata)
 {
     int i = 0;
@@ -59,6 +61,12 @@ t_firmata *initFirmata (t_firmata *firmata)
 }
 
 t_firmata *firmata = initFirmata(firmata);
+
+// how servo should be called
+// t_servo *servo;
+// servo = servo_attach(firmata, pin)
+// servo_write(servo, value)
+
 #endif
 
 int wiringSetup ()
@@ -118,8 +126,8 @@ int digitalRead (int pin)
 
 
 /**************************************************************************************************
- *  3. Analog I/O 
- * 16. PWMs: PWM1, PWM2, PWM3, PWM4
+ * 3. Analog I/O 
+ * 4. PWMs: PWM1, PWM2, PWM3, PWM4
  *************************************************************************************************/
 
 /*
@@ -127,6 +135,7 @@ int digitalRead (int pin)
  * UDOO board contains 11 analog pins: A0 ... A11
  */
 #ifdef __FIRMATA__
+
 int analogRead (int pin)
 {
     if (pin < A0 || pin > CANTX) {
@@ -155,6 +164,7 @@ void analogWrite (int pin, int value)
         firmata_pinMode(firmata, pin, MODE_PWM);
     firmata_analogWrite(firmata, pin, value);
 }
+
 #endif
 
 /**************************************************************************************************
