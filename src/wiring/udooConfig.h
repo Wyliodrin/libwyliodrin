@@ -8,13 +8,15 @@
  * 1. Includes 
  * 2. Constants, Flags and Structures
  * 3. GPIO
- * 4. Debug
+ * 4. Servo
+ * 5. Debug
  *************************************************************************************************/
 
 
 #ifndef __UDOO_CONFIG_H__
 #define __UDOO_CONFIG_H__
 
+// modify this in the future so the user can choose if he wants either firmata active or not
 #ifndef __FIRMATA__
 #define __FIRMATA__
 
@@ -39,7 +41,7 @@ extern "C" {
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-
+#include "firmata.h"
 
 /**************************************************************************************************
  * 2. Constants, Flags and Structures
@@ -138,6 +140,13 @@ typedef struct {
 } udooPin_t;
 
 extern const udooPin_t pinTable[];
+
+typedef struct s_servo {
+    t_firmata *firmata;
+    int pin;
+} t_servo;
+
+
 /**************************************************************************************************
  * 3. GPIO
  *************************************************************************************************/
@@ -181,6 +190,17 @@ int gpioToIrq           (byte gpio);
 // map IRQ numbers to IRQ numbers
 int irqToGpio           (byte gpio);
 
+
+
+/**************************************************************************************************
+ * 4. Servo
+ *************************************************************************************************/
+
+// attach the servo variable to a pin
+t_servo *servo_attach (t_firmata *firmata, int pin);
+
+// writes a value to the servo, controlling the shaft accordingly
+int servo_write (t_servo *servo, int value);
 
 
 /**************************************************************************************************
