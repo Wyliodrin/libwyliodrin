@@ -458,7 +458,13 @@ int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
     return -1;
 }
 
-int i2c_closeadapter(int i2c_id);
+int i2c_closeadapter(int i2c_id)
+{
+    int rc = close(i2c_buses[i2c_id]);
+    i2c_addresses[i2c_id] = -1;
+    i2c_buses[i2c_id] = -1;
+    return rc;
+}
 
 
 /*  
