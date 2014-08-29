@@ -76,7 +76,8 @@ extern "C" {
 #define ADC_RESOLUTION 12
 #define LSBFIRST 0
 #define MSBFIRST 1
- 
+
+#define MAX_UDOO_BUSES 3
 // Edge
 enum whatEdge {
     NONE,
