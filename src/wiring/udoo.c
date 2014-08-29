@@ -360,7 +360,25 @@ int i2c_setslave(int i2c_id, uint8_t addr)
     return 0;
 }
 
-int i2c_writebyte(int i2c_id, uint8_t byte);
+/* \brief Write an immediate byte to the SMBus.
+ * \param i2c_id     Bus id
+ * \param byte       Byte value to write
+ */
+int i2c_writebyte(int i2c_id, uint8_t byte)
+{
+    struct i2c_smbus_ioctl_data args;
+
+    args.read_write = I2C_SMBUS_WRITE;
+    args.command = byte;
+    args.size = I2C_SMBUS_BYTE;
+    args.data = NULL;
+
+    if (ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args) < 0) {
+        perror("Failed to write to i2c:");
+    }
+    return 0;
+}
+
 int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length);
 int i2c_readbyte(int i2c_id);
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length);
