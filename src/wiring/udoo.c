@@ -374,18 +374,44 @@ int i2c_writebyte(int i2c_id, uint8_t byte)
     args.data = NULL;
 
     if (ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args) < 0) {
-        perror("Failed to write to i2c:");
+        perror("Failed to write one byte to i2c:");
     }
     return 0;
 }
 
-int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length);
+int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
+{
+    union i2c_smbus_data data;
+    int i;
+
+    length = length - 1;
+    if (length > I2C_SMBUS_I2C_BLOCK_MAX) {
+        length = I2C_SMBUS_I2C_BLOCK_MAX;
+    }
+    for (i = 1; i <= length; i++) {
+        data.block[i] = bytes[i];
+    }
+    data.block[0] = length;
+
+    struct i2c_smbus_ioctl_data args;
+
+    args.read_write = I2C_SMBUS_WRITE;
+    args.command = bytes[0];
+    args.size = I2C_SMBUS_BLOCK_DATA;
+    args.data = &data;
+
+    if (ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args) < 0) {
+        perror("Failed to write more bytes to i2c:");
+    }
+    return 0;
+}
+
 int i2c_readbyte(int i2c_id);
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length);
 int i2c_closeadapter(int i2c_id);
 
 
-/*
+/*  
 #ifdef __cplusplus
 }
 #endif
