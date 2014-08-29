@@ -38,6 +38,8 @@ extern "C" {
 #include <time.h>
 #include "wiring.h"
 #include "udooConfig.h"
+#include <linux/i2c-dev.h>
+#include <pthread.h>
 
 #ifdef __FIRMATA__
 #include "firmata.h"
@@ -48,7 +50,7 @@ extern "C" {
  * 1. General configuration
  *************************************************************************************************/
 
-static int i2c_busses[MAX_UDOO_BUSES];
+static int i2c_buses[MAX_UDOO_BUSES];
 static int i2c_addresses[MAX_UDOO_BUSES];
 
 #ifdef __FIRMATA__
@@ -70,7 +72,35 @@ t_firmata *firmata = initFirmata(firmata);
 int wiringSetup ()
 {
     // TODO
+    int id;
+    for (id = 0; id <= MAX_UDOO_BUSES; id++) i2c_buses[id] = -1;
     return 0;
+}
+
+pthread_mutex_t locki2c;
+
+int getI2CId ()
+{
+    int i;
+    int id = -1;
+    pthread_mutex_lock(&locki2c);
+    for (i = 0; i < MAX_I2C_BUSES && id == -1; i++)
+    {
+        if (i2c_buses[i] == -1)
+        {
+            id = i;
+            i2c_buses[id] = 0;
+        }
+    }
+    pthread_mutex_unlock(&locki2c);
+    return id;
+}
+
+void releaseI2CId (int id)
+{
+    pthread_mutex_lock(&locki2c);
+    i2c_buses[id] = -1;
+    pthread_mutex_unlock(&locki2c);
 }
 
 
