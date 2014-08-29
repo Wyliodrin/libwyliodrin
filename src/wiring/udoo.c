@@ -15,7 +15,7 @@
  * 5.  Advanced I/O
  * 6.  Time
  * 7.  Servo
- * 8.  I2C     // IN PROGRESS
+ * 8.  I2C
  * 9.  SPIs: spi1, spi2, spi5   // TODO
  * 10. Communication (Serial, Stream)   // TODO
  * 11. UARTs: uart1, uart3, uart4, uart5   // TODO
