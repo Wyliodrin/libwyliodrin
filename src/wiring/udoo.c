@@ -406,6 +406,12 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
     return 0;
 }
 
+/*
+ * \brief  Read an immediate byte from SMBus
+ * \param  i2c_id   The Bus is
+ * \return   -1 in case of error
+ *           the databyte itself otherwise
+ */ 
 int i2c_readbyte(int i2c_id)
 {
     union i2c_smbus_data data;
@@ -426,7 +432,32 @@ int i2c_readbyte(int i2c_id)
     return (0x0FF & data.byte);
 }
 
-int i2c_readbytes(int i2c_id, uint8_t *buf, int length);
+int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
+{
+    // Read a max of I2C_SMBUS_I2C_BLOCK_MAX bytes
+    i2c_smbus_data data;
+    int  i;
+    int rc;
+
+    struct i2c_smbus_ioctl_data args;
+
+    args.read_write = I2C_SMBUS_READ;
+    args.command = I2C_NOCMD;
+    args.size = I2C_SMBUS_BLOCK_DATA;
+    args.data = &data; 
+
+    rc = ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args);
+
+    if (rc >= 0) {
+        for (i = 1; i <= data.block[0]; i++) {
+            buf[i - 1] = data.block[i];
+        }
+        length = data.block[0];
+        return length;
+    }
+    return -1;
+}
+
 int i2c_closeadapter(int i2c_id);
 
 
