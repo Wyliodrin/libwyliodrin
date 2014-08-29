@@ -15,7 +15,7 @@
  * 5.  Advanced I/O
  * 6.  Time
  * 7.  Servo
- * 8.  I2C     // TODO
+ * 8.  I2C     // IN PROGRESS
  * 9.  SPIs: spi1, spi2, spi5   // TODO
  * 10. Communication (Serial, Stream)   // TODO
  * 11. UARTs: uart1, uart3, uart4, uart5   // TODO
@@ -47,6 +47,9 @@ extern "C" {
 /**************************************************************************************************
  * 1. General configuration
  *************************************************************************************************/
+
+static int i2c_busses[MAX_UDOO_BUSES];
+static int i2c_addresses[MAX_UDOO_BUSES];
 
 #ifdef __FIRMATA__
 
@@ -163,6 +166,7 @@ void analogWrite (int pin, int value)
 
 #endif
 
+
 /**************************************************************************************************
  * 5. Advanced I/O
  *************************************************************************************************/
@@ -208,7 +212,6 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val)
         digitalWrite(clockPin, LOW);
     }
 }
-
 
 
 /**************************************************************************************************
@@ -302,7 +305,16 @@ int servo_write (t_servo *servo, int value)
  *************************************************************************************************/
 
 int i2c_openadapter(uint8_t i2c_bus);
-int i2c_setslave(int i2c_id, uint8_t addr);
+
+int i2c_setslave(int i2c_id, uint8_t addr)
+{
+    i2c_addresses[i2c_id] = addr;
+    int res = ioctl (i2c_buses[i2c_id], I2C_SLAVE_FORCE, addr);
+    if (res < 0)
+        perror("i2c_setslave:");
+    return 0;
+}
+
 int i2c_writebyte(int i2c_id, uint8_t byte);
 int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length);
 int i2c_readbyte(int i2c_id);
