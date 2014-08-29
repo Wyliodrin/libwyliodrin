@@ -77,31 +77,31 @@ int wiringSetup ()
     return 0;
 }
 
-pthread_mutex_t locki2c;
+// pthread_mutex_t locki2c;
 
-int getI2CId ()
-{
-    int i;
-    int id = -1;
-    pthread_mutex_lock(&locki2c);
-    for (i = 0; i < MAX_I2C_BUSES && id == -1; i++)
-    {
-        if (i2c_buses[i] == -1)
-        {
-            id = i;
-            i2c_buses[id] = 0;
-        }
-    }
-    pthread_mutex_unlock(&locki2c);
-    return id;
-}
+// int getI2CId ()
+// {
+//     int i;
+//     int id = -1;
+//     pthread_mutex_lock(&locki2c);
+//     for (i = 0; i < MAX_I2C_BUSES && id == -1; i++)
+//     {
+//         if (i2c_buses[i] == -1)
+//         {
+//             id = i;
+//             i2c_buses[id] = 0;
+//         }
+//     }
+//     pthread_mutex_unlock(&locki2c);
+//     return id;
+// }
 
-void releaseI2CId (int id)
-{
-    pthread_mutex_lock(&locki2c);
-    i2c_buses[id] = -1;
-    pthread_mutex_unlock(&locki2c);
-}
+// void releaseI2CId (int id)
+// {
+//     pthread_mutex_lock(&locki2c);
+//     i2c_buses[id] = -1;
+//     pthread_mutex_unlock(&locki2c);
+// }
 
 
 /**************************************************************************************************
@@ -330,11 +330,26 @@ int servo_write (t_servo *servo, int value)
 
 #endif
 
+
 /**************************************************************************************************
  * 8. I2C
  *************************************************************************************************/
 
-int i2c_openadapter(uint8_t i2c_bus);
+int i2c_openadapter(uint8_t i2c_bus)
+{
+    if (i2c_bus < 0 || i2c_bus > 2) {
+        debug("i2c_bus %d unknown", i2c_bus);
+        return 0;
+    }
+    char filepath[32];
+    snprintf(filepath, 32, "/dev/i2c-%u", i2c_bus);
+    i2c_buses[i2c_bus] = open(filepath, O_RDWR);
+    if (i2c_buses < 0) {
+        debug("Failed to open requested port %s", filepath);
+        perror("i2c_openadapter");
+    }
+    return 0;
+}
 
 int i2c_setslave(int i2c_id, uint8_t addr)
 {
