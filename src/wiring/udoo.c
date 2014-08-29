@@ -406,7 +406,26 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
     return 0;
 }
 
-int i2c_readbyte(int i2c_id);
+int i2c_readbyte(int i2c_id)
+{
+    union i2c_smbus_data data;
+    int rc;
+
+    struct i2c_smbus_ioctl_data args;
+
+    args.read_write = I2C_SMBUS_READ;
+    args.command = I2C_NOCMD;
+    args.size = I2C_SMBUS_BYTE;
+    args.data = &data;
+
+    rc = ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args);
+    if (rc < 0) {
+        perror("Failed to write more bytes to i2c:");
+        return -1;
+    }
+    return (0x0FF & data.byte);
+}
+
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length);
 int i2c_closeadapter(int i2c_id);
 
