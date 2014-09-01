@@ -19,12 +19,18 @@
     #include "libraries/Adafruit_GFX.h"
     #include "libraries/Adafruit_PCD8544.h"
     #include "libraries/Adafruit_ST7735.h"
+    #include "libraries/TM1637.h"
+    #include "libraries/SeeedOLED.h"
 %}
 
 %init %{
     //Adding mraa_init() to the module initialisation process
     wyliodrinSetup();
 %}
+
+#if defined(RASPBERRYPI)
+%include "wiring/raspberrypi.h"
+#endif
 
 %include "wiring/wiring.h"
 %include "wiring/binary.h"
@@ -43,5 +49,7 @@
 %include "libraries/Adafruit_GFX.h"
 %include "libraries/Adafruit_PCD8544.h"
 %include "libraries/Adafruit_ST7735.h"
+%include "libraries/TM1637.h"
+%include "libraries/SeeedOLED.h"
 
 %template(Pixy) TPixy<LinkSPI>;

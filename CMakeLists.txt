@@ -34,9 +34,12 @@ if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
   message (INFO " found libmraa version: ${MRAA_VERSION}")
+  set(FLAGS "-DARDUINOGALILEO")
+
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
   find_package(Wiringpi REQUIRED)
+  set(FLAGS "-DRASPBERRYPI")
   include_directories(${WIRINGPI_INCLUDE_DIR})
 elseif (UDOO)
   add_definitions(-DUDOO)
@@ -60,6 +63,8 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_GFX.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_PCD8544.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_ST7735.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/TM1637.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/SeeedOLED.cpp
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c

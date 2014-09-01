@@ -11,6 +11,7 @@
 #define REDIS_ECONNECT -1
 #define JSON_ERROR	-2
 #define REDIS_EENV	-3
+#define MESSAGES_ITEMS 100
 
 redisContext *c;
 const char *projectId;
@@ -69,9 +70,34 @@ void addSignal(const char * sig_name, double sig_value, json_t *signals)
 				free(n);
 }
 
+int messagesItems ()
+{
+	static time_t firstMessage = 0;
+	static long messages = 0;
+	if (firstMessage == 0)
+	{
+		time (&firstMessage);
+	}
+
+	time_t now;
+	time (&now);
+
+	if (now != firstMessage)
+	{
+		firstMessage = now;
+		messages = 0;
+	}
+	else
+	{
+		messages = messages + 1;
+	}
+	// printf ("messages %d\n", messages);
+	return messages < MESSAGES_ITEMS;
+}
+
 int sendSignalsAndFlag  (const char *text, const char *name, double value, ...)
 {
-	if(projectId != NULL && c != NULL)
+	if(messagesItems() && projectId != NULL && c != NULL)
 	{
 		//printf("sendSignalsAndDebug\n");
 		va_list arguments;
@@ -123,7 +149,7 @@ int sendSignalsAndFlag  (const char *text, const char *name, double value, ...)
 	}
 	else
 	{
-		printf("No projectId\n");
+		printf("Too many messages/s or no projectId\n");
 		return REDIS_EENV;
 	}
 	return 0;
@@ -131,7 +157,7 @@ int sendSignalsAndFlag  (const char *text, const char *name, double value, ...)
 
 int sendSignals  (const char *name, double value, ...)
 {
-	if(projectId != NULL && c!= NULL)
+	if(messagesItems () && projectId != NULL && c!= NULL)
 	{
 		//printf("sendSignals\n");
 		va_list arguments;
@@ -180,7 +206,7 @@ int sendSignals  (const char *name, double value, ...)
 	}
 	else
 	{
-		printf("No projectId\n");
+		printf("Too many messages/s or no projectId\n");
 		return REDIS_EENV;
 	}
 	return 0;
@@ -188,7 +214,7 @@ int sendSignals  (const char *name, double value, ...)
 
 int sendSignalsListAndFlag  (const char *flag, const char **names, double *values, int elements)
 {
-	if(projectId != NULL && c!=NULL)
+	if(messagesItems () && projectId != NULL && c!=NULL)
 	{
 		int i;
 		json_t *root, *signals;
@@ -224,7 +250,7 @@ int sendSignalsListAndFlag  (const char *flag, const char **names, double *value
 	}
 	else
 	{
-		printf("No projectId\n");
+		printf("Too many messages/s or no projectId\n");
 		return REDIS_EENV;
 	}
 	return 0;
@@ -237,7 +263,7 @@ int sendSignalsList (const char **names, double *values, int elements)
 
 int sendSignalAndFlag(const char *tag, const char *name, double value)
 {
-	if(projectId != NULL && c != NULL)
+	if(messagesItems() && projectId != NULL && c != NULL)
 	{
 		//printf("sendSignalAndDebug\n");
 		json_t *root, *signals;
@@ -276,7 +302,7 @@ int sendSignalAndFlag(const char *tag, const char *name, double value)
 	}
 	else
 	{
-		printf("No projectId\n");
+		printf("Too many messages/s or no projectId\n");
 		return REDIS_EENV;
 	}
 	return 0;
