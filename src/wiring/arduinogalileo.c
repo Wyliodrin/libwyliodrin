@@ -182,12 +182,12 @@ void analogWrite (int pin, int value)
 	{
 		resetPin (pin);
 		pwm_pins[pin] = mraa_pwm_init (pin);
+		mraa_pwm_period_us(pwm_pins[pin], 1200);
+		mraa_pwm_enable (pwm_pins[pin], 1);
 	}
 	if (pwm_pins[pin])
 	{
-		mraa_pwm_period_us(pwm_pins[pin], 1200);
 		mraa_pwm_write (pwm_pins[pin], value/255.0);
-		mraa_pwm_enable (pwm_pins[pin], 1);
 	}
 	else
 	{
