@@ -15,9 +15,11 @@
 
 //#ifdef UDOO
 
+/*
 #ifdef __cplusplus
 extern "C" {
 #endif
+*/
 
 #include "udooConfig.h"
 
@@ -369,8 +371,10 @@ int gpioUnexport (byte gpio)
     }
 }
 
+/*
 #ifdef __cplusplus
 }
 #endif
+*/
 
 //#endif /* UDOO */

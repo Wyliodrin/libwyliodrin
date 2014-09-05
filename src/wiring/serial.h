@@ -23,6 +23,10 @@
 
 #include <termios.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct		s_serial
 {
   int			port_is_open;
@@ -46,5 +50,9 @@ int		serial_waitInput(t_serial *serial, int msec);
 int		serial_discardInput(t_serial *serial);
 void		serial_flushOutput(t_serial *serial);
 int		serial_setControl(t_serial *serial, int dtr, int rts);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

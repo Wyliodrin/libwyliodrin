@@ -74,10 +74,14 @@ extern "C" {
 #define CLOCK_TIME_ERROR -137
 
 #define ADC_RESOLUTION 12
+
 #define LSBFIRST 0
 #define MSBFIRST 1
 
+// i2c stuff
+#define I2C_NOCMD 0
 #define MAX_UDOO_BUSES 3
+
 // Edge
 enum whatEdge {
     NONE,
@@ -198,7 +202,7 @@ int irqToGpio           (byte gpio);
  *************************************************************************************************/
 
 // attach the servo variable to a pin
-t_servo *servo_attach (t_firmata *firmata, int pin);
+t_servo *servo_attach (int pin);
 
 // writes a value to the servo, controlling the shaft accordingly
 int servo_write (t_servo *servo, int value);

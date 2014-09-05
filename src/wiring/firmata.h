@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.      
  */
 
+
 #ifndef		__H_FIRMATAC_
 #define		__H_FIRMATAC_
 
@@ -65,6 +66,10 @@
 
 #define FIRMATA_MSG_LEN			1024
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct		s_pin
 {
   uint8_t		mode;
@@ -93,5 +98,9 @@ int			firmata_analogWrite(t_firmata *firmata, int pin, int value);
 int			firmata_pull(t_firmata *firmata);
 void			firmata_parse(t_firmata *firmata, const uint8_t *buf, int len);
 void			firmata_endParse(t_firmata *firmata);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
