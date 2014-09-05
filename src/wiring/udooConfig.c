@@ -13,7 +13,7 @@
  *************************************************************************************************/
 
 
-//#ifdef UDOO
+#ifdef UDOO
 
 /*
 #ifdef __cplusplus
@@ -377,4 +377,4 @@ int gpioUnexport (byte gpio)
 #endif
 */
 
-//#endif /* UDOO */
+#endif /* UDOO */
