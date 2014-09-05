@@ -28,7 +28,7 @@
  * 18. Digital audio   // TODO 
  *************************************************************************************************/
 
-//#ifdef UDOO
+#ifdef UDOO
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,32 +79,33 @@ int wiringSetup ()
     return 0;
 }
 
-// pthread_mutex_t locki2c;
+/*
+pthread_mutex_t locki2c;
 
-// int getI2CId ()
-// {
-//     int i;
-//     int id = -1;
-//     pthread_mutex_lock(&locki2c);
-//     for (i = 0; i < MAX_I2C_BUSES && id == -1; i++)
-//     {
-//         if (i2c_buses[i] == -1)
-//         {
-//             id = i;
-//             i2c_buses[id] = 0;
-//         }
-//     }
-//     pthread_mutex_unlock(&locki2c);
-//     return id;
-// }
+int getI2CId ()
+{
+    int i;
+    int id = -1;
+    pthread_mutex_lock(&locki2c);
+    for (i = 0; i < MAX_I2C_BUSES && id == -1; i++)
+    {
+        if (i2c_buses[i] == -1)
+        {
+            id = i;
+            i2c_buses[id] = 0;
+        }
+    }
+    pthread_mutex_unlock(&locki2c);
+    return id;
+}
 
-// void releaseI2CId (int id)
-// {
-//     pthread_mutex_lock(&locki2c);
-//     i2c_buses[id] = -1;
-//     pthread_mutex_unlock(&locki2c);
-// }
-
+void releaseI2CId (int id)
+{
+    pthread_mutex_lock(&locki2c);
+    i2c_buses[id] = -1;
+    pthread_mutex_unlock(&locki2c);
+}
+*/
 
 /**************************************************************************************************
  * 2. Digital I/O
@@ -276,23 +277,26 @@ void delayMicroseconds (unsigned int mcs)
  * This number will go back to zero after some time.
  * Note: there are 1000 microseconds in 1 millisecond and 1000000 microseconds in 1 second
  */
-/*
-unsigned long micros (void)
+
+unsigned int micros (void)
 {
-    struct timespec tm;
+/*    struct timespec tm;
     int ret = clock_gettime(CLOCK_REALTIME, &tm);
     if (ret == -1) {
         debug("Clock Time error");
         return CLOCK_TIME_ERROR;
     }
     return (unsigned long)(tm.tv_sec * 1000000L + tm.tv_nsec / 1000L);
+*/
+    return 0;
 }
 
-unsigned long milis (void)
+unsigned int millis (void)
 {
-    return micros() / 1000;
+//    return micros() / 1000;
+    return 0;
 }
-*/
+
 
 
 /**************************************************************************************************
@@ -350,13 +354,14 @@ int i2c_openadapter(uint8_t i2c_bus)
         debug("Failed to open requested port %s", filepath);
         perror("i2c_openadapter");
     }
-    return 0;
+    return i2c_buses[i2c_bus];
 }
 
-int i2c_setslave(int i2c_id, uint8_t addr)
+int i2c_setslave(int i2c_fd, uint8_t addr)
 {
-    i2c_addresses[i2c_id] = addr;
-    int res = ioctl (i2c_buses[i2c_id], I2C_SLAVE_FORCE, addr);
+//    i2c_addresses[i2c_id] = addr;
+//    int res = ioctl (i2c_buses[i2c_id], I2C_SLAVE_FORCE, addr);
+    int res = ioctl (i2c_fd, I2C_SLAVE_FORCE, addr);
     if (res < 0)
         perror("i2c_setslave:");
     return 0;
@@ -366,7 +371,7 @@ int i2c_setslave(int i2c_id, uint8_t addr)
  * \param i2c_id     Bus id
  * \param byte       Byte value to write
  */
-int i2c_writebyte(int i2c_id, uint8_t byte)
+int i2c_writebyte(int i2c_fd, uint8_t byte)
 {
     struct i2c_smbus_ioctl_data args;
 
@@ -375,14 +380,14 @@ int i2c_writebyte(int i2c_id, uint8_t byte)
     args.size = I2C_SMBUS_BYTE;
     args.data = NULL;
 
-    if (ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args) < 0) {
+    if (ioctl(i2c_fd, I2C_SMBUS, &args) < 0) {
         perror("Failed to write one byte to i2c:");
     }
     return 0;
 }
 
 
-int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
+int i2c_writebytes(int i2c_fd, uint8_t *bytes, uint8_t length)
 {
     union i2c_smbus_data data;
     int i;
@@ -403,7 +408,7 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
     args.size = I2C_SMBUS_BLOCK_DATA;
     args.data = &data;
 
-    if (ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args) < 0) {
+    if (ioctl(i2c_fd, I2C_SMBUS, &args) < 0) {
         perror("Failed to write more bytes to i2c:");
     }
     return 0;
@@ -415,7 +420,7 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
  * \return   -1 in case of error
  *           the databyte itself otherwise
  */ 
-int i2c_readbyte(int i2c_id)
+int i2c_readbyte(int i2c_fd)
 {
     union i2c_smbus_data data;
     int rc;
@@ -427,7 +432,7 @@ int i2c_readbyte(int i2c_id)
     args.size = I2C_SMBUS_BYTE;
     args.data = &data;
 
-    rc = ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args);
+    rc = ioctl(i2c_fd, I2C_SMBUS, &args);
     if (rc < 0) {
         perror("Failed to write more bytes to i2c:");
         return -1;
@@ -436,7 +441,7 @@ int i2c_readbyte(int i2c_id)
 }
 
 
-int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
+int i2c_readbytes(int i2c_fd, uint8_t *buf, int length)
 {
     // Read a max of I2C_SMBUS_I2C_BLOCK_MAX bytes
     union i2c_smbus_data data;
@@ -450,7 +455,7 @@ int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
     args.size = I2C_SMBUS_BLOCK_DATA;
     args.data = &data; 
 
-    rc = ioctl(i2c_buses[i2c_id], I2C_SMBUS, &args);
+    rc = ioctl(i2c_fd, I2C_SMBUS, &args);
 
     if (rc >= 0) {
         for (i = 1; i <= data.block[0]; i++) {
@@ -462,12 +467,55 @@ int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
     return -1;
 }
 
-int i2c_closeadapter(int i2c_id)
+int i2c_closeadapter(int i2c_fd)
 {
-    int rc = close(i2c_buses[i2c_id]);
-    i2c_addresses[i2c_id] = -1;
-    i2c_buses[i2c_id] = -1;
+    int rc = close(i2c_fd);
+//    i2c_addresses[i2c_id] = -1;
+//    i2c_buses[i2c_id] = -1;
     return rc;
+}
+
+/******************************************************************************************************
+ * 9. SPI
+ ******************************************************************************************************/
+
+int spi_openadapter (uint8_t spi_bus)
+{
+    return 0;
+}
+int spi_setmode (int spiId, unsigned short mode)
+{
+    return 0;
+}
+
+int spi_set_frequency (int spiId, int freq)
+{
+    return 0;
+}
+
+uint8_t spi_writebyte (int spiId, uint8_t byte)
+{
+    return 0;
+}
+
+unsigned char *spi_writebytes (int spiId, uint8_t *bytes, uint8_t length)
+{
+    return NULL;
+}
+
+int spi_lsb_mode (int spiId, unsigned char lsb)
+{
+    return 0;
+}
+
+int spi_bit_per_word (int spiId, unsigned int bits)
+{
+    return 0;
+}
+
+int spi_closeadapter (int spiId)
+{
+    return 0;
 }
 
   
@@ -475,4 +523,5 @@ int i2c_closeadapter(int i2c_id)
 }
 #endif
 
-//#endif /* UDOO */
+
+#endif /* UDOO */
