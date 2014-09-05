@@ -30,20 +30,21 @@
 
 //#ifdef UDOO
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
-*/
+
 
 #include <time.h>
 #include "wiring.h"
 #include "udooConfig.h"
 #include <linux/i2c-dev.h>
+#include <linux/i2c.h>
 #include <pthread.h>
 
-#ifdef __FIRMATA__
+//#ifdef __FIRMATA__
 #include "firmata.h"
-#endif
+//#endif
 
 
 /**************************************************************************************************
@@ -64,14 +65,15 @@ t_firmata *initFirmata (t_firmata *firmata)
         firmata_pull(firmata);
     return firmata;
 }
-
-t_firmata *firmata = initFirmata(firmata);
+t_firmata *firmata;
+//t_firmata *firmata = initFirmata(firmata);
 
 #endif
 
 int wiringSetup ()
 {
     // TODO
+    firmata = initFirmata(firmata);
     int id;
     for (id = 0; id <= MAX_UDOO_BUSES; id++) i2c_buses[id] = -1;
     return 0;
@@ -379,9 +381,10 @@ int i2c_writebyte(int i2c_id, uint8_t byte)
     return 0;
 }
 
+/*
 int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
 {
-    union i2c_smbus_data data;
+    union i2c_smbus_data *data;
     int i;
 
     length = length - 1;
@@ -389,9 +392,9 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
         length = I2C_SMBUS_I2C_BLOCK_MAX;
     }
     for (i = 1; i <= length; i++) {
-        data.block[i] = bytes[i];
+        data->block[i] = bytes[i];
     }
-    data.block[0] = length;
+    data->block[0] = length;
 
     struct i2c_smbus_ioctl_data args;
 
@@ -405,7 +408,7 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
     }
     return 0;
 }
-
+*/
 /*
  * \brief  Read an immediate byte from SMBus
  * \param  i2c_id   The Bus is
@@ -432,6 +435,7 @@ int i2c_readbyte(int i2c_id)
     return (0x0FF & data.byte);
 }
 
+/*
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
 {
     // Read a max of I2C_SMBUS_I2C_BLOCK_MAX bytes
@@ -457,7 +461,7 @@ int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
     }
     return -1;
 }
-
+*/
 int i2c_closeadapter(int i2c_id)
 {
     int rc = close(i2c_buses[i2c_id]);
@@ -466,11 +470,9 @@ int i2c_closeadapter(int i2c_id)
     return rc;
 }
 
-
-/*  
+  
 #ifdef __cplusplus
 }
 #endif
-*/
 
 //#endif /* UDOO */
