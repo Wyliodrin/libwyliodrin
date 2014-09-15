@@ -41,8 +41,11 @@ elseif (RASPBERRYPI)
   find_package(Wiringpi REQUIRED)
   set(FLAGS "-DRASPBERRYPI")
   include_directories(${WIRINGPI_INCLUDE_DIR})
+
 elseif (UDOO)
   add_definitions(-DUDOO)
+  set(FLAGS "-DUDOO")
+
 else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, or -DUDOO=ON")
 endif ()
@@ -68,6 +71,10 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/udoo.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/udooConfig.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/firmata.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/serial.c
 )
 
 add_subdirectory (src)
