@@ -81,7 +81,7 @@ extern "C" {
 // i2c stuff
 #define I2C_NOCMD 0
 #define I2C_SMBUS_I2C_BLOCK_MAX 32
-#define MAX_UDOO_BUSES 3
+#define MAX_UDOO_I2C_BUSES 3
 
 // Edge
 enum whatEdge {

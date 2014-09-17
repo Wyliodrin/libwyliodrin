@@ -15,11 +15,11 @@
 
 #ifdef UDOO
 
-/*
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-*/
+
 
 #include "udooConfig.h"
 
@@ -341,7 +341,7 @@ int gpioExport (byte gpio)
         debug("Can't export gpio no: %d [INVALID]", gpio);
         return PIN_INVALID_ERROR;
     } else if (gpioIsExported(gpio)) {
-        debug("Can't export gpio no: %d [ALREADY EXPORTED]", gpio);
+//        debug("Can't export gpio no: %d [ALREADY EXPORTED]", gpio);
         return PIN_EXPORTED_ERROR;
     } else {
         char buffer[64];
@@ -371,10 +371,10 @@ int gpioUnexport (byte gpio)
     }
 }
 
-/*
+
 #ifdef __cplusplus
 }
 #endif
-*/
+
 
 #endif /* UDOO */
