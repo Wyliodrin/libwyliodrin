@@ -1,5 +1,6 @@
 #include "Servo.h"
 #include "../wiring/wiring.h"
+#include "../wiring/udooConfig.h"
 #include <stdio.h>
 
 #define trace_debug printf
@@ -25,7 +26,6 @@ Servo::Servo()
   #ifdef ARDUINOGALILEO
   m_currentAngle = 180;
   #endif
-
 }
 
 void Servo::set48hz()
@@ -72,6 +72,21 @@ uint8_t Servo::attach(int pin, int min, int max)
     #ifdef ARDUINOGALILEO
       m_pwmServoContext = mraa_pwm_init (this->pin);
       write (0);
+    #endif
+
+    #ifdef UDOO
+      if (is_firmata_defined) {
+        if (!firmata || !firmata->isReady)
+            perror("servo.attach: firmata is not ready yet");
+        else {
+            firmata_pinMode(firmata, this->pin, MODE_SERVO);  
+        }
+      }
+      else {
+        printf(" Sorry, you do not have access to Servo()\n");
+        printf(" In order to use Servo() functions, you must first enable Firmata\n");
+        return -1;
+      }
     #endif
   }
 
@@ -133,6 +148,18 @@ void Servo::write(int val)
       
       m_currentAngle = val;
   #endif
+
+  #ifdef UDOO
+    if (is_firmata_defined) 
+      if (val < 256)
+        firmata_analogWrite(firmata, this->pin, val);
+    else {
+      printf(" Sorry, you do not have access to Servo\n");
+      printf(" In order to access Servo() functions, you must first enable Firmata\n");
+      return;
+    }
+  #endif
+
   }
   else
   {
@@ -167,7 +194,14 @@ void Servo::detach()
     if (this->isAttached)
     {
         this->isAttached = false;        
+        #ifdef UDOO
+            if (is_firmata_defined)
+                firmata_pinMode(firmata, this->pin, MODE_OUTPUT);
+        #endif
+
+        #ifndef UDOO
         pinMode(this->pin, OUTPUT);
+        #endif
         this->lastByteInDuty = -1;
     }
 
