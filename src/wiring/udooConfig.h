@@ -8,17 +8,12 @@
  * 1. Includes 
  * 2. Constants, Flags and Structures
  * 3. GPIO
- * 4. Servo
- * 5. Debug
+ * 4. Debug
  *************************************************************************************************/
 
 
 #ifndef __UDOO_CONFIG_H__
 #define __UDOO_CONFIG_H__
-
-// modify this in the future so the user can choose if he wants either firmata active or not
-#ifndef __FIRMATA__
-#define __FIRMATA__
 
 #ifdef __cplusplus
 extern "C" {
@@ -147,11 +142,20 @@ typedef struct {
 
 extern const udooPin_t pinTable[];
 
+t_firmata *firmata;
+
+unsigned int is_firmata_defined;
+
+#ifdef FIRMATA
+is_firmata_defined = 1;
+#endif
+
+/*
 typedef struct s_servo {
     t_firmata *firmata;
     int pin;
 } t_servo;
-
+*/
 
 /**************************************************************************************************
  * 3. GPIO
@@ -199,23 +203,13 @@ int irqToGpio           (byte gpio);
 
 
 /**************************************************************************************************
- * 4. Servo
- *************************************************************************************************/
-
-// attach the servo variable to a pin
-t_servo *servo_attach (int pin);
-
-// writes a value to the servo, controlling the shaft accordingly
-int servo_write (t_servo *servo, int value);
-
-
-/**************************************************************************************************
  * 4. Debug
  *************************************************************************************************/
 
 /**
  * Took this from Matei. 
  * It's a nice macro that does all the work good.
+ * I use this sometimes instead of perror()
  */
 
 #define DEBUG 1
@@ -234,5 +228,4 @@ int servo_write (t_servo *servo, int value);
 }
 #endif
 
-#endif /* __FIRMATA__ */
 #endif /* __UDOO_CONFIG_H__ */

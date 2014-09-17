@@ -3,7 +3,7 @@
  * See documentation here: 
  *      http://arduino.cc/en/Reference/HomePage
  *      file:///home/andrei/Desktop/UDOO_Starting_Manual_beta0.4_11_28_2013.pdf
- *
+ *  
  * Follow "Wyliodrin Coding Style Convention" at:
  *      https://docs.google.com/document/d/14zRCX1KIwvQ1qEzWBVH-We0CkQmd5-kZb81bzvbIQKY/edit
  * 
@@ -41,10 +41,6 @@ extern "C" {
 #include <linux/i2c.h>
 #include <pthread.h>
 
-//#ifdef __FIRMATA__
-#include "firmata.h"
-//#endif
-
 
 /**************************************************************************************************
  * 1. General configuration
@@ -53,10 +49,13 @@ extern "C" {
 static int i2c_buses[MAX_UDOO_I2C_BUSES];
 static int i2c_addresses[MAX_UDOO_I2C_BUSES];
 
-#ifdef __FIRMATA__
-
 t_firmata *initFirmata (t_firmata *firmata)
 {
+    if (!is_firmata_defined) {
+        debug(" Sorry, you do not have access to Firmata!\n");
+        printf(" returning NULL...\n");
+        return NULL;
+    }
     int i = 0;
     char str[] = "/dev/ttymxc3";
     firmata = firmata_new(str);     // init Firmata
@@ -64,15 +63,20 @@ t_firmata *initFirmata (t_firmata *firmata)
         firmata_pull(firmata);
     return firmata;
 }
-t_firmata *firmata;
-//t_firmata *firmata = initFirmata(firmata);
-
-#endif
 
 int wiringSetup ()
 {
-    // TODO
-    firmata = initFirmata(firmata);
+    if (is_firmata_defined)
+        firmata = initFirmata(firmata);
+    else {
+        printf("\n Sorry, you cannot initialize Firmata!\n");
+        printf(" Enable Firmata using -OFIRMATA=ON option in Cmake\n");
+        printf(" With Firmata disabled you can access only:\n");
+        printf("     - Digital I/O\n");
+        printf("     - Advanced I/O\n");
+        printf("     - Time functions\n");
+        printf("     - I2C\n\n");
+    }
     int id;
     for (id = 0; id <= MAX_UDOO_I2C_BUSES; id++) i2c_buses[id] = -1;
     return 0;
@@ -160,15 +164,17 @@ int digitalRead (int pin)
  * 4. PWMs: PWM1, PWM2, PWM3, PWM4
  *************************************************************************************************/
 
-
-#ifdef __FIRMATA__
-
 /*
  * Reads the value from the specified analog pin
  * UDOO board contains 11 analog pins: A0 ... A11
  */
 int analogRead (int pin)
 {
+    if (!is_firmata_defined) {
+        printf(" Sorry, you do not have access to analogRead()\n");
+        printf(" In order to use analogRead(), you must first enable Firmata.\n");
+        return 0;
+    }
     if (pin < A0 || pin > CANTX) {
         debug("Pin %d is not analog", pin);
         return NOT_ANALOG_PIN_ERROR;
@@ -191,12 +197,15 @@ void analogWrite (int pin, int value)
         value = 255;
     else if (value < 0)
         value = 0;
+    if (!is_firmata_defined) {
+        printf(" Sorry, you do not have access to analogWrite()\n");
+        printf(" In order to use analogWrite() you must first enable Firmata\n");
+        return;
+    }
     if (firmata->pins[pin].mode != MODE_PWM)
         firmata_pinMode(firmata, pin, MODE_PWM);
     firmata_analogWrite(firmata, pin, value);
 }
-
-#endif
 
 
 /**************************************************************************************************
@@ -295,45 +304,6 @@ unsigned int millis (void)
 //    return micros() / 1000;
     return 0;
 }
-
-
-
-/**************************************************************************************************
- * 7. Servo
- *************************************************************************************************/
-
-#ifdef __FIRMATA__
-
-/* IMPORTANT!!!
- * how servo should be called:
- * t_servo *servo = servo_attach(pin)
- * servo_write(servo, value)
- */
-
-t_servo *servo_attach (int pin)
-{
-    t_servo *myServo;
-    if (!firmata || !firmata->isReady) {
-        perror("servo_new: Firmata is not ready\n");
-        return NULL;
-    }
-    myServo = (t_servo*)malloc(sizeof(t_servo));
-    if (!myServo) {
-        perror("servo_new: malloc failed\n");
-        return NULL;
-    }
-    myServo->firmata = firmata;
-    myServo->pin = pin;
-    firmata_pinMode(myServo->firmata, pin, MODE_SERVO);
-    return myServo;
-}
-
-int servo_write (t_servo *servo, int value)
-{
-    return (firmata_analogWrite(servo->firmata, servo->pin, value));
-}
-
-#endif
 
 
 /**************************************************************************************************
