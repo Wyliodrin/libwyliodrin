@@ -34,7 +34,6 @@
 extern "C" {
 #endif
 
-
 #include <time.h>
 #include "wiring.h"
 #include "udooConfig.h"
@@ -51,8 +50,8 @@ extern "C" {
  * 1. General configuration
  *************************************************************************************************/
 
-static int i2c_buses[MAX_UDOO_BUSES];
-static int i2c_addresses[MAX_UDOO_BUSES];
+static int i2c_buses[MAX_UDOO_I2C_BUSES];
+static int i2c_addresses[MAX_UDOO_I2C_BUSES];
 
 #ifdef __FIRMATA__
 
@@ -75,7 +74,7 @@ int wiringSetup ()
     // TODO
     firmata = initFirmata(firmata);
     int id;
-    for (id = 0; id <= MAX_UDOO_BUSES; id++) i2c_buses[id] = -1;
+    for (id = 0; id <= MAX_UDOO_I2C_BUSES; id++) i2c_buses[id] = -1;
     return 0;
 }
 
@@ -350,6 +349,7 @@ int i2c_openadapter(uint8_t i2c_bus)
     char filepath[32];
     snprintf(filepath, 32, "/dev/i2c-%u", i2c_bus);
     i2c_buses[i2c_bus] = open(filepath, O_RDWR);
+    printf("file descriptor: %d\n", i2c_buses[i2c_bus]);
     if (i2c_buses < 0) {
         debug("Failed to open requested port %s", filepath);
         perror("i2c_openadapter");
@@ -359,8 +359,6 @@ int i2c_openadapter(uint8_t i2c_bus)
 
 int i2c_setslave(int i2c_fd, uint8_t addr)
 {
-//    i2c_addresses[i2c_id] = addr;
-//    int res = ioctl (i2c_buses[i2c_id], I2C_SLAVE_FORCE, addr);
     int res = ioctl (i2c_fd, I2C_SLAVE_FORCE, addr);
     if (res < 0)
         perror("i2c_setslave:");
@@ -389,7 +387,7 @@ int i2c_writebyte(int i2c_fd, uint8_t byte)
 
 int i2c_writebytes(int i2c_fd, uint8_t *bytes, uint8_t length)
 {
-    union i2c_smbus_data data;
+/*    union i2c_smbus_data data;
     int i;
 
     length = length - 1;
@@ -410,6 +408,13 @@ int i2c_writebytes(int i2c_fd, uint8_t *bytes, uint8_t length)
 
     if (ioctl(i2c_fd, I2C_SMBUS, &args) < 0) {
         perror("Failed to write more bytes to i2c:");
+    }
+    return 0;
+*/
+    
+    if (write(i2c_fd, bytes, length) != length) {
+        perror("could not write more bytes to i2c bus");
+        return -1;
     }
     return 0;
 }
@@ -470,8 +475,6 @@ int i2c_readbytes(int i2c_fd, uint8_t *buf, int length)
 int i2c_closeadapter(int i2c_fd)
 {
     int rc = close(i2c_fd);
-//    i2c_addresses[i2c_id] = -1;
-//    i2c_buses[i2c_id] = -1;
     return rc;
 }
 
