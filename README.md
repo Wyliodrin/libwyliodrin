@@ -32,7 +32,8 @@ Install
     
     mkdir build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI
+    cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DBOARD=ON -DFIRMATA .. - BOARD can be GALILEO, RASPBERRYPI or UDOO
+        -DFIRMATA works for UDOO only
     make
     sudo make install
   
