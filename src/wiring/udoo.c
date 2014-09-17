@@ -70,7 +70,7 @@ int wiringSetup ()
         firmata = initFirmata(firmata);
     else {
         printf("\n Sorry, you cannot initialize Firmata!\n");
-        printf(" Enable Firmata using -OFIRMATA=ON option in Cmake\n");
+        printf(" Enable Firmata using -DFIRMATA=ON option in Cmake\n");
         printf(" With Firmata disabled you can access only:\n");
         printf("     - Digital I/O\n");
         printf("     - Advanced I/O\n");
