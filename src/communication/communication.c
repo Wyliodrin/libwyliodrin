@@ -94,6 +94,6 @@ int sendMessage (int communication_port, char *data)
 int closeCommunication ()
 {
 	redisFree(context);
-	redisAsyncDisconnect(c);
+	redisAsyncDisconnect(c); 
 }
 
