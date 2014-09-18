@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <jansson.h>
 #include "hiredis/hiredis.h"
 #include "hiredis/async.h"
 #include "hiredis/adapters/libevent.h"
@@ -79,9 +80,17 @@ void openConnection (int communication_port, void (*f)(int err, char *data))
     event_base_dispatch(base);
 }
 
-int sendMessage (int communication_port, char *data)
+int sendMessage (char *id, int communication_port, char *data)
 {
-	redisReply *reply = redisCommand(context, "PUBLISH %s%d %s", redis_channel, communication_port, data);
+	json_t *root;
+	root = json_object();
+	json_object_set_new(root, "id", json_string(id));
+	json_object_set_new(root, "data", json_string(data));
+	char *j = json_dumps(root, 0);
+	if(j == NULL)
+		return -1;
+	redisReply *reply = redisCommand(context, "PUBLISH %s%d %s", redis_channel, communication_port, j);
+	free(j);
 	if(reply)
 	{
 		freeReplyObject(reply);
