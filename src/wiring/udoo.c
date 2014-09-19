@@ -1,4 +1,6 @@
 /**************************************************************************************************
+ * \Author: Andrei Dinu (@dinuand)
+ * 
  * This file contains the functions available on UDOO pin headers.
  * See documentation here: 
  *      http://arduino.cc/en/Reference/HomePage
