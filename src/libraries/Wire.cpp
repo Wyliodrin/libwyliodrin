@@ -46,12 +46,12 @@ void TwoWire::begin(void)
 	// if ((adapter_nr = i2c_getadapter(I2C2)) < 0) {
 	// 	return;	
 	// }
-	if (BOARD == GALILEO)
+	if (BOARd == RUN_RASPBERRYPI || BOARD == RUN_GALILEO)
 	{
 		adapter_nr = 0;
 	}
 	else
-	if (BOARD == EDISON)
+	if (BOARD == RUN_EDISON)
 	{
 		adapter_nr = 6;
 	}
