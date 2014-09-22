@@ -5,18 +5,6 @@
 #define GALILEO 1
 #define EDISON 2
 
-#ifdef RASPBERRYPI
-#define BOARD RASPBERRYPI
-#endif
-
-#ifdef GALILEO
-#define BOARD GALILEO
-#endif
-
-#ifdef EDISON
-#define BOARD EDISON
-#endif
-
 #include <stdlib.h>
 
 // Signals library
