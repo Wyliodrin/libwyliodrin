@@ -8,6 +8,21 @@
 #define MAX_SPI_BUSES 10
 #define MAX_SERIAL_BUSES	10
 
+#define RUN_RASPBERRYPI 0
+#define RUN_GALILEO 1
+#define RUN_EDISON 2
+
+#ifdef RASPBERRYPI
+#define BOARD RUN_RASPBERRYPI
+#endif
+
+#ifdef GALILEO
+#define BOARD RUN_GALILEO
+#endif
+
+#ifdef EDISON
+#define BOARD RUN_EDISON
+#endif
 
 typedef unsigned char uint8_t;
 
