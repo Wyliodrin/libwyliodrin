@@ -16,7 +16,7 @@
 #define BOARD RUN_RASPBERRYPI
 #endif
 
-#ifdef GALILEO
+#ifdef ARDUINOGALILEO
 #define BOARD RUN_GALILEO
 #endif
 
