@@ -1,10 +1,6 @@
 #ifndef WYLIODRIN_H
 #define WYLIODRIN_H
 
-#define RASPBERRYPI 0
-#define GALILEO 1
-#define EDISON 2
-
 #include <stdlib.h>
 
 // Signals library
