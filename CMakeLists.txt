@@ -35,6 +35,12 @@ if (GALILEO)
   message (INFO " found libmraa version: ${MRAA_VERSION}")
   set(FLAGS "-DARDUINOGALILEO")
 
+elseif (EDISON)
+  add_definitions(-DEDISON)
+  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
+  message (INFO " found libmraa version: ${MRAA_VERSION}")
+  set(FLAGS "-DEDISON")
+
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
   find_package(Wiringpi REQUIRED)
