@@ -40,7 +40,7 @@ typedef unsigned char uint8_t;
 
 // Arduino Galileo
 // use the mraa library
-#ifdef ARDUINOGALILEO
+#if defined(ARDUINOGALILEO) || defined(EDISON)
 
 #include <mraa/gpio.h>
 #include <mraa/aio.h>
