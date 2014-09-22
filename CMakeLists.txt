@@ -27,6 +27,7 @@ set (wyliodrin_VERSION_MINOR 4)
 set (wyliodrin_VERSION_PATCH 0})
 
 option (GALILEO "Build for the Intel Galileo." OFF)
+option (EDISON "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi." OFF)
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
