@@ -1,0 +1,437 @@
+
+#ifdef BEAGLEBONE
+#include <math.h>
+#include <stdint.h>
+int getSerialId()
+{
+	return -1;
+}
+
+void releaseSerial(int id)
+{
+	
+}
+
+int getSPIId ()
+{
+	// int i;
+	// int id = -1;
+	// pthread_mutex_lock(&lockspi);
+	// for (i=0; i < MAX_SPI_BUSES && id == -1; i++)
+	// {
+	// 	if (spi_buses[i] == NULL)
+	// 	{
+	// 		id = i;
+	// 		spi_buses[id] = (void*)1;
+	// 	}
+	// }
+	// pthread_mutex_unlock(&lockspi);
+	// return id;
+	return -1;
+}
+
+void releaseSPIId (int id)
+{
+	// pthread_mutex_lock(&lockspi);
+	// spi_buses[id] = NULL;
+	// pthread_mutex_unlock(&lockspi);
+}
+
+int getI2CId ()
+{
+	// int i;
+	// int id = -1;
+	// pthread_mutex_lock(&locki2c);
+	// for (i=0; i < MAX_I2C_BUSES && id == -1; i++)
+	// {
+	// 	if (i2c_buses[i] == NULL)
+	// 	{
+	// 		id = i;
+	// 		i2c_buses[id] = (void*)1;
+	// 	}
+	// }
+	// pthread_mutex_unlock(&locki2c);
+	// return id;
+	return -1;
+}
+
+void releaseI2CId (int id)
+{
+	// pthread_mutex_lock(&locki2c);
+	// i2c_buses[id] = NULL;
+	// pthread_mutex_unlock(&locki2c);
+}
+
+void resetPin (int pin);
+void pwmReset (int pin);
+
+int wiringSetup ()
+{
+	// mraa_init ();
+	// adc_raw_bits = mraa_adc_raw_bits();
+	// adc_power = pow (2, adc_raw_bits)-1;
+	// pthread_mutex_init(&lockspi, NULL);
+	// pthread_mutex_init(&locki2c, NULL);
+	return -1;
+}
+
+void pinReset (int pin)
+{
+	// pinMode (pin, OUTPUT);
+	// resetPin (pin);
+	// pwmReset (pin);
+}
+
+void pwmReset (pin)
+{
+	// mraa_pwm_context p = mraa_pwm_init (pin);
+	// if (p) 
+	// {
+	// 	mraa_pwm_enable (p, 0);
+	// 	mraa_pwm_close (p);
+	// }
+}
+
+void resetPin (int pin)
+{
+	// if (gpio_pins[pin] != NULL)
+	// {
+	// 	mraa_gpio_close (gpio_pins[pin]);
+	// 	gpio_pins[pin] = NULL;
+	// }
+	// if (pwm_pins[pin] != NULL)
+	// {
+	// 	mraa_pwm_close (pwm_pins[pin]);
+	// 	pwm_pins[pin] = NULL;
+	// }
+	// // if (aio_pins[pin] != NULL)
+	// // {
+	// // 	mraa_aio_close (aio_pins[pin]);
+	// // 	aio_pins[pin] = NULL;
+	// // }
+}
+
+#define pinValue(pin)  (pin = (pin >= 14)?(pin - 14):pin)
+
+#define isGpioPin(pin)   (gpio_pins[pin] != NULL)
+#define isAioPin(pin)   (aio_pins[pin] != NULL)
+#define isPwmPin(pin)   (pwm_pins[pin] != NULL)
+#define inPin(pin) do { if (!isGpioPin(pin)) pinMode (pin, INPUT); } while (0);
+#define outPin(pin) do { if (!isGpioPin(pin)) pinMode (pin, OUTPUT); } while (0);
+
+void pinMode (int pin, int mode)
+{
+	// if (!isGpioPin(pin))
+	// {
+	// 	resetPin (pin);
+	// 	gpio_pins[pin] = mraa_gpio_init (pin);
+	// }
+	// if (mode == INPUT)
+	// {
+	// 	mraa_gpio_dir (gpio_pins[pin], MRAA_GPIO_IN);
+	// }
+	// else if (mode == OUTPUT)
+	// {
+	// 	mraa_gpio_dir (gpio_pins[pin], MRAA_GPIO_OUT);
+	// }
+}
+
+void digitalWrite (int pin, int value)
+{
+	// outPin (pin);
+	// mraa_gpio_write (gpio_pins[pin], value);
+}
+
+int digitalRead (int pin)
+{
+	// inPin (pin);
+	// return mraa_gpio_read (gpio_pins[pin]);
+	return -1;
+}
+
+void analogWrite (int pin, int value)
+{
+	// if (!isPwmPin (pin))
+	// {
+	// 	resetPin (pin);
+	// 	pwm_pins[pin] = mraa_pwm_init (pin);
+	// 	mraa_pwm_period_us(pwm_pins[pin], 1200);
+	// 	mraa_pwm_enable (pwm_pins[pin], 1);
+	// }
+	// if (pwm_pins[pin])
+	// {
+	// 	mraa_pwm_write (pwm_pins[pin], value/255.0);
+	// }
+	// else
+	// {
+	// 	printf ("Cannot PWM on pin %d\n"+pin);
+	// }
+}
+
+int analogRead (int pin)
+{
+	// pinValue (pin);
+	// if (!isAioPin (pin))
+	// {
+	// 	resetPin (pin);
+	// 	aio_pins[pin] = mraa_aio_init (pin);
+	// }
+	// int adc = mraa_aio_read (aio_pins[pin]);
+	// if (adc_raw_bits != 10)
+	// {
+	// 	return (int)((float)adc*1023/adc_power);
+	// }
+	// return adc;
+	return -1;
+}
+
+void delay (unsigned int milliseconds)
+{
+	// usleep (milliseconds*1000);
+}
+
+void delayMicroseconds (unsigned int microseconds)
+{
+	//usleep (microseconds);
+}
+
+unsigned int millis()
+{
+  // return micros() / 1000;
+return 0;
+}
+
+
+unsigned int micros()
+{
+
+  // struct timespec t;
+  // t.tv_sec = t.tv_nsec = 0;
+
+  // clock_gettime(CLOCK_REALTIME, &t);
+  // return (unsigned long)(t.tv_sec)*1000000L + t.tv_nsec / 1000L ;
+return 0;
+}
+
+uint8_t shiftIn (uint8_t dPin, uint8_t cPin, uint8_t order)
+{
+  // uint8_t value = 0 ;
+  // int8_t  i ;
+ 
+  // if (order == MSBFIRST)
+  //   for (i = 7 ; i >= 0 ; --i)
+  //   {
+  //     digitalWrite (cPin, HIGH) ;
+  //     value |= digitalRead (dPin) << i ;
+  //     digitalWrite (cPin, LOW) ;
+  //   }
+  // else
+  //   for (i = 0 ; i < 8 ; ++i)
+  //   {
+  //     digitalWrite (cPin, HIGH) ;
+  //     value |= digitalRead (dPin) << i ;
+  //     digitalWrite (cPin, LOW) ;
+  //   }
+
+  // return value;
+return 0;
+}
+
+void shiftOut (uint8_t dPin, uint8_t cPin, uint8_t order, uint8_t val)
+{
+  // int8_t i;
+
+  // if (order == MSBFIRST)
+  //   for (i = 7 ; i >= 0 ; --i)
+  //   {
+  //     digitalWrite (dPin, val & (1 << i)) ;
+  //     digitalWrite (cPin, HIGH) ;
+  //     digitalWrite (cPin, LOW) ;
+  //   }
+  // else
+  //   for (i = 0 ; i < 8 ; ++i)
+  //   {
+  //     digitalWrite (dPin, val & (1 << i)) ;
+  //     digitalWrite (cPin, HIGH) ;
+  //     digitalWrite (cPin, LOW) ;
+  //   }
+}
+
+int spi_getadapter(uint32_t spi_bus_address)
+{
+	// error, function not implemented
+	return -1;
+}
+
+int spi_openadapter(uint8_t spi_bus)
+{
+	// int spiId = getSPIId ();
+	// if (spiId >= 0)
+	// {
+	// 	spi_buses[spiId] = mraa_spi_init (spi_bus);
+	// }
+	// return spiId;
+return -1;
+}
+
+int spi_setmode(int spiId, unsigned short mode)
+{
+	//return mraa_spi_mode (spi_buses[spiId], mode);
+return -1;
+}
+
+int spi_set_frequency(int spiId, int freq)
+{
+	//return mraa_spi_frequency (spi_buses[spiId], freq);
+return -1;
+}
+
+uint8_t spi_writebyte(int spiId, uint8_t byte)
+{
+	//return mraa_spi_write (spi_buses[spiId], byte);
+return 0;
+}
+
+unsigned char * spi_writebytes(int spiId, uint8_t *bytes, uint8_t length)
+{
+	//return mraa_spi_write_buf (spi_buses[spiId], bytes, length);
+return 0;
+}
+
+int spi_lsb_mode(int spiId, unsigned char lsb)
+{
+	//return mraa_spi_lsbmode (spi_buses[spiId], lsb);	
+return -1;
+}
+
+int spi_bit_per_word(int spiId, unsigned int bits)
+{
+//	return mraa_spi_bit_per_word (spi_buses[spiId], bits);
+return -1;
+}
+
+int spi_closeadapter (int spiId)
+{
+	// mraa_spi_stop (spi_buses[spiId]);
+	// releaseSPIId (spiId);
+	return 0;
+}
+
+int i2c_getadapter(uint32_t i2c_bus_address)
+{
+	// error, function not implemented
+	return -1;
+}
+
+int i2c_openadapter(uint8_t i2c_bus)
+{
+	// int i2cId = getI2CId ();
+	// if (i2cId >= 0)
+	// {
+	// 	i2c_buses[i2cId] = mraa_i2c_init (i2c_bus);
+	// }
+	// return i2cId;
+return -1;
+}
+
+int i2c_setslave(int i2cId, uint8_t addr)
+{
+//	return mraa_i2c_address (i2c_buses[i2cId], addr);
+return -1;
+}
+
+int i2c_writebyte(int i2cId, uint8_t byte)
+{
+//	return mraa_i2c_write_byte (i2c_buses[i2cId], byte);
+return -1;
+}
+
+int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length)
+{
+//	return mraa_i2c_write (i2c_buses[i2cId], bytes, length);
+return -1;
+}
+
+int i2c_readbyte(int i2cId)
+{
+//	return mraa_i2c_read_byte (i2c_buses[i2cId]);	
+return -1;
+}
+
+int i2c_readbytes(int i2cId, uint8_t *buf, int length)
+{
+//	return mraa_i2c_read (i2c_buses[i2cId], buf, length);
+return -1;}
+
+int i2c_closeadapter(int i2cId)
+{
+	// mraa_i2c_stop (i2c_buses[i2cId]);
+	// releaseI2CId (i2cId);
+	return 0;
+}
+
+int i2c_readwrite(int i2cId)
+{
+	// struct i2c_rdwr_ioctl_data packets;
+	// packets.msgs = i2c_buf;
+	// packets.nmsgs = i2c_buf_count;
+	// if (ioctl(i2c_fd, I2C_RDWR, &packets) < 0) {
+	// 	perror("Unable to send data");
+	// 	i2c_buf_count = 0;
+	// 	return -1;
+	// }
+	// i2c_buf_count = 0;
+	return -1;
+}
+
+int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
+{
+	// if(i2c_buf_count < 2) {
+	// 	i2c_buf[i2c_buf_count].addr = addr;
+	// 	i2c_buf[i2c_buf_count].flags = rw ? I2C_M_RD : 0;
+	// 	i2c_buf[i2c_buf_count].len = length;
+	// 	i2c_buf[i2c_buf_count].buf = (char *)value;
+	// 	return ++i2c_buf_count;
+	// } else
+	return -1;
+}
+
+int serial_openadapter(char *serial_bus)
+{
+	return -1;
+
+}
+int serial_set_speed(int serial_id, int baud)
+{
+	return 0;
+}
+int serial_bytes_available(int serial_id)
+{
+	return 0;
+}
+int serial_closeadapter(int serial_id)
+{
+	return 0;
+}
+int serial_writebyte(int serial_id, uint8_t byte)
+{
+	return 0;
+}
+int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length)
+{
+	return 0;
+}
+uint8_t serial_readbyte(int serial_id)
+{
+	return -1;
+}
+int serial_readbytes(int serial_id, uint8_t *buf, int length)
+{
+	return 0;
+}
+int serial_flush(int serial_id)
+{
+	return 0;
+}
+#endif
+

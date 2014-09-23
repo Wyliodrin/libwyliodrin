@@ -91,4 +91,10 @@
   free((double *) $1);
 }
 
+%pythoncode %{
+def test():
+  print "merge"
+%}
+
+
 %include "../../src/wyliodrin.i"
