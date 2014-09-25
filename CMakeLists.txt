@@ -26,11 +26,9 @@ set (wyliodrin_VERSION_MAJOR 1)
 set (wyliodrin_VERSION_MINOR 4)
 set (wyliodrin_VERSION_PATCH 0})
 
-<<<<<<< HEAD
 option (GALILEO     "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
-
 
 option (GALILEO "Build for the Intel Galileo." OFF)
 option (EDISON "Build for the Intel Galileo." OFF)
@@ -55,6 +53,7 @@ elseif (RASPBERRYPI)
   include_directories(${WIRINGPI_INCLUDE_DIR})
 elseif (BEAGLEBONE)
   add_definitions(-DBEAGLEBONE)
+  set(FLAGS "-DBEAGLEBONE")
 else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON or -DBEAGLEBONE=ON")
 endif ()

@@ -11,6 +11,7 @@
 #define RUN_RASPBERRYPI 0
 #define RUN_GALILEO 1
 #define RUN_EDISON 2
+#define RUN_BEAGLEBONE 3
 
 #ifdef RASPBERRYPI
 #define BOARD RUN_RASPBERRYPI
@@ -23,6 +24,11 @@
 #ifdef EDISON
 #define BOARD RUN_EDISON
 #endif
+
+#ifdef BEAGLEBONE
+#define BOARD RUN_BEAGLEBONE
+#endif
+
 
 typedef unsigned char uint8_t;
 
