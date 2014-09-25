@@ -1,5 +1,5 @@
 
-#ifdef ARDUINOGALILEO
+#if defined(ARDUINOGALILEO) || defined (EDISON)
 
 #include "wiring.h"
 #include <pthread.h>

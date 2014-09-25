@@ -32,7 +32,7 @@ Install
     
     mkdir build
     cd build
-    cmake -DBOARD=ON .. - BOARD can be GALILEO, RASPBERRYPI or BEAGLEBONE
+    cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI or BEAGLEBONE
     make
     sudo make install
   

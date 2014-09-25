@@ -23,6 +23,10 @@ if (GALILEO)
 install (FILES ${CMAKE_CURRENT_BINARY_DIR}/_wyliodrin.so
          ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.py
          DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/)
+elseif (EDISON)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/_wyliodrin.so
+         ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.py
+         DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/)
 elseif (RASPBERRYPI)
 install (FILES ${CMAKE_CURRENT_BINARY_DIR}/_wyliodrin.so
          ${CMAKE_CURRENT_BINARY_DIR}/wyliodrin.py

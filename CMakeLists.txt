@@ -26,15 +26,27 @@ set (wyliodrin_VERSION_MAJOR 1)
 set (wyliodrin_VERSION_MINOR 4)
 set (wyliodrin_VERSION_PATCH 0})
 
+<<<<<<< HEAD
 option (GALILEO     "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
+
+
+option (GALILEO "Build for the Intel Galileo." OFF)
+option (EDISON "Build for the Intel Galileo." OFF)
+option (RASPBERRYPI "Build for the RaspberryPi." OFF)
 
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
   message (INFO " found libmraa version: ${MRAA_VERSION}")
   set(FLAGS "-DARDUINOGALILEO")
+
+elseif (EDISON)
+  add_definitions(-DEDISON)
+  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
+  message (INFO " found libmraa version: ${MRAA_VERSION}")
+  set(FLAGS "-DEDISON")
 
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
