@@ -12,6 +12,7 @@
  * 5.Time
  * 6.SPI
  * 7.I2C
+ * 8.Serial
  *************************************************************************************************/
 
 #ifdef BEAGLEBONE
@@ -393,6 +394,21 @@ int i2c_closeadapter (int i2c_bus) {}
 int i2c_readbytes(int i2c_bus, uint8_t *buf, int length) {}
 int i2c_readwrite(int i2c_bus) {}
 // int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length) {}
+
+
+
+/**************************************************************************************************
+ * 8.Serial
+ *************************************************************************************************/
+int serial_openadapter(char *serial_bus) {}
+int serial_set_speed(int serial_id, int baud) {}
+int serial_bytes_available(int serial_id) {}
+int serial_closeadapter(int serial_id) {}
+int serial_writebyte(int serial_id, uint8_t byte) {}
+int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length) {}
+uint8_t serial_readbyte(int serial_id) {}
+int serial_readbytes(int serial_id, uint8_t *buf, int length) {}
+int serial_flush(int serial_id) {}
 
 
 #ifdef __cplusplus
