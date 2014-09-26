@@ -263,19 +263,51 @@ int analogRead(int pin) {
  *************************************************************************************************/
 
 /**
- * TODO
+ * Shifts in a byte of data one bit at a time. Starts from either the most (i.e. the leftmost) or 
+ * least (rightmost) significant bit. For each bit, the clock pin is pulled high, the next bit is
+ * read from the data line, and then the clock pin is taken low.
+ * If you're interfacing with a device that's clocked by rising edges, you'll need to make sure
+ * that the clock pin is low before the first call to shiftIn(), e.g. with a call to 
+ * digitalWrite(clockPin, LOW).
  */
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
-  // TODO
+  uint8_t value;
+  uint8_t i;
 
-  return 0;
+  value = 0;
+  for (i = 0; i < 8; i++) {
+    digitalWrite(clockPin, HIGH);
+
+    if (bitOrder == LSBFIRST) {
+      value |= digitalRead(dataPin) << i;
+    } else {
+      value |= digitalRead(dataPin) << (7 - i);
+    }
+
+    digitalWrite(clockPin, LOW);
+  }
+
+  return value;
 }
 
 /**
- * TODO
+ * Shifts out a byte of data one bit at a time. Starts from either the most (i.e. the leftmost)
+ * or least (rightmost) significant bit. Each bit is written in turn to a data pin, after which a
+ * clock pin is pulsed (taken high, then low) to indicate that the bit is available.
  */
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) {
-  // TODO
+  uint8_t i;
+
+  for (i = 0; i < 8; i++) {
+    if (bitOrder == LSBFIRST) {
+      digitalWrite(dataPin, !!(val & (1 << i)));
+    } else {
+      digitalWrite(dataPin, !!(val & (1 << (7 - i))));
+    }
+        
+    digitalWrite(clockPin, HIGH);
+    digitalWrite(clockPin, LOW);
+  }
 }
 
 
