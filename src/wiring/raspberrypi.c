@@ -32,7 +32,7 @@ int wiringSetup ()
 		wiringPiSetupGpio();
 	}
 	else
-	if (pins_numbering != NULL && strncmp (pins_numbering, "PHYSICAL", 8)==0)
+	if (pins_numbering != NULL && strncmp (pins_numbering, "PHYSICAL", 9)==0)
 	{
 		wiringPiSetupPhys();
 	}
