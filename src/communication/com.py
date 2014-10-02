@@ -27,7 +27,6 @@ def myHandlerFunction (message):
 	myHandler = handlers[label]
 
 	mes = json.loads(message['data'])
-	print mes
 	fromId = mes['from']
 	data = mes['data']
 
