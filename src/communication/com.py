@@ -25,7 +25,6 @@ def myHandlerFunction (message):
 	channel = message['channel']
 	label = int(channel[len(CHANNEL):])
 	myHandler = handlers[label]
-
 	mes = json.loads(message['data'])
 	fromId = mes['from']
 	data = mes['data']
