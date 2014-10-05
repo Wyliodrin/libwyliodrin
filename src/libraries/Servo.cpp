@@ -75,18 +75,18 @@ uint8_t Servo::attach(int pin, int min, int max)
     #endif
 
     #ifdef UDOO
-      if (is_firmata_defined) {
+      #ifdef FIRMATA
         if (!firmata || !firmata->isReady)
             perror("servo.attach: firmata is not ready yet");
         else {
             firmata_pinMode(firmata, this->pin, MODE_SERVO);  
         }
-      }
-      else {
+      #endif
+      #ifndef FIRMATA
         printf(" Sorry, you do not have access to Servo()\n");
         printf(" In order to use Servo() functions, you must first enable Firmata\n");
         return -1;
-      }
+      #endif
     #endif
   }
 
@@ -150,14 +150,15 @@ void Servo::write(int val)
   #endif
 
   #ifdef UDOO
-    if (is_firmata_defined) 
+    #ifdef FIRMATA 
       if (val < 256)
         firmata_analogWrite(firmata, this->pin, val);
-    else {
+    #endif
+    #ifndef FIRMATA
       printf(" Sorry, you do not have access to Servo\n");
       printf(" In order to access Servo() functions, you must first enable Firmata\n");
       return;
-    }
+    #endif
   #endif
 
   }
@@ -195,8 +196,9 @@ void Servo::detach()
     {
         this->isAttached = false;        
         #ifdef UDOO
-            if (is_firmata_defined)
+            #ifdef FIRMATA
                 firmata_pinMode(firmata, this->pin, MODE_OUTPUT);
+            #endif
         #endif
 
         #ifndef UDOO

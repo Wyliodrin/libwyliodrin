@@ -51,11 +51,11 @@ static int i2c_addresses[MAX_UDOO_I2C_BUSES];
 
 t_firmata *initFirmata (t_firmata *firmata)
 {
-    if (!is_firmata_defined) {
+    #ifndef FIRMATA
         debug(" Sorry, you do not have access to Firmata!\n");
         printf(" returning NULL...\n");
         return NULL;
-    }
+    #endif
     int i = 0;
     char str[] = "/dev/ttymxc3";
     firmata = firmata_new(str);     // init Firmata
@@ -66,9 +66,10 @@ t_firmata *initFirmata (t_firmata *firmata)
 
 int wiringSetup ()
 {
-    if (is_firmata_defined)
+    #ifdef FIRMATA
         firmata = initFirmata(firmata);
-    else {
+    #endif
+    #ifndef FIRMATA
         printf("\n Sorry, you cannot initialize Firmata!\n");
         printf(" Enable Firmata using -DFIRMATA=ON option in Cmake\n");
         printf(" With Firmata disabled you can access only:\n");
@@ -76,7 +77,7 @@ int wiringSetup ()
         printf("     - Advanced I/O\n");
         printf("     - Time functions\n");
         printf("     - I2C\n\n");
-    }
+    #endif
     int id;
     for (id = 0; id <= MAX_UDOO_I2C_BUSES; id++) i2c_buses[id] = -1;
     return 0;
@@ -109,6 +110,11 @@ void releaseI2CId (int id)
     pthread_mutex_unlock(&locki2c);
 }
 */
+
+void pinReset (int pin)
+{
+    return;
+}
 
 /**************************************************************************************************
  * 2. Digital I/O
@@ -170,11 +176,11 @@ int digitalRead (int pin)
  */
 int analogRead (int pin)
 {
-    if (!is_firmata_defined) {
+    #ifndef FIRMATA
         printf(" Sorry, you do not have access to analogRead()\n");
         printf(" In order to use analogRead(), you must first enable Firmata.\n");
         return 0;
-    }
+    #endif
     if (pin < A0 || pin > CANTX) {
         debug("Pin %d is not analog", pin);
         return NOT_ANALOG_PIN_ERROR;
@@ -197,11 +203,11 @@ void analogWrite (int pin, int value)
         value = 255;
     else if (value < 0)
         value = 0;
-    if (!is_firmata_defined) {
+    #ifndef FIRMATA
         printf(" Sorry, you do not have access to analogWrite()\n");
         printf(" In order to use analogWrite() you must first enable Firmata\n");
         return;
-    }
+    #endif
     if (firmata->pins[pin].mode != MODE_PWM)
         firmata_pinMode(firmata, pin, MODE_PWM);
     firmata_analogWrite(firmata, pin, value);
@@ -442,15 +448,26 @@ int i2c_readbytes(int i2c_fd, uint8_t *buf, int length)
     return -1;
 }
 
+int i2c_readwrite (int i2c_id)
+{
+    return 0;
+}
+
 int i2c_closeadapter(int i2c_fd)
 {
     int rc = close(i2c_fd);
     return rc;
 }
 
+
 /******************************************************************************************************
  * 9. SPI
  ******************************************************************************************************/
+
+int spi_getadapter (uint32_t spi_bus_address)
+{
+    return 0;
+}
 
 int spi_openadapter (uint8_t spi_bus)
 {
@@ -487,6 +504,51 @@ int spi_bit_per_word (int spiId, unsigned int bits)
 }
 
 int spi_closeadapter (int spiId)
+{
+    return 0;
+}
+
+int serial_openadapter (char *serial_bus)
+{
+    return 0;
+}
+
+int serial_set_speed (int serial_id, int baud)
+{
+    return 0;
+}
+
+int serial_bytes_available (int serial_id)
+{
+    return 0;
+}
+
+int serial_closeadapter (int serial_id)
+{
+    return 0;
+}
+
+int serial_writebyte (int serial_id, uint8_t byte)
+{
+    return 0;
+}
+
+int serial_writebytes (int serial_id, uint8_t *bytes, uint8_t length)
+{
+    return 0;
+}
+
+uint8_t serial_readbyte (int serial_id)
+{
+    return 0;
+}
+
+int serial_readbytes (int serial_id, uint8_t *buf, int length)
+{
+    return 0;
+}
+
+int serial_flush (int serial_id)
 {
     return 0;
 }

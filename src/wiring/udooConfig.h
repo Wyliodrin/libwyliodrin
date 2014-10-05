@@ -144,12 +144,6 @@ extern const udooPin_t pinTable[];
 
 t_firmata *firmata;
 
-unsigned int is_firmata_defined;
-
-#ifdef FIRMATA
-is_firmata_defined = 1;
-#endif
-
 /*
 typedef struct s_servo {
     t_firmata *firmata;
