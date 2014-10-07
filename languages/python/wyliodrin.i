@@ -92,8 +92,74 @@
 }
 
 %pythoncode %{
-def test():
-  print "merge"
+import redis
+import os
+import json
+
+port = 6379
+channelClient = {}
+threads = {}
+handlers = {}
+CHANNEL_SERVER = "communication_server:"
+CHANNEL_CLIENT = "communication_client:"
+client = None
+
+def initCommunication (redis_port=6379):
+  global port
+  global client
+  if redis_port is None:
+    redis_port = os.getenv("wyliodrin_port", 6379);
+  client = redis.StrictRedis(host='localhost', port=redis_port, db=0)
+  port = redis_port
+  return 0
+
+def myHandlerFunction (message):
+  global handlers
+  global CHANNEL_SERVER
+
+  channel = message['channel']
+  label = int(channel[len(CHANNEL_CLIENT):])
+  myHandler = handlers[label]
+
+  mes = json.loads(message['data'])
+  fromId = mes['from']
+  data = mes['data']
+
+  myHandler(fromId, label, 0, data)
+
+def openConnection (label, handlerFunction):
+  global channelClient
+  global threads
+  global handlers
+  global CHANNEL_SERVER
+
+  handlers[label] = handlerFunction
+  r = redis.StrictRedis(host='localhost', port=port, db=0)
+  p = r.pubsub(ignore_subscribe_messages=True)
+  p.subscribe(**{CHANNEL_CLIENT+str(label): myHandlerFunction})
+  channelClient[label] = p
+  thread = p.run_in_thread()
+
+def sendMessage (wyliodrin_id, label, data):
+  global client
+
+  message = {"id":wyliodrin_id, "data":data}
+  client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
+
+def closeConnection(label):
+  global threads
+  global channelClient
+
+  p = channelClient[label]
+  if p is not None:
+    p.close()
+    del channelClient[label]
+
+def closeCommunication():
+  global threads
+  global channelClient
+  for c in channelClient:
+    c.close()
 %}
 
 
