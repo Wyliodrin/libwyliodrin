@@ -6,7 +6,8 @@ port = 6379
 channelClient = {}
 threads = {}
 handlers = {}
-CHANNEL = "communication"
+CHANNEL_SERVER = "communication_server:"
+CHANNEL_CLIENT = "communication_client:"
 client = None
 
 def initCommunication (redis_port):
@@ -20,14 +21,13 @@ def initCommunication (redis_port):
 
 def myHandlerFunction (message):
 	global handlers
-	global CHANNEL
+	global CHANNEL_SERVER
 
 	channel = message['channel']
-	label = int(channel[len(CHANNEL):])
+	label = int(channel[len(CHANNEL_CLIENT):])
 	myHandler = handlers[label]
 
 	mes = json.loads(message['data'])
-	print mes
 	fromId = mes['from']
 	data = mes['data']
 
@@ -37,34 +37,39 @@ def openConnection (label, handlerFunction):
 	global channelClient
 	global threads
 	global handlers
-	global CHANNEL
+	global CHANNEL_SERVER
 
 	handlers[label] = handlerFunction
 	r = redis.StrictRedis(host='localhost', port=port, db=0)
 	p = r.pubsub(ignore_subscribe_messages=True)
-	p.subscribe(**{CHANNEL+str(label): myHandlerFunction})
+	p.subscribe(**{CHANNEL_CLIENT+str(label): myHandlerFunction})
 	# keyword = CHANNEL+str(label)
 	#p.subscribe(channel1=handlerFunction)
 	channelClient[label] = p
 	thread = p.run_in_thread()
-	threads[label] = thread
+	p.close()
+	# threads[label] = thread
 
 def sendMessage (wyliodrin_id, label, data):
 	global client
 
 	message = {"id":wyliodrin_id, "data":data}
-	client.publish(CHANNEL+str(label), json.dumps(message))
+	client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
 
 def closeConnection(label):
 	global threads
 	global channelClient
 
-	thread = threads[label]
-	if thread is not None:
-		thread.stop()
-		del threads[label]
+	print "close connection"
+	threads[label].stop()
+	#thread = threads[label]
+	# if thread is not None:
+	# 	thread.stop()
+	# 	del threads[label]
 	p = channelClient[label]
+	channelClient[label].close()
 	if p is not None:
+
 		p.close()
 		del channelClient[label]
 
@@ -82,7 +87,7 @@ def closeCommunication():
 
 def func(wfrom, err, data):
 	print wfrom, data
+	#closeConnection(2)
 
 openConnection (2, func)
-closeConnection(2)
 # sendMessage("ioana", 2, "testam")

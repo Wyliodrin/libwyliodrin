@@ -6,7 +6,8 @@ port = 6379
 channelClient = {}
 threads = {}
 handlers = {}
-CHANNEL = "communication"
+CHANNEL_SERVER = "communication_server:"
+CHANNEL_CLIENT = "communication_client:"
 client = None
 
 def initCommunication (redis_port):
@@ -20,12 +21,14 @@ def initCommunication (redis_port):
 
 def myHandlerFunction (message):
 	global handlers
-	global CHANNEL
+	global CHANNEL_SERVER
 
 	channel = message['channel']
-	label = int(channel[len(CHANNEL):])
+	label = int(channel[len(CHANNEL_CLIENT):])
 	myHandler = handlers[label]
+
 	mes = json.loads(message['data'])
+	print mes
 	fromId = mes['from']
 	data = mes['data']
 
@@ -35,12 +38,12 @@ def openConnection (label, handlerFunction):
 	global channelClient
 	global threads
 	global handlers
-	global CHANNEL
+	global CHANNEL_SERVER
 
 	handlers[label] = handlerFunction
 	r = redis.StrictRedis(host='localhost', port=port, db=0)
 	p = r.pubsub(ignore_subscribe_messages=True)
-	p.subscribe(**{CHANNEL+str(label): myHandlerFunction})
+	p.subscribe(**{CHANNEL_CLIENT+str(label): myHandlerFunction})
 	# keyword = CHANNEL+str(label)
 	#p.subscribe(channel1=handlerFunction)
 	channelClient[label] = p
@@ -51,7 +54,7 @@ def sendMessage (wyliodrin_id, label, data):
 	global client
 
 	message = {"id":wyliodrin_id, "data":data}
-	client.publish(CHANNEL+str(label), json.dumps(message))
+	client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
 
 def closeConnection(label):
 	global threads
@@ -71,15 +74,17 @@ def closeCommunication():
 	global threads
 	global channelClient
 
-	#client.close()
+	client.close()
 
 	for thread in threads:
 		thread.stop()
 	for c in channelClient:
 		c.close()
 
+def func(wfrom, err, data):
+	print wfrom, data
+	closeConnection(2)
 
 initCommunication(None)
-# initCommunication(None)
-sendMessage("ioana", 2, "testam")
-closeCommunication()
+sendMessage("ioana.culic_pixy@wyliodrin.com", 2, "testam")
+#closeCommunication()
