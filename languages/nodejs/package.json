@@ -1,6 +1,7 @@
 {
   "name" : "wyliodrin",
-  "main" : "./wyliodrin.node",
+  //"main" : "./wyliodrin.node",
+  "main" : "./index.js"
   "version" : "1.1.0",
   "engines": {
     "node": ">= 0.10.x"
