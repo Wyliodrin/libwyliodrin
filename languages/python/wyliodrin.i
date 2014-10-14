@@ -118,7 +118,7 @@ def myHandlerFunction (message):
   global CHANNEL_SERVER
 
   channel = message['channel']
-  label = int(channel[len(CHANNEL_CLIENT):])
+  label = channel[len(CHANNEL_CLIENT):]
   myHandler = handlers[label]
 
   mes = json.loads(message['data'])
