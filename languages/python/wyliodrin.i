@@ -142,9 +142,13 @@ def openConnection (label, handlerFunction):
 
 def sendMessage (wyliodrin_id, label, data):
   global client
-
-  message = {"id":wyliodrin_id, "data":data}
-  client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
+  if isinstance(wyliodrin_id, list):
+    for id in wyliodrin_id:
+      message = {"id":id, "data":data}
+      client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
+  else:
+    message = {"id":wyliodrin_id, "data":data}
+    client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
 
 def closeConnection(label):
   global threads
