@@ -140,8 +140,6 @@ def openConnection (label, handlerFunction):
   channelClient[label] = p
   thread = p.run_in_thread()
 
-
-
 def sendMessage (wyliodrin_id, label, data):
   global client
   if isinstance(wyliodrin_id, list):
