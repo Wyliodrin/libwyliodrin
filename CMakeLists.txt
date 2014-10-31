@@ -86,3 +86,4 @@ add_subdirectory (languages)
 
 install (FILES scripts/install_social DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
 install (FILES scripts/update_libwyliodrin DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
+install (FILES scripts/say DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
