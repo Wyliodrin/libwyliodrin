@@ -15,7 +15,7 @@ ary=($INPUT)
 #echo "---------------------------"
 for key in "${!ary[@]}" 
   do
-  if [ $key != "0" ]; then
+  if [ "$key" != "0" ]; then
     SHORTTMP[$STRINGNUM]="${SHORTTMP[$STRINGNUM]} ${ary[$key]}"
     LENGTH=$(echo ${#SHORTTMP[$STRINGNUM]})
     #echo "word:$key, ${ary[$key]}"
@@ -33,11 +33,9 @@ done
  
 for key in "${!SHORT[@]}"
   do
-  if [ $key != "0" ]; then
     #echo "line: $key is: ${SHORT[$key]}"
  
-    echo "Playing line: $(($key+1)) of $(($STRINGNUM+1))"
+    #echo "Playing line: $(($key+1)) of $(($STRINGNUM+1))"
     NEXTURL=$(echo ${SHORT[$key]} | xxd -plain | tr -d '\n' | sed 's/\(..\)/%\1/g')
     mpg123 -q "http://translate.google.com/translate_tts?tl=$1&q=$NEXTURL"
-  fi
 done
