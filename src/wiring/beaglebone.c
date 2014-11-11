@@ -77,6 +77,15 @@ int getPinByKey(const char* key) {
   return getGpioByKey(key);
 }
 
+/**
+ * Returns PIN by position.
+ *
+ * See pinTable in beagleboneConfig.c for pins' positions.
+ */
+int pin(const int position) {
+  return getPinByPos(position);
+}
+
 
 
 /**************************************************************************************************

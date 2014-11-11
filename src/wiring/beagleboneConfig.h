@@ -121,6 +121,7 @@ void        beagleTest    ();
 
 result_t    buildPath     (const char *dirPath, const char *prefix, char *fullPath, int pathLen);
 
+byte        getGpioByPos  (const byte pos);
 byte        getGpioByName (const char *name);
 byte        getGpioByKey  (const char *key);
 

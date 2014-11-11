@@ -193,6 +193,22 @@ result_t buildPath(const char *dirPath, const char *prefix, char *fullPath, int 
 }
 
 /**
+ * Returns the gpio pin number by position in pinTable or 0xFF if position is invalid
+ */
+byte getGpioByPos(const byte pos) {
+  if (!(0 <= pos && pos < NO_PINS)) {
+    debug("Invalid position %d. pos should be in [0, NO_PINS) interval.", pos);
+    return -1;
+  }
+
+  pin_t *aux;
+
+  aux = pinTable + pos;
+
+  return aux->gpio;
+}
+
+/**
  * Returns the gpio pin number by name or 0xFF if doesn't exists
  */
 byte getGpioByName(const char *name) {
