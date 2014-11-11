@@ -13,11 +13,8 @@
 
 int main() {
   int i;
-  int USR0;
 
-  USR0 = pin(0);
-
-  pinMode(USR0, OUTPUT);
+  pinMode(0, OUTPUT);
 
   for(i = 0; i < NO_BLINKS; i++) {
     digitalWrite(USR0, HIGH);

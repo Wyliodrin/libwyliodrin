@@ -99,7 +99,13 @@ int getPinByKey(const char* key) {
  * pin  - the number of the pin whose pin you wish to set 
  * mode - INPUT or OUTPUT
  */
-void pinMode(int pin, int mode) {
+void pinMode(int pin_pos, int mode) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+
   // Test valid pin
   if(!gpioIsValid(pin)) {
     debug("Invalid pin %d", pin);
