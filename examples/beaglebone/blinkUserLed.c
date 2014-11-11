@@ -15,7 +15,7 @@ int main() {
   int i;
   int USR0;
 
-  USR0 = getPinByKey("USR0");
+  USR0 = pin(0);
 
   pinMode(USR0, OUTPUT);
 
