@@ -22,7 +22,6 @@ swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSO
 set_target_properties (wyliodrinjs PROPERTIES
   PREFIX ""
   OUTPUT_NAME "wyliodrin"
-  OUTPUT_NAME "wyliodrin"
   SUFFIX ".node"
 )
 

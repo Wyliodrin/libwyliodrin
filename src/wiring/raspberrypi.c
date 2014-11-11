@@ -2,6 +2,7 @@
 #include "wiring.h"
 #include <linux/i2c-dev.h>
 #include <pthread.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -25,7 +26,20 @@ static struct serial_bus *serial_buses[MAX_SERIAL_BUSES];
 int wiringSetup ()
 {
 	int i=0;
-	wiringPiSetup();
+	const char *pins_numbering = getenv ("PINS_NUMBERING");
+	if (pins_numbering != NULL && strncmp (pins_numbering, "GPIO", 5)==0)
+	{
+		wiringPiSetupGpio();
+	}
+	else
+	if (pins_numbering != NULL && strncmp (pins_numbering, "PHYSICAL", 9)==0)
+	{
+		wiringPiSetupPhys();
+	}
+	else
+	{
+		wiringPiSetup ();
+	}
 	for (i=0; i<MAX_SPI_BUSES; i++) spi_buses[i]=-1;
 	for (i=0; i<MAX_I2C_BUSES; i++) i2c_buses[i]=-1;
 	for (i=0; i<MAX_SERIAL_BUSES; i++) serial_buses[i]=NULL;
