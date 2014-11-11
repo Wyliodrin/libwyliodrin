@@ -45,7 +45,13 @@ int wiringSetup() {
 /**
  * Resets pin
  */
-void pinReset(int pin) {
+void pinReset(int pin_pos) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+  
   if(ledIsValid(pin)) {
     ledReset(pin);
     return;
