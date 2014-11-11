@@ -81,14 +81,8 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
-<<<<<<< HEAD
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
-=======
-  
-   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
->>>>>>> master
-)
 
 add_subdirectory (src)
 add_subdirectory (languages)
