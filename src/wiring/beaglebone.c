@@ -69,7 +69,7 @@ void pinReset(int pin) {
  * See pinTable in beagleboneConfig.c for pins' positions.
  */
 int pin(const int pos) {
-  return getPinByPos(pos);
+  return getGpioByPos(pos);
 }
 
 /**
