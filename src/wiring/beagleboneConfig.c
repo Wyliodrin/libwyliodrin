@@ -160,7 +160,7 @@ pin_t pinTable[] = {
  * Function used for testing the correctness of install
  */
 void beagleTest() {
-  printf("Hello from beagleboneConfig.c! Magic number: 11\n");
+  printf("Hello from beagleboneConfig.c! Magic number: 42\n");
 }
 
 /**

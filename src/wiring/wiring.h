@@ -91,6 +91,7 @@ int wiringSetup ();
 void pinReset (int pin);
 
 // WIRING
+int pin(const int pos);
 int getPinByName(const char* name);
 int getPinByKey(const char* key);
 void pinMode (int pin, int mode);

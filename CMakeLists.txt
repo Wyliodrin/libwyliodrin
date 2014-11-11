@@ -83,6 +83,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
+)
 
 add_subdirectory (src)
 add_subdirectory (languages)

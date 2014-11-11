@@ -64,6 +64,15 @@ void pinReset(int pin) {
 }
 
 /**
+ * Returns PIN by position.
+ *
+ * See pinTable in beagleboneConfig.c for pins' positions.
+ */
+int pin(const int pos) {
+  return getPinByPos(pos);
+}
+
+/**
  * Returns PIN by name
  */
 int getPinByName(const char* name) {
@@ -75,15 +84,6 @@ int getPinByName(const char* name) {
  */
 int getPinByKey(const char* key) {
   return getGpioByKey(key);
-}
-
-/**
- * Returns PIN by position.
- *
- * See pinTable in beagleboneConfig.c for pins' positions.
- */
-int pin(const int position) {
-  return getPinByPos(position);
 }
 
 
