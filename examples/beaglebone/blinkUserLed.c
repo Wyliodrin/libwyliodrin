@@ -17,12 +17,12 @@ int main() {
   pinMode(0, OUTPUT);
 
   for(i = 0; i < NO_BLINKS; i++) {
-    digitalWrite(USR0, HIGH);
+    digitalWrite(0, HIGH);
     delay(DELAY);
-    digitalWrite(USR0, LOW);
+    digitalWrite(0, LOW);
     delay(DELAY);
   }
 
-  pinReset(USR0);
+  pinReset(0);
   return 0;
 }
