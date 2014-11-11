@@ -155,7 +155,13 @@ void pinMode(int pin_pos, int mode) {
  * pin   - the pin number
  * value - LOW or HIGH
  */
-void digitalWrite(int pin, int value) {
+void digitalWrite(int pin_pos, int value) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+
   // Test valid pin
   if(!gpioIsValid(pin)) {
     debug("Invalid pin %d", pin);
@@ -192,7 +198,13 @@ void digitalWrite(int pin, int value) {
  * RETURNS: 
  * LOW or HIGH
  */
-int digitalRead(int pin) {
+int digitalRead(int pin_pos) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+
   // Test valid pin
   if(!gpioIsValid(pin)) {
     debug("Invalid pin %d", pin);
@@ -228,7 +240,13 @@ int digitalRead(int pin) {
  * cycle until the next call to analogWrite() (or a call to digitalRead() or digitalWrite() on the
  * same pin).
  */
-void analogWrite(int pin, int value) {
+void analogWrite(int pin_pos, int value) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+
   if(!pwmIsValid(pin)) {
     debug("Pin %d is not a valid PWM pin", pin);
     return;
@@ -263,7 +281,13 @@ void analogWrite(int pin, int value) {
  * RETURN:
  * value between 0 and 100 (coresponding to 1.8V)
  */
-int analogRead(int pin) {
+int analogRead(int pin_pos) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+
   if(!(200 <= pin && pin <= 206)) {
     debug("Value of pin should be in [200, 206] interval");
     return -1;
