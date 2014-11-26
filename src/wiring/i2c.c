@@ -58,6 +58,7 @@ int i2c_openadapter(uint8_t i2c_bus)
 	// i2c_buses[id] = wiringPiI2CSetup (i2c_bus) ;
 	if (i2c_bus==255)
 	{
+		printf ("auto\n");
 		#ifdef RASPBERRYPI
 		if (piBoardRev ()==1)
 		{
@@ -67,7 +68,9 @@ int i2c_openadapter(uint8_t i2c_bus)
 		{
 			i2c_bus = 1;
 		}
-		#elseif BEAGLEBONE
+		#endif
+		#ifdef BEAGLEBONE
+		printf ("beaglebone\n");
 		i2c_bus = 1;
 		#endif
 	}
