@@ -345,7 +345,7 @@ int i2c_openadapter(uint8_t i2c_bus)
 	int i2cId = getI2CId ();
 	if (i2cId >= 0)
 	{
-		if (i2c_bus == -1)
+		if (i2c_bus == 255)
 		{
 			#ifdef ARDUINOGALILEO
 			i2c_bus = 0;
