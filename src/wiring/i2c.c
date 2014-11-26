@@ -1,4 +1,4 @@
-#if defined(RASPBERRYPI) || (BEAGLEBONE)
+#if defined(RASPBERRYPI) || defined(BEAGLEBONE)
 
 #ifdef RASPBERRYPI
 #include "raspberrypi.h"
@@ -67,8 +67,7 @@ int i2c_openadapter(uint8_t i2c_bus)
 		{
 			i2c_bus = 1;
 		}
-		#endif
-		#ifdef BEAGLEBONE
+		#elseif BEAGLEBONE
 		i2c_bus = 1;
 		#endif
 	}
