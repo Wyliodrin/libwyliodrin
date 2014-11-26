@@ -43,27 +43,28 @@ void TwoWire::begin(void)
 	// muxSelectI2c(0);
 	if (onBeginCallback)
 		onBeginCallback();
+	adapter_nr = -1;
 	// if ((adapter_nr = i2c_getadapter(I2C2)) < 0) {
 	// 	return;	
 	// }
-	if (BOARD == RUN_RASPBERRYPI)
-	{
-		adapter_nr = -1;
-	}
-	else if (BOARD == RUN_GALILEO)
-	{
-		adapter_nr = 0;
-	}
-	else
-	if (BOARD == RUN_EDISON)
-	{
-		adapter_nr = 6;
-	}
-	else
-	if (BOARD == RUN_BEAGLEBONE)
-	{
-		adapter_nr = 1;
-	}
+	// if (BOARD == RUN_RASPBERRYPI)
+	// {
+	// 	adapter_nr = -1;
+	// }
+	// else if (BOARD == RUN_GALILEO)
+	// {
+	// 	adapter_nr = 0;
+	// }
+	// else
+	// if (BOARD == RUN_EDISON)
+	// {
+	// 	adapter_nr = 6;
+	// }
+	// else
+	// if (BOARD == RUN_BEAGLEBONE)
+	// {
+	// 	adapter_nr = 1;
+	// }
 	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
 		return;	
 	}
