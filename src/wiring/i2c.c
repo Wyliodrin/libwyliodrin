@@ -56,9 +56,9 @@ int i2c_openadapter(uint8_t i2c_bus)
 	// printf ("%d\n", i2c_bus);
 	int id = getI2CId();
 	// i2c_buses[id] = wiringPiI2CSetup (i2c_bus) ;
-	#ifdef RASPBERRYPI
 	if (i2c_bus==-1)
 	{
+		#ifdef RASPBERRYPI
 		if (piBoardRev ()==1)
 		{
 			i2c_bus = 0;
@@ -67,8 +67,10 @@ int i2c_openadapter(uint8_t i2c_bus)
 		{
 			i2c_bus = 1;
 		}
+		#elseif BEAGLEBONE
+		i2c_bus = 1;
+		#endif
 	}
-	#endif
 	char filepath[32];
     snprintf(filepath, 32, "/dev/i2c-%u", i2c_bus);
     if ((i2c_buses[i2c_bus] = open(filepath, O_RDWR)) < 1) {
