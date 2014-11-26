@@ -93,6 +93,7 @@ int i2c_writebyte(int i2c_id, uint8_t byte)
 	// wiringPiI2CWrite (i2c_buses[i2c_id], byte) ;
 	// perror ("write");
 	if (i2c_smbus_write_byte(i2c_buses[i2c_id], byte) < 0) {
+	perror ('i2c write');
         fprintf(stderr, "Failed to write to i2c\n");
     }
 	return 0;
@@ -106,6 +107,7 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length)
 	// int addr = i2c_addresses[i2c_id];
 
 	if (i2c_smbus_write_i2c_block_data(i2c_buses[i2c_id], bytes[0], length-1, (uint8_t*) bytes+1) < 0) {
+	perror ('i2c write bytes');
         fprintf(stderr, "Failed to write to i2c\n");
     }
 	// for (i=0; i<length; i++)
