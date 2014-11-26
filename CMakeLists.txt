@@ -80,6 +80,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
