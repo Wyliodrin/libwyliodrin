@@ -1,6 +1,5 @@
 #ifdef RASPBERRYPI
 #include "wiring.h"
-#include <linux/i2c-dev.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
