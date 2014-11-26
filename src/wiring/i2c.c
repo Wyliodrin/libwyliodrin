@@ -1,5 +1,12 @@
 #if defined(RASPBERRYPI) || (BEAGLEBONE)
 
+#include <pthread.h>
+
+static int i2c_buses[MAX_I2C_PINS];
+static int i2c_addresses[MAX_I2C_PINS];
+
+pthread_mutex_t locki2c;
+
 int getI2CId ()
 {
 	int i;
