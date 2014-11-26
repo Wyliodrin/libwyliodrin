@@ -1,8 +1,8 @@
 #if defined(RASPBERRYPI) || (BEAGLEBONE)
 
-#ifdef RASPBERRYPI
-#include "raspberrypi.h"
-#endif
+// #ifdef RASPBERRYPI
+// #include "raspberrypi.h"
+// #endif
 
 #ifdef BEAGLEBONE
 #include "beagleboneConfig.h"
