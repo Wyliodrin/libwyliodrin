@@ -1,5 +1,6 @@
 #if defined(RASPBERRYPI) || (BEAGLEBONE)
 
+#include "wiring.h"
 #include <pthread.h>
 
 static int i2c_buses[MAX_I2C_PINS];
