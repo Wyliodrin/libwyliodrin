@@ -1,5 +1,13 @@
 #if defined(RASPBERRYPI) || (BEAGLEBONE)
 
+#ifdef RASPBERRYPI
+#include "raspberrypi.h"
+#endif
+
+#ifdef BEAGLEBONE
+#include "beagleboneConfig.h"
+#endif
+
 #include "wiring.h"
 #include <linux/i2c-dev.h>
 #include <pthread.h>
