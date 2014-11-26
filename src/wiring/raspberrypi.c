@@ -1,7 +1,6 @@
 #ifdef RASPBERRYPI
 #include "wiring.h"
 #include <linux/i2c-dev.h>
-#include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -14,9 +13,7 @@ struct serial_bus
 	int fd;
 };
 
-static int i2c_buses[MAX_I2C_PINS];
 static int spi_buses[MAX_SPI_BUSES];
-static int i2c_addresses[MAX_I2C_PINS];
 static int spi_freq[MAX_SPI_BUSES];
 static int spi_channels[MAX_SPI_BUSES];
 static struct serial_bus *serial_buses[MAX_SERIAL_BUSES];
@@ -46,7 +43,6 @@ int wiringSetup ()
 }
 
 pthread_mutex_t lockspi;
-pthread_mutex_t locki2c;
 pthread_mutex_t lockserial;
 
 void pinReset (int pin)
