@@ -62,7 +62,7 @@ void TwoWire::begin(void)
 	else
 	if (BOARD == RUN_BEAGLEBONE)
 	{
-		adapter_nr = 6;
+		adapter_nr = 1;
 	}
 	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
 		return;	
