@@ -345,6 +345,15 @@ int i2c_openadapter(uint8_t i2c_bus)
 	int i2cId = getI2CId ();
 	if (i2cId >= 0)
 	{
+		if (i2c_bus == -1)
+		{
+			#ifdef ARDUINOGALILEO
+			i2c_bus = 0;
+			#endif
+			#ifdef EDISON
+			i2c_bus = 6;
+			#endif
+		}
 		i2c_buses[i2cId] = mraa_i2c_init (i2c_bus);
 	}
 	return i2cId;
