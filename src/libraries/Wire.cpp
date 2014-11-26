@@ -43,7 +43,7 @@ void TwoWire::begin(void)
 	// muxSelectI2c(0);
 	if (onBeginCallback)
 		onBeginCallback();
-	adapter_nr = -1;
+	adapter_nr = 255;
 	// if ((adapter_nr = i2c_getadapter(I2C2)) < 0) {
 	// 	return;	
 	// }
