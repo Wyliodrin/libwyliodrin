@@ -1,8 +1,8 @@
 #if defined(RASPBERRYPI) || (BEAGLEBONE)
 
-// #ifdef RASPBERRYPI
-// #include "raspberrypi.h"
-// #endif
+#ifdef RASPBERRYPI
+#include "raspberrypi.h"
+#endif
 
 #ifdef BEAGLEBONE
 #include "beagleboneConfig.h"
@@ -55,17 +55,21 @@ int i2c_openadapter(uint8_t i2c_bus)
 	// printf ("%d\n", i2c_bus);
 	int id = getI2CId();
 	// i2c_buses[id] = wiringPiI2CSetup (i2c_bus) ;
-	int d = 0;
-	if (piBoardRev ()==1)
+	#ifdef RASPBERRYPI
+	if (bus==-1)
 	{
-		d = 0;
+		if (piBoardRev ()==1)
+		{
+			bus = 0;
+		}
+		else
+		{
+			bus = 1;
+		}
 	}
-	else
-	{
-		d = 1;
-	}
+	#endif
 	char filepath[32];
-    snprintf(filepath, 32, "/dev/i2c-%u", d);
+    snprintf(filepath, 32, "/dev/i2c-%u", bus);
     if ((i2c_buses[i2c_bus] = open(filepath, O_RDWR)) < 1) {
         fprintf(stderr, "Failed to open requested i2c port %s\n", filepath);
     }
