@@ -70,6 +70,7 @@ extern "C" {
 #define I2C_0 0
 #define I2C_1 1
 #define I2C_2 2
+#define MAX_I2C_PINS 2
 
 // SPI
 #define SPI_0 0
