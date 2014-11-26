@@ -11,6 +11,7 @@
 #include "wiring.h"
 #include <linux/i2c-dev.h>
 #include <pthread.h>
+#include <stdio.h>
 
 static int i2c_buses[MAX_I2C_PINS];
 static int i2c_addresses[MAX_I2C_PINS];
