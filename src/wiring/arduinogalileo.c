@@ -349,8 +349,7 @@ int i2c_openadapter(uint8_t i2c_bus)
 		{
 			#ifdef ARDUINOGALILEO
 			i2c_bus = 0;
-			#endif
-			#ifdef EDISON
+			#elif EDISON
 			i2c_bus = 6;
 			#endif
 		}
