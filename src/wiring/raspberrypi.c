@@ -1,6 +1,6 @@
 #ifdef RASPBERRYPI
 #include "wiring.h"
-#include "i2c.h""
+#include "raspberrypi.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -38,7 +38,6 @@ int wiringSetup ()
 		wiringPiSetup ();
 	}
 	for (i=0; i<MAX_SPI_BUSES; i++) spi_buses[i]=-1;
-	for (i=0; i<MAX_I2C_BUSES; i++) i2c_buses[i]=-1;
 	for (i=0; i<MAX_SERIAL_BUSES; i++) serial_buses[i]=NULL;
 }
 
