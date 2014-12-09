@@ -24,6 +24,8 @@ int wiringSetup ()
 {
 	int i=0;
 	const char *pins_numbering = getenv ("PINS_NUMBERING");
+	const char *grovepi = getenv ("GROVE_PI");
+	int addr_grovepi = -1;
 	if (pins_numbering != NULL && strncmp (pins_numbering, "GPIO", 5)==0)
 	{
 		wiringPiSetupGpio();
@@ -36,6 +38,11 @@ int wiringSetup ()
 	else
 	{
 		wiringPiSetup ();
+	}
+	if (grovepi) sscanf (grovepi, "%d", &addr_grovepi);
+	if (addr_gorvepi > -1)
+	{
+		grovepiSetup (addr_grovepi, 4);
 	}
 	for (i=0; i<MAX_SPI_BUSES; i++) spi_buses[i]=-1;
 	for (i=0; i<MAX_SERIAL_BUSES; i++) serial_buses[i]=NULL;
