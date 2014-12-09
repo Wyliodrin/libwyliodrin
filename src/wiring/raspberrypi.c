@@ -40,7 +40,7 @@ int wiringSetup ()
 		wiringPiSetup ();
 	}
 	if (grovepi) sscanf (grovepi, "%d", &addr_grovepi);
-	if (addr_gorvepi > -1)
+	if (addr_grovepi > -1)
 	{
 		grovepiSetup (addr_grovepi, 4);
 	}
