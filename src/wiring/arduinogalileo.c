@@ -198,10 +198,12 @@ void analogWrite (int pin, int value)
 int analogRead (int pin)
 {
 	pinValue (pin);
+	printf ("%p\n", aio_pins[pin]);
 	if (!isAioPin (pin))
 	{
 		resetPin (pin);
 		aio_pins[pin] = mraa_aio_init (pin);
+		printf ("%p\n", aio_pins[pin]);
 	}
 	int adc = mraa_aio_read (aio_pins[pin]);
 	if (adc_raw_bits != 10)
