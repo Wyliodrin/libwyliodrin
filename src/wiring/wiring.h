@@ -11,7 +11,7 @@
 #define RUN_RASPBERRYPI 0
 #define RUN_GALILEO 1
 #define RUN_EDISON 2
-#define RUN_BEAGLEBONE 3
+#define RUN_BEAGLEBONE 3p
 
 #ifdef RASPBERRYPI
 #define BOARD RUN_RASPBERRYPI
@@ -91,7 +91,6 @@ int wiringSetup ();
 void pinReset (int pin);
 
 // WIRING
-int pin(const int pos);
 void pinMode (int pin, int mode);
 void digitalWrite (int pin, int value);
 int digitalRead (int pin);
