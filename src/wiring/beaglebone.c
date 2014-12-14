@@ -308,6 +308,12 @@ int analogRead(int pin_pos) {
  * 4.Advanced I/O
  *************************************************************************************************/
 
+unsigned long pulseIn(uint8_t pin, uint8_t state)
+{
+  printf ("pulseIn is not implemented for BeagleBone Black");
+  return 0;
+}
+
 /**
  * Shifts in a byte of data one bit at a time. Starts from either the most (i.e. the leftmost) or 
  * least (rightmost) significant bit. For each bit, the clock pin is pulled high, the next bit is
