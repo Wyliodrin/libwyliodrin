@@ -240,6 +240,95 @@ unsigned int micros()
 
 }
 
+unsigned long pulseIn(uint8_t pin, uint8_t state)
+{
+  long timeout = 1000000L;
+  int timeoutFlag = 0;
+  
+  unsigned long time_a;
+  unsigned long time_b;
+  bool timeoutFlag = 0;
+  bool timeBFlag = 0;
+  unsigned long time_c;
+
+  time_a = micros();
+  
+  //wait for previous pulse to end or timeout
+  while(digitalRead(pin) == state)
+  {
+    time_b = micros();
+    timeBFlag = 1;
+    if(time_b >= time_a)
+    {
+      if((time_b - time_a)>timeout)
+      {
+        timeoutFlag = 1;
+        break;
+      }
+    }
+    else
+    {//micros() overflow
+      time_c = (0xFFFFFFFF - time_a) + time_b;
+      if(time_c > timeout)
+      {
+        timeoutFlag = 1;
+        break;
+      }
+    }
+  }
+
+  //wait for pin to go to target value or timeout
+  while((digitalRead (pin) != state) && !timeoutFlag)
+  {
+    time_b = micros();
+    timeBFlag = 1;
+    if(time_b >= time_a)
+    {
+      if((time_b - time_a)>timeout)
+      {
+        timeoutFlag = 1;
+        break;
+      }
+    }
+    else
+    {//micros() overflow
+      time_c = (0xFFFFFFFF - time_a) + time_b;
+      if(time_c > timeout)
+      {
+        timeoutFlag = 1;
+        break;
+      }
+    }
+  }
+
+  //determine pulse length
+  if((digitalRead(pin) == state) && !timeoutFlag)
+  {
+    if(!timeBFlag)
+    {
+      time_b = micros();
+    }
+    time_a = time_b;
+    while(digitalRead(pin) == state)
+    {
+    }
+    time_b = micros();
+    if(time_b > time_a)
+    {
+      return (time_b - time_a - 1);
+    }
+    else
+    {//micros() overflow
+      time_c = (0xFFFFFFFF - time_a) + time_b - 1;
+      return time_c;
+    }
+  }
+  else
+  {
+    return 0;
+  }
+}
+
 uint8_t shiftIn (uint8_t dPin, uint8_t cPin, uint8_t order)
 {
   uint8_t value = 0 ;
