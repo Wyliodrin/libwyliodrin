@@ -247,7 +247,6 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
   
   unsigned long time_a;
   unsigned long time_b;
-  unsigned long timeoutFlag = 0;
   unsigned long timeBFlag = 0;
   unsigned long time_c;
 
