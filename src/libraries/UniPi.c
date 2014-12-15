@@ -27,7 +27,7 @@ void unipiSetup ()
 void unipiRelay (int relay, int value)
 {
   #ifdef RASPBERRYPI
-  digitalWrite (MCP32008_PIN+(8-relay), value);
+  digitalWrite (MCP23008_PIN+(8-relay), value);
   #endif
 }
 
