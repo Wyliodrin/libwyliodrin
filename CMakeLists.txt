@@ -78,6 +78,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/SeeedOLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/UniPi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
