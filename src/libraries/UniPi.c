@@ -2,6 +2,7 @@
 #include "UniPi.h"
 
 #ifdef RASPBERRYPI
+#include <wiringPi.h>
 #include <mcp23008.h>
 #include <mcp3422.h>
 
