@@ -23,6 +23,7 @@
     #include "libraries/LED_Bar.h"
     #include "libraries/CircularLED.h"
     #include "libraries/SeeedOLED.h"
+    #include "libraries/UniPi.h"
 %}
 
 %init %{
@@ -32,8 +33,6 @@
 
 #if defined(RASPBERRYPI)
 %include "wiring/raspberrypi.h"
-%include <mcp23008.h>
-%include <mcp3422.h>
 #endif
 
 
