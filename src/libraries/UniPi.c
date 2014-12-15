@@ -50,7 +50,7 @@ int unipiAnalogRead (int pin)
 int unipiDigitalRead (int pin)
 {
   #ifdef RASPBERRYPI
-  return digitalRead (DIO[pin01]); 
+  return digitalRead (DIO[pin-1]); 
   #else
   return 0;
   #endif
