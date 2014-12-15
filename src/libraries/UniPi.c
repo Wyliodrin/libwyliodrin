@@ -20,7 +20,7 @@ void unipiSetup ()
 {
   #ifdef RASPBERRYPI
   mcp23008Setup (MCP23008_PIN, 0x20);
-  mcp3422SSetup (MCP3422_PIN, 0x86);
+  mcp3422Setup (MCP3422_PIN, 0x86, 0, 0);
   #endif
 }
 
