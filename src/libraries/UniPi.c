@@ -38,7 +38,7 @@ void unipiAnalogWrite (int value)
 {
   #ifdef RASPBERRYPI
   pinMode (1, PWM_OUTPUT);
-  analogWrite (1, value);
+  pwmWrite (1, value);
   #endif
 }
 
