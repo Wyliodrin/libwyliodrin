@@ -32,6 +32,8 @@
 
 #if defined(RASPBERRYPI)
 %include "wiring/raspberrypi.h"
+%include <mcp23008.h>
+%include <mcp3422.h>
 #endif
 
 
