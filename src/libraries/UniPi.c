@@ -2,10 +2,10 @@
 #include "UniPi.h"
 
 #ifdef RASPBERRYPI
-#include <mcp32008.h>
+#include <mcp23008.h>
 #include <mcp3422.h>
 
-#define MCP32008_PIN  3000
+#define MCP23008_PIN  3000
 #define MCP3422_PIN   3200
 
 int DIO[] = {7, 0, 2, 4, 3, 5, 14, 11, 10, 13, 6, 12};
@@ -19,7 +19,7 @@ int DIO[] = {7, 0, 2, 4, 3, 5, 14, 11, 10, 13, 6, 12};
 void unipiSetup ()
 {
   #ifdef RASPBERRYPI
-  mcp32008Setup (MCP32008_PIN, 0x20);
+  mcp23008Setup (MCP23008_PIN, 0x20);
   mcp3422SSetup (MCP3422_PIN, 0x86);
   #endif
 }
