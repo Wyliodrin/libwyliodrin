@@ -1,5 +1,5 @@
 
-#include "UniPI.h"
+#include "UniPi.h"
 
 #ifdef RASPBERRYPI
 #include <mcp32008.h>
