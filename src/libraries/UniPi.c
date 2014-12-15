@@ -12,6 +12,10 @@ int DIO[] = {7, 0, 2, 4, 3, 5, 14, 11, 10, 13, 6, 12};
 
 #endif
 
+#ifdef __cplusplus /* If this is a C++ compiler, end C linkage */
+}
+#endif
+
 void unipiSetup ()
 {
   #ifdef RASPBERRYPI
@@ -52,3 +56,6 @@ int unipiDigitalRead (int pin)
   #endif
 }
 
+#ifdef __cplusplus /* If this is a C++ compiler, end C linkage */
+}
+#endif
