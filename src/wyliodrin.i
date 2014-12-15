@@ -12,6 +12,7 @@
     #include "libraries/SPI.h"
     #include "libraries/Wire.h"
     #include "libraries/Servo.h"
+    #include "libraries/UniPi.h"
     #include "libraries/Stepper.h"
     #include "libraries/rgb_lcd.h"
     #include "libraries/Pixy.h"
@@ -23,7 +24,6 @@
     #include "libraries/LED_Bar.h"
     #include "libraries/CircularLED.h"
     #include "libraries/SeeedOLED.h"
-    #include "libraries/UniPi.h"
 %}
 
 %init %{
@@ -46,6 +46,7 @@
 %include "libraries/SPI.h"
 %include "libraries/Wire.h"
 %include "libraries/Servo.h"
+%include "libraries/UniPi.h"
 %include "libraries/Stepper.h"
 %include "libraries/rgb_lcd.h"
 %include "libraries/Pixy.h"
