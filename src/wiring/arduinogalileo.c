@@ -277,6 +277,7 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
   //wait for previous pulse to end or timeout
   while(digitalRead(pin) == state)
   {
+    printf ("%d ", digitalRead (pin));
     time_b = micros();
     timeBFlag = 1;
     if(time_b >= time_a)
@@ -301,6 +302,7 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
   //wait for pin to go to target value or timeout
   while((digitalRead (pin) != state) && !timeoutFlag)
   {
+    printf ("%d ", digitalRead (pin));
     time_b = micros();
     timeBFlag = 1;
     if(time_b >= time_a)
@@ -325,6 +327,7 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
   //determine pulse length
   if((digitalRead(pin) == state) && !timeoutFlag)
   {
+    printf ("%d ", digitalRead (pin));
     if(!timeBFlag)
     {
       time_b = micros();
