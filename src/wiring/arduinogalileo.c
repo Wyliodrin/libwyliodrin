@@ -118,6 +118,10 @@ void pwmReset (pin)
 		mraa_pwm_enable (p, 0);
 		mraa_pwm_close (p);
 	}
+	else
+	{
+		perror ("pwmReset");
+	}
 }
 
 void resetPin (int pin)
@@ -154,13 +158,20 @@ void pinMode (int pin, int mode)
 		resetPin (pin);
 		gpio_pins[pin] = mraa_gpio_init (pin);
 	}
-	if (mode == INPUT)
+	if (isGpioPin(pin))
 	{
-		mraa_gpio_dir (gpio_pins[pin], MRAA_GPIO_IN);
+		if (mode == INPUT)
+		{
+			mraa_gpio_dir (gpio_pins[pin], MRAA_GPIO_IN);
+		}
+		else if (mode == OUTPUT)
+		{
+			mraa_gpio_dir (gpio_pins[pin], MRAA_GPIO_OUT);
+		}
 	}
-	else if (mode == OUTPUT)
+	else
 	{
-		mraa_gpio_dir (gpio_pins[pin], MRAA_GPIO_OUT);
+		perror ("pinMode");
 	}
 }
 
@@ -182,8 +193,11 @@ void analogWrite (int pin, int value)
 	{
 		resetPin (pin);
 		pwm_pins[pin] = mraa_pwm_init (pin);
-		mraa_pwm_period_us(pwm_pins[pin], 1200);
-		mraa_pwm_enable (pwm_pins[pin], 1);
+		if (pwm_pins[pin])
+		{
+			mraa_pwm_period_us(pwm_pins[pin], 1200);
+			mraa_pwm_enable (pwm_pins[pin], 1);
+		}
 	}
 	if (pwm_pins[pin])
 	{
@@ -191,7 +205,7 @@ void analogWrite (int pin, int value)
 	}
 	else
 	{
-		printf ("Cannot PWM on pin %d\n"+pin);
+		perror ("analogWrite");
 	}
 }
 
@@ -205,12 +219,20 @@ int analogRead (int pin)
 		aio_pins[pin] = mraa_aio_init (pin);
 		// printf ("%p\n", aio_pins[pin]);
 	}
-	int adc = mraa_aio_read (aio_pins[pin]);
-	if (adc_raw_bits != 10)
+	if (isAioPin (pin))
 	{
-		return (int)((float)adc*1023/adc_power);
+		int adc = mraa_aio_read (aio_pins[pin]);
+		if (adc_raw_bits != 10)
+		{
+			return (int)((float)adc*1023/adc_power);
+		}
+		return adc;
 	}
-	return adc;
+	else
+	{
+		perror ("analogRead");
+		return 0;
+	}
 }
 
 void delay (unsigned int milliseconds)
