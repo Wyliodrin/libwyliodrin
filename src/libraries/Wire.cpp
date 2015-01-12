@@ -131,11 +131,12 @@ uint8_t TwoWire::requestFrom(int address, int quantity, int sendStop)
 
 void TwoWire::beginTransmission(uint8_t address)
 {
-	if (i2c_fd < 0 || adapter_nr < 0)
+	if (i2c_fd < 0)
 		return;
 	/* set slave address via ioctl in case we need to perform terminating 
 	 * write operation
 	 */
+	// printf ("i2c_fd: %d\n", i2c_fd);
 	i2c_setslave(i2c_fd, address);
 	// save address of target and empty buffer
 	txAddress = address;
@@ -274,7 +275,7 @@ static void Wire1_Init(void)
 	if ((adapter_nr = i2c_getadapter(I2C1)) < 0) {
 		return;	
 	}
-	if ((i2c_fd = i2c_openadapter) < 0) {
+	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
 		return;	
 	}
 }

@@ -20,6 +20,13 @@ static int i2c_addresses[MAX_I2C_PINS];
 
 pthread_mutex_t locki2c;
 
+void i2c_init ()
+{
+	int i;
+	for (i=0; i<MAX_I2C_PINS; i++) i2c_buses[i]=-1;
+}
+
+
 int getI2CId ()
 {
 	int i;
@@ -73,11 +80,14 @@ int i2c_openadapter(uint8_t i2c_bus)
 		#endif
 	}
 	char filepath[32];
+// printf ("i2c_bus: %d\n", i2c_bus);
     snprintf(filepath, 32, "/dev/i2c-%u", i2c_bus);
-    if ((i2c_buses[id] = open(filepath, O_RDWR)) < 1) {
+    if ((i2c_buses[id] = open(filepath, O_RDWR)) < 0) {
         fprintf(stderr, "Failed to open requested i2c port %s\n", filepath);
+	perror ("bus");
     }
-	//perror ("set");
+	
+	// printf ("id: %d\n", id);
 	return id;
 }
 

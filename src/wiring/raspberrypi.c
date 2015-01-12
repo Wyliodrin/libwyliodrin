@@ -20,6 +20,8 @@ static struct serial_bus *serial_buses[MAX_SERIAL_BUSES];
 #define SPI_DEFAULT_FREQ	4000000
 #define SERIAL_DEFAULT_SPEED	9600
 
+void i2c_init ();
+
 unsigned long pulseIn(uint8_t pin, uint8_t state)
 {
   printf ("pulseIn is not implemented for Raspberry Pi");
@@ -52,6 +54,7 @@ int wiringSetup ()
 	}
 	for (i=0; i<MAX_SPI_BUSES; i++) spi_buses[i]=-1;
 	for (i=0; i<MAX_SERIAL_BUSES; i++) serial_buses[i]=NULL;
+	i2c_init ();
 }
 
 pthread_mutex_t lockspi;
