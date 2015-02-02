@@ -97,7 +97,7 @@ void pwmReset (int pin);
 int wiringSetup ()
 {
 	mraa_init ();
-	adc_raw_bits = mraa_adc_raw_bits();
+	adc_raw_bits = mraa_adc_supported_bits();
 	adc_power = pow (2, adc_raw_bits)-1;
 	pthread_mutex_init(&lockspi, NULL);
 	pthread_mutex_init(&locki2c, NULL);
