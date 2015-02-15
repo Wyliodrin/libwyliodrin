@@ -5,8 +5,8 @@
  * 1. Signals
  *************************************************************************************************/
  
-#ifndef SIGNALS__H
-#define SIGNALS__H
+#ifndef SIGNALS_H
+#define SIGNALS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,4 +35,4 @@ int sendCoordinatesAndFlag (const char *name, double latitude, double longitude,
 }
 #endif
 
-#endif
+#endif // SIGNALS_H
