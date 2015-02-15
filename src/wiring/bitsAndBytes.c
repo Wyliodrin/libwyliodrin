@@ -23,7 +23,7 @@ extern "C" {
  */
 uint8_t lowByte(unsigned int w) 
 {
-	return w & 0xff;
+  return w & 0xff;
 }
 
 /**
@@ -31,7 +31,7 @@ uint8_t lowByte(unsigned int w)
  */
 uint8_t highByte(unsigned int w)
 {
-	return w >> 8;
+  return w >> 8;
 }
 
 
@@ -45,7 +45,7 @@ uint8_t highByte(unsigned int w)
  */
 unsigned int bit(int b)
 {
-	return (1UL << (b));
+  return (1UL << (b));
 }
 
 /**
@@ -53,7 +53,7 @@ unsigned int bit(int b)
  */
 unsigned int bitRead(unsigned int value, unsigned int bit) 
 {
-	return (((value) >> (bit)) & 0x01);
+  return (((value) >> (bit)) & 0x01);
 }
 
 /**
@@ -61,7 +61,7 @@ unsigned int bitRead(unsigned int value, unsigned int bit)
  */
 unsigned int bitSet (unsigned int value, unsigned int bit) 
 {
-	return ((value) |= (1UL << (bit)));
+  return ((value) |= (1UL << (bit)));
 }
 
 /**
@@ -69,7 +69,7 @@ unsigned int bitSet (unsigned int value, unsigned int bit)
  */
 unsigned int bitClear (unsigned int value, unsigned int bit)
 {
-	return ((value) &= ~(1UL << (bit)));
+  return ((value) &= ~(1UL << (bit)));
 }
 
 /**
@@ -77,7 +77,7 @@ unsigned int bitClear (unsigned int value, unsigned int bit)
  */
 unsigned int bitWrite(unsigned int value, unsigned int bit, unsigned int bitvalue)
 {
-	return (bitvalue ? bitSet(value, bit) : bitClear(value, bit));
+  return (bitvalue ? bitSet(value, bit) : bitClear(value, bit));
 }
 
 
