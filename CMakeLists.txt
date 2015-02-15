@@ -60,7 +60,7 @@ endif ()
 
 set (wyliodrin_LIB_SRCS                                                                                   
   ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/bitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/libraries/lcd.c
   ${PROJECT_SOURCE_DIR}/src/libraries/Print.cpp

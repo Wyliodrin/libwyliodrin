@@ -38,7 +38,7 @@
 
 %include "wiring/wiring.h"
 %include "wiring/binary.h"
-%include "wiring/BitsAndBytes.h"
+%include "wiring/bitsAndBytes.h"
 %include "signals/signals.h"
 %include "libraries/lcd.h"
 %include "libraries/Print.h"
