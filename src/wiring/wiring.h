@@ -77,7 +77,7 @@ typedef unsigned char uint8_t;
 #define OUTPUT 1
 
 #include "binary.h"
-#include "BitsAndBytes.h"
+#include "bitsAndBytes.h"
 
 typedef uint8_t byte;
 typedef unsigned short uint16_t;
