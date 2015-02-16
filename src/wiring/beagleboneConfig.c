@@ -1,6 +1,5 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
- * Date last modified: August 2014
  *
  * This file contains the definitions of all configuration functions for the BeagleBone Black.
  *
