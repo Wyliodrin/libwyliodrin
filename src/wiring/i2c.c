@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * I2C functions
+ * I2C functions for Raspberry Pi and Beaglebone
  *
  * CONTENT
  * 1. Auxiliary
