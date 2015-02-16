@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-int grovepiSetup (int basePin, int i2caddr);
+int grovepiSetup(int basePin, int i2caddr);
 
 #ifdef __cplusplus
 }
