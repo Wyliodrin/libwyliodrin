@@ -1,6 +1,9 @@
+/**************************************************************************************************
+ * Arduino setup() and loop() functions
+ *************************************************************************************************/
 
-#ifndef ARDUINO__H
-#define ARDUINO__H
+#ifndef ARDUINO_H
+#define ARDUINO_H
 
 #include <Wyliodrin.h>
 #include <stdlib.h>
@@ -11,15 +14,12 @@
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 
-// main fucntion for Arduino
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void setup ();
-void loop ();
-
+void setup();
+void loop();
 
 #ifdef __cplusplus
 }
@@ -27,12 +27,12 @@ void loop ();
 
 int main ()
 {
-	wyliodrinSetup ();
-	setup ();
-	for (;;)
-	{
-		loop ();
-	}
+  wyliodrinSetup();
+  setup();
+  for(;;)
+  {
+    loop();
+  }
 }
 
-#endif
+#endif // ARDUINO_H
