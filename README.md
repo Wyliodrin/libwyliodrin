@@ -14,7 +14,6 @@ Supported Boards
 
 Requirements
 ============
-Libwyliodrin has the following requirements:
   * [redis-server](http://redis.io/)
   * [libhiredis](https://github.com/redis/hiredis)
   * [libjansson](https://github.com/akheron/jansson)
