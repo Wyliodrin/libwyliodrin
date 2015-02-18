@@ -3,7 +3,7 @@
  *
  * CONTENT
  * 1. Auxiliary
- * 1. Signals
+ * 2. Signals
  *************************************************************************************************/
 
 #include <hiredis/hiredis.h>
@@ -34,7 +34,10 @@ const char *userId;
  *************************************************************************************************/
 
 /**
- * Add signal
+ * Add a new signal with:
+ *                name   = sig_name
+ *                value  = sig_value
+ *                signals= data structure where the new signal is stored to
  */
 void addSignal(const char * sig_name, double sig_value, json_t *signals)
 {
@@ -53,7 +56,7 @@ void addSignal(const char * sig_name, double sig_value, json_t *signals)
 }
 
 /**
- * TODO description
+ * Returns true if there is still space to store received messages
  */
 int messagesItems()
 {
@@ -88,7 +91,13 @@ int messagesItems()
  *************************************************************************************************/
 
 /**
- * Initiate signal
+ * Initiate Redis connection to send signal coming from project
+ *        port   = connection port
+ *        pId    = the ID of the project sending signal
+ *        sID    = the session ID
+ *        uid    = user ID
+ * arguments are passed as environment variables
+ *        
  */
 int initSignal(int port, const char *pId, const char *sId, const char *uid)
 {
@@ -120,7 +129,9 @@ int initSignal(int port, const char *pId, const char *sId, const char *uid)
 }
 
 /**
- * Send signal
+ * Send signal to Redis channel
+ *        name   = signal name
+ *        value  = signal value
  */
 int sendSignal(const char *name, double value)
 {
@@ -128,7 +139,10 @@ int sendSignal(const char *name, double value)
 }
 
 /**
- * Send signal and flag
+ * Send signal with flag to Redis channel
+ *        tag   = flag name
+ *        name  = signal name
+ *        value = signal value
  */
 int sendSignalAndFlag(const char *tag, const char *name, double value)
 {
@@ -175,7 +189,7 @@ int sendSignalAndFlag(const char *tag, const char *name, double value)
 }
 
 /**
- * Send multiple signals and flags
+ * Send multiple signals with flags to Redis channel
  */
 int sendSignalsAndFlag(const char *text, const char *name, double value, ...)
 {
@@ -244,7 +258,7 @@ int sendSignalsAndFlag(const char *text, const char *name, double value, ...)
 }
 
 /**
- * Send signals
+ * Send multiple signals to Redis channel
  */
 int sendSignals(const char *name, double value, ...)
 {
@@ -308,7 +322,9 @@ int sendSignals(const char *name, double value, ...)
 }
 
 /**
- * Put flag only
+ * Send only flag to Redis channel
+ *        signal   = signal name
+ *        flag     = flag name
  */
 int putFlag (const char *signal, const char *flag)
 {
@@ -318,7 +334,7 @@ int putFlag (const char *signal, const char *flag)
 }
 
 /**
- * Send list of signals
+ * Send list of signals to Redis channel
  */
 int sendSignalsList(const char **names, double *values, int elements)
 {
@@ -326,7 +342,7 @@ int sendSignalsList(const char **names, double *values, int elements)
 }
 
 /**
- * Send list of signals and flag
+ * Send list of signals and flag to Redis channel
  */
 int sendSignalsListAndFlag(const char *flag, const char **names, double *values, int elements)
 {
@@ -381,7 +397,7 @@ int sendSignalsListAndFlag(const char *flag, const char **names, double *values,
 }
 
 /**
- * Send latitude and longitude
+ * Send signal with latitude and longitude to Redis channel
  */
 int sendCoordinates(const char *name, double latitude, double longitude)
 {
@@ -389,7 +405,7 @@ int sendCoordinates(const char *name, double latitude, double longitude)
 }
 
 /**
- * Send coordinates and flag
+ * Send coordinates and flag to Redis channel
  */
 int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, const char *flag)
 {
