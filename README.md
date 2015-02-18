@@ -58,4 +58,4 @@ cd build
 cmake -DBOARD=ON .. # BOARD can be GALILEO, RASPBERRYPI or BEAGLEBONE
 make
 sudo make install
-~~~~~~~~~~~~~{.sh}
+~~~~~~~~~~~~~
