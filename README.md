@@ -6,8 +6,11 @@ libwyliodrin - Arduino-like library for Communication on GNU/Linux platforms
 Supported Boards
 ============
 [Intel Galileo](http://arduino.cc/en/ArduinoCertified/IntelGalileo)
+
 [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html)
+
 [Raspberry Pi](http://www.raspberrypi.org/)
+
 [Beaglebone Black](http://beagleboard.org/BLACK)
 
 
@@ -49,8 +52,10 @@ Check [this](http://wiringpi.com/download-and-install/) for **WiringPi** install
 
 Install
 ==========
-  mkdir build
-  cd build
-  cmake -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI or BEAGLEBONE
-  make
-  sudo make install
+~~~~~~~~~~~~~{.sh}
+mkdir build
+cd build
+cmake -DBOARD=ON .. # BOARD can be GALILEO, RASPBERRYPI or BEAGLEBONE
+make
+sudo make install
+~~~~~~~~~~~~~{.sh}
