@@ -51,7 +51,7 @@ Install
 ~~~~~~~~~~~~~{.sh}
 mkdir build
 cd build
-cmake -DBOARD=ON .. # BOARD can be GALILEO, RASPBERRYPI or BEAGLEBONE
+cmake -DBOARD=ON .. # replace BOARD with GALILEO, RASPBERRYPI or BEAGLEBONE
 make
 sudo make install
 ~~~~~~~~~~~~~
