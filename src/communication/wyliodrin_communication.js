@@ -25,7 +25,7 @@ var channelClient = {};
  *************************************************************************************************/
 
 /**
- * TODO
+ * Initiate communication on <redis_port>
  */
 function initCommunication(redis_port)
 {
@@ -43,7 +43,7 @@ function initCommunication(redis_port)
 }
 
 /**
- * TODO
+ * Open communication
  */
 function openConnection(label, handlerFunction)
 {
@@ -66,7 +66,7 @@ function openConnection(label, handlerFunction)
 }
 
 /**
- * TODO
+ * Send message
  */
 function sendMessage(wyliodrin_id, label, data)
 {
@@ -75,7 +75,7 @@ function sendMessage(wyliodrin_id, label, data)
 }
 
 /**
- * TODO
+ * Close connection
  */
 function closeConnection(label)
 {
@@ -87,9 +87,9 @@ function closeConnection(label)
 }
 
 /**
- * TODO
+ * Close communication
  */
-function closeCommunication ()
+function closeCommunication()
 {
   client.quit();
   _.each(channelClient, function(value, key,list){

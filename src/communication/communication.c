@@ -31,9 +31,9 @@ char *redis_channel = "communication:";
  *************************************************************************************************/
 
 /**
- * TODO
+ * Disconnet from redis server
  */
-void redisDisconnect (const redisAsyncContext *c, int status)
+void redisDisconnect(const redisAsyncContext *c, int status)
 {
   if(status != REDIS_OK)
   {
@@ -42,13 +42,13 @@ void redisDisconnect (const redisAsyncContext *c, int status)
 }
 
 /**
- * TODO
+ * Asynchronous connection on <redis_port>
  */
 int asyncConnect(int redis_port)
 {
   c = redisAsyncConnect(IP, redis_port);
   signal(SIGPIPE, SIG_IGN);
-  if (c != NULL && c->err)
+  if(c != NULL && c->err)
   {
     return REDIS_ECONNECT;
   } 
@@ -61,7 +61,7 @@ int asyncConnect(int redis_port)
 }
 
 /**
- * TODO
+ * On message received
  */
 void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   int j;
@@ -71,12 +71,12 @@ void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   r = reply;
   void (*f)(int err, char *data) = privdata;
 
-  if (reply == NULL)
+  if(reply == NULL)
   {
     return;
   }
-  if (r->type == REDIS_REPLY_ARRAY) {
-    for (j = 0; j < (r->elements-2); j = j+3) {
+  if(r->type == REDIS_REPLY_ARRAY) {
+    for(j = 0; j < (r->elements-2); j = j+3) {
       data = r->element[j]->str;
       if(strcmp(data, "message") == 0)
       {
@@ -101,13 +101,13 @@ int initCommunication(int redis_port)
   int rc;
 
   rc = asyncConnect(redis_port);
-  if (rc != 0) 
+  if(rc != 0) 
   {
     return rc;
   }
 
   context = redisConnect(IP, redis_port);
-  if (context != NULL && context->err)
+  if(context != NULL && context->err)
   {
     return REDIS_ECONNECT;
   } 
@@ -120,13 +120,12 @@ int initCommunication(int redis_port)
 }
 
 /**
- * TODO
+ * Open communication on <communication_port>
  */
-void openConnection (int communication_port, void (*f)(int err, char *data))
+void openConnection(int communication_port, void (*f)(int err, char *data))
 {
-  struct event_base *base;
+  struct event_base *base = event_base_new();
 
-  base = base = event_base_new();
   initCommunication(6379);
   redisLibeventAttach(c, base);
   redisAsyncCommand(c, onMessage, f, "SUBSCRIBE %s%d", redis_channel,communication_port);
@@ -134,9 +133,9 @@ void openConnection (int communication_port, void (*f)(int err, char *data))
 }
 
 /**
- * TODO
+ * Send message on <communication_port>
  */
-int sendMessage (char *id, int communication_port, char *data)
+int sendMessage(char *id, int communication_port, char *data)
 {
   char *j;
   json_t *root;

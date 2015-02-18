@@ -43,14 +43,7 @@ int adc_power = 1;
  * 1. Pins
  *************************************************************************************************/
 
-/**
- * TODO
- */
 void resetPin(int pin);
-
-/**
- * TODO
- */
 void pwmReset(int pin);
 
 /**
@@ -534,7 +527,7 @@ unsigned char *spi_writebytes(int spiId, uint8_t *bytes, uint8_t length)
 }
 
 /**
- * TODO description
+ * Set least significant bit mode
  */
 int spi_lsb_mode(int spiId, unsigned char lsb)
 {
@@ -542,7 +535,7 @@ int spi_lsb_mode(int spiId, unsigned char lsb)
 }
 
 /**
- * TODO description
+ * Set number of bits per word
  */
 int spi_bit_per_word(int spiId, unsigned int bits)
 {

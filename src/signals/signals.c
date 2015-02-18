@@ -34,13 +34,13 @@ const char *userId;
  *************************************************************************************************/
 
 /**
- * TODO
+ * Add signal
  */
 void addSignal(const char * sig_name, double sig_value, json_t *signals)
 {
   int i;
   char *n = strndup(sig_name, 100);
-  for (i=0; i<strnlen(n, 100); i++)
+  for (i = 0; i < strnlen(n, 100); i++)
   {
     char c = n[i];
     if(!(c>='0' && c<='9') && !(c>='A' && c<='Z') && !(c>='a' && c<='z') && c!='_' && c!='.')
@@ -53,21 +53,22 @@ void addSignal(const char * sig_name, double sig_value, json_t *signals)
 }
 
 /**
- * TODO
+ * TODO description
  */
 int messagesItems()
 {
   static time_t firstMessage = 0;
   static long messages = 0;
-  if (firstMessage == 0)
+
+  if(firstMessage == 0)
   {
-    time (&firstMessage);
+    time(&firstMessage);
   }
 
   time_t now;
-  time (&now);
+  time(&now);
 
-  if (now != firstMessage)
+  if(now != firstMessage)
   {
     firstMessage = now;
     messages = 0;
@@ -87,7 +88,7 @@ int messagesItems()
  *************************************************************************************************/
 
 /**
- * TODO
+ * Initiate signal
  */
 int initSignal(int port, const char *pId, const char *sId, const char *uid)
 {
@@ -119,7 +120,7 @@ int initSignal(int port, const char *pId, const char *sId, const char *uid)
 }
 
 /**
- * TODO
+ * Send signal
  */
 int sendSignal(const char *name, double value)
 {
@@ -127,7 +128,7 @@ int sendSignal(const char *name, double value)
 }
 
 /**
- * TODO
+ * Send signal and flag
  */
 int sendSignalAndFlag(const char *tag, const char *name, double value)
 {
@@ -174,7 +175,7 @@ int sendSignalAndFlag(const char *tag, const char *name, double value)
 }
 
 /**
- * TODO
+ * Send multiple signals and flags
  */
 int sendSignalsAndFlag(const char *text, const char *name, double value, ...)
 {
@@ -243,7 +244,7 @@ int sendSignalsAndFlag(const char *text, const char *name, double value, ...)
 }
 
 /**
- * TODO
+ * Send signals
  */
 int sendSignals(const char *name, double value, ...)
 {
@@ -307,7 +308,7 @@ int sendSignals(const char *name, double value, ...)
 }
 
 /**
- * TODO
+ * Put flag only
  */
 int putFlag (const char *signal, const char *flag)
 {
@@ -317,7 +318,7 @@ int putFlag (const char *signal, const char *flag)
 }
 
 /**
- * TODO
+ * Send list of signals
  */
 int sendSignalsList(const char **names, double *values, int elements)
 {
@@ -325,7 +326,7 @@ int sendSignalsList(const char **names, double *values, int elements)
 }
 
 /**
- * TODO
+ * Send list of signals and flag
  */
 int sendSignalsListAndFlag(const char *flag, const char **names, double *values, int elements)
 {
@@ -380,7 +381,7 @@ int sendSignalsListAndFlag(const char *flag, const char **names, double *values,
 }
 
 /**
- * TODO
+ * Send latitude and longitude
  */
 int sendCoordinates(const char *name, double latitude, double longitude)
 {
@@ -388,22 +389,22 @@ int sendCoordinates(const char *name, double latitude, double longitude)
 }
 
 /**
- * TODO
+ * Send coordinates and flag
  */
 int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, const char *flag)
 {
   int rc;
-  char *lon = malloc(100 *sizeof(char));
-  char *lat = malloc(100 *sizeof(char));
+  char *lon = malloc(100 * sizeof(char));
+  char *lat = malloc(100 * sizeof(char));
   snprintf(lat, 99, "%s_latitude",name);
   snprintf(lon, 99, "%s_longitude",name);
   if(flag != NULL)
   {
-    rc = sendSignalsAndFlag(flag,lat,latitude,lon,longitude,NULL);
+    rc = sendSignalsAndFlag(flag, lat, latitude, lon, longitude, NULL);
   }
   else
   {
-    rc = sendSignals(lat,latitude,lon,longitude,NULL);
+    rc = sendSignals(lat, latitude, lon, longitude, NULL);
   }
 
   free(lon);
