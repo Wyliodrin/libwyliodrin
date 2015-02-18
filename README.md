@@ -5,13 +5,10 @@ libwyliodrin - Arduino-like library for Communication on GNU/Linux platforms
 
 Supported Boards
 ============
-[Intel Galileo](http://arduino.cc/en/ArduinoCertified/IntelGalileo)
-
-[Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html)
-
-[Raspberry Pi](http://www.raspberrypi.org/)
-
-[Beaglebone Black](http://beagleboard.org/BLACK)
+  * [Intel Galileo](http://arduino.cc/en/ArduinoCertified/IntelGalileo)
+  * [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html)
+  * [Raspberry Pi](http://www.raspberrypi.org/)
+  * [Beaglebone Black](http://beagleboard.org/BLACK)
 
 
 
