@@ -36,7 +36,7 @@ pthread_mutex_t locki2c;
 /**
  * I2C initialization
  */
-void i2c_init ()
+void i2c_init()
 {
   int i;
 
@@ -48,8 +48,11 @@ void i2c_init ()
 
 /**
  * Return number or I2C buses
+ *
+ * RETURN
+ *    latest uninitialized slot in <i2c_buses>
  */
-int getI2CId ()
+int getI2CId()
 {
   int i;
   int id = -1;
@@ -70,8 +73,11 @@ int getI2CId ()
 
 /**
  * Release I2C bus
+ * 
+ * PARAMETERS
+ *    id - slot id in <i2c_buses> to be set to -1
  */
-void releaseI2CId (int id)
+void releaseI2CId(int id)
 {
   pthread_mutex_lock(&locki2c);
   i2c_buses[id] = -1;
@@ -80,6 +86,12 @@ void releaseI2CId (int id)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    i2c_bus_address -
+ *
+ * RETURN
+ *    -1
  */
 int i2c_getadapter(uint32_t i2c_bus_address)
 {
@@ -88,6 +100,15 @@ int i2c_getadapter(uint32_t i2c_bus_address)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    addr   -
+ *    rw     -
+ *    value  -
+ *    length -
+ *
+ * RETURN
+ *    -1
  */
 int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 {
@@ -102,6 +123,12 @@ int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 
 /**
  * Open I2C adapter
+ *
+ * PARAMETERS
+ *    i2c_bus - I2C bus
+ *
+ * RETURN
+ *    slot position in <i2c_buses> the bus has been assigned to
  */
 int i2c_openadapter(uint8_t i2c_bus)
 {
@@ -140,6 +167,12 @@ int i2c_openadapter(uint8_t i2c_bus)
 
 /**
  * Close I2C adapter
+ *
+ * PARAMETERS
+ *    i2c_id - slot position in <i2c_buses> to be closed
+ *
+ * RETURN
+ *    result of operation
  */
 int i2c_closeadapter(int i2c_id)
 {
@@ -152,6 +185,12 @@ int i2c_closeadapter(int i2c_id)
 
 /**
  * Set I2C slave
+ * 
+ * PARAMETERS
+ *    i2c_id - slot position in <i2c_buses>
+ *    addr   - SPI address
+ * RETURN
+ *    0
  */
 int i2c_setslave(int i2c_id, uint8_t addr)
 {
@@ -161,6 +200,13 @@ int i2c_setslave(int i2c_id, uint8_t addr)
 
 /**
  * Write byte on I2C bus
+ *
+ * PARAMETERS
+ *    i2c_id - slot position in <i2c_buses> to be written to
+ *    byte   - byte to be written
+ *
+ * RETURN
+ *    0
  */
 int i2c_writebyte(int i2c_id, uint8_t byte)
 {
@@ -175,6 +221,14 @@ int i2c_writebyte(int i2c_id, uint8_t byte)
 
 /**
  * Write bytes on I2C bus
+ *
+ * PARAMETERS
+ *    i2c_id - slot position in <i2c_buses> to be written to
+ *    bytes  - vector of bytes
+ *    length - length of <bytes>
+ *
+ * RETURN
+ *    result of operation
  */
 int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length){
   int i;
@@ -192,6 +246,12 @@ int i2c_writebytes(int i2c_id, uint8_t *bytes, uint8_t length){
 
 /**
  * Read byte from I2C bus
+ *
+ * PARAMETERS
+ *    i2c_id - slot position in <i2c_buses> to be read from
+ *
+ * RETURN
+ *    value of read byte or -1 in case of error
  */
 int i2c_readbyte(int i2c_id)
 {
@@ -209,6 +269,13 @@ int i2c_readbyte(int i2c_id)
 
 /**
  * Read bytes on I2C bus
+ *
+ * PARAMETERS
+ *    i2c_id - slot position in <i2c_buses> to be read from
+ *    buf    - buffer to be read into
+ *    length - length of <buf>
+ * RETURN
+ *    number of bytes read
  */
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
 {
@@ -221,6 +288,12 @@ int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
 
 /**
  * TODO
+ * 
+ * PARAMETERS
+ *    i2c_id -
+ *
+ * RETURN
+ *    -1
  */
 int i2c_readwrite(int i2c_id)
 {
