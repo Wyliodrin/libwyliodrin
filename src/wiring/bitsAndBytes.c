@@ -20,6 +20,12 @@ extern "C" {
 
 /**
  * Return the low byte from <w>
+ *
+ * PARAMETERS
+ * 		w - two bytes integer
+ *
+ * RETURN
+ *		low byte of <w>
  */
 uint8_t lowByte(unsigned int w) 
 {
@@ -28,6 +34,12 @@ uint8_t lowByte(unsigned int w)
 
 /**
  * Return the high byte from <w>
+ *
+ * PARAMETERS
+ * 		w - two bytes integer
+ *
+ * RETURN
+ *		high byte of <w>
  */
 uint8_t highByte(unsigned int w)
 {
@@ -42,6 +54,12 @@ uint8_t highByte(unsigned int w)
 
 /**
  * Return an integer where the only 1 bit is on position <b>
+ *
+ * PARAMETERS
+ *		b - number of positions
+ *
+ * RETURN
+ *		2 raised to the power <b>
  */
 unsigned int bit(int b)
 {
@@ -50,6 +68,13 @@ unsigned int bit(int b)
 
 /**
  * Return the bit number <bit> from <value>
+ *
+ * PARAMETERS
+ * 		value - unsigned integer
+ *		bit   - bit position to be read
+ *
+ * RETURN
+ *    either 0 or 1
  */
 unsigned int bitRead(unsigned int value, unsigned int bit) 
 {
@@ -58,22 +83,44 @@ unsigned int bitRead(unsigned int value, unsigned int bit)
 
 /**
  * Set the bit number <bit> to 1 in <value>
+ *
+ * PARAMETERS
+ *		value - unsigned integer
+ *		bit   - bit position
+ *
+ * RETURN
+ *		<value> with the bit at position <bit> set to 1
  */
-unsigned int bitSet (unsigned int value, unsigned int bit) 
+unsigned int bitSet(unsigned int value, unsigned int bit) 
 {
   return ((value) |= (1UL << (bit)));
 }
 
 /**
  * Set the bit number <bit> to 0 in <value>
+ *
+ * PARAMETERS
+ *		value - unsigned integer
+ *		bit   - bit position
+ *
+ * RETURN
+ *		<value> with the bit at position <bit> set to 0
  */
-unsigned int bitClear (unsigned int value, unsigned int bit)
+unsigned int bitClear(unsigned int value, unsigned int bit)
 {
   return ((value) &= ~(1UL << (bit)));
 }
 
 /**
  * Set the bit number <bit> to <bitvalue> in <value>
+ *
+ * PARAMETERS
+ *		value    - unsigned integer
+ *		bit      - bit position
+ *    bitvalue - either 0 or 1
+ *
+ * RETURN
+ *		<value> with the bit at position <bit> set to <bitvalue>
  */
 unsigned int bitWrite(unsigned int value, unsigned int bit, unsigned int bitvalue)
 {
