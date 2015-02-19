@@ -60,6 +60,9 @@ int wiringSetup()
 
 /**
  * Reset pin
+ * 
+ * PARAMETERS
+ *    pin - pin number to reset
  */
 void pinReset(int pin)
 {
@@ -70,6 +73,9 @@ void pinReset(int pin)
 
 /**
  * Reset PWM pin
+ *
+ * PARAMETERS
+ *    pin - pwm pin to reset
  */
 void pwmReset(pin)
 {
@@ -88,10 +94,13 @@ void pwmReset(pin)
 
 /**
  * Reset pin
+ *
+ * PARAMETERS
+ *    pin - pin to reset
  */
 void resetPin(int pin)
 {
-  if (gpio_pins[pin] != NULL)
+  if(gpio_pins[pin] != NULL)
   {
     mraa_gpio_close(gpio_pins[pin]);
     gpio_pins[pin] = NULL;
@@ -105,6 +114,10 @@ void resetPin(int pin)
 
 /**
  * Set pin mode
+ *
+ * PARAMETERS
+ *    pin  - pin number
+ *    mode - either INPUT or OUTPUT
  */
 void pinMode(int pin, int mode)
 {
@@ -138,8 +151,14 @@ void pinMode(int pin, int mode)
 
 /**
  * Read digital value on pin
+ *
+ * PARAMETERS
+ *    pin - pin number to read from
+ *
+ * RETURN
+ *    either HIGH or LOW
  */
-int digitalRead (int pin)
+int digitalRead(int pin)
 {
   inPin(pin);
   return mraa_gpio_read(gpio_pins[pin]);
@@ -147,6 +166,10 @@ int digitalRead (int pin)
 
 /**
  * Write digital value on pin
+ *
+ * PARAMETERS
+ *    pin   - pin number to write to
+ *    value - wither HIGH or LOW
  */
 void digitalWrite(int pin, int value)
 {
@@ -162,6 +185,12 @@ void digitalWrite(int pin, int value)
 
 /**
  * Read analog value from pin
+ * 
+ * PARAMETERS
+ *    pin - pin number to read from
+ *
+ * RETURN
+ *    analog value between 0 and 1023
  */
 int analogRead(int pin)
 {
@@ -189,7 +218,11 @@ int analogRead(int pin)
 }
 
 /**
- * Write analog value on pin. Value must be in [0, 255] interval
+ * Write analog value on pin
+ *
+ * PARAMETERS
+ *    pin   - pin to write analog value to
+ *    value - analog value between 0 and 255
  */
 void analogWrite(int pin, int value)
 {
@@ -220,7 +253,10 @@ void analogWrite(int pin, int value)
  *************************************************************************************************/
 
 /**
- * Return system time in milliseconds
+ * Get system time in milliseconds
+ *
+ * RETURN
+ *    system time in milliseconds
  */
 unsigned int millis()
 {
@@ -229,6 +265,9 @@ unsigned int millis()
 
 /**
  * Return system time in microseconds
+ *
+ * RETURN
+ *    system time in microseconds
  */
 unsigned int micros()
 {
@@ -241,6 +280,9 @@ unsigned int micros()
 
 /**
  * Delay execution in milliseconds
+ * 
+ * PARAMETERS
+ *    milliseconds - number of milliseconds to delay execution   
  */
 void delay(unsigned int milliseconds)
 {
@@ -249,8 +291,11 @@ void delay(unsigned int milliseconds)
 
 /**
  * Delay execution in milcroseconds
+ *
+ * PARAMETERS
+ *    microseconds - number of microseconds to delay execution
  */
-void delayMicroseconds (unsigned int microseconds)
+void delayMicroseconds(unsigned int microseconds)
 {
   usleep(microseconds);
 }
@@ -269,6 +314,13 @@ void delayMicroseconds (unsigned int microseconds)
  *
  * Returns the length of the pulse in microseconds. Gives up and returns 0 if no pulse 
  * starts within 1 second;
+ *
+ * PARAMETERS
+ *    pin   - pin to get the pulse from
+ *    state - either HIGH or LOW
+ * 
+ * RETURN
+ *    length of the pulse in microseconds
  */
 unsigned long pulseIn(uint8_t pin, uint8_t state)
 {
@@ -365,6 +417,14 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
  * If you're interfacing with a device that's clocked by rising edges, you'll need to make sure
  * that the clock pin is low before the first call to shiftIn(), e.g. with a call to 
  * digitalWrite(clockPin, LOW).
+ *
+ * PARAMETERS
+ *    dPin  - data pin
+ *    cPin  - clock pin
+ *    order - either MSBFIRST or LSBFIRST
+ *
+ * RETURN
+ *    last value read from the data pin
  */
 uint8_t shiftIn(uint8_t dPin, uint8_t cPin, uint8_t order)
 {
@@ -375,18 +435,18 @@ uint8_t shiftIn(uint8_t dPin, uint8_t cPin, uint8_t order)
   {
     for (i = 7; i >= 0; --i)
     {
-      digitalWrite(cPin, HIGH) ;
-      value |= digitalRead (dPin) << i ;
-      digitalWrite(cPin, LOW) ;
+      digitalWrite(cPin, HIGH);
+      value |= digitalRead(dPin) << i;
+      digitalWrite(cPin, LOW);
     }
   }
   else
   {
     for (i = 0; i < 8; ++i)
     {
-      digitalWrite(cPin, HIGH) ;
+      digitalWrite(cPin, HIGH);
       value |= digitalRead(dPin) << i;
-      digitalWrite(cPin, LOW) ;
+      digitalWrite(cPin, LOW);
     }
   }
 
@@ -397,6 +457,12 @@ uint8_t shiftIn(uint8_t dPin, uint8_t cPin, uint8_t order)
  * Shifts out a byte of data one bit at a time. Starts from either the most (i.e. the leftmost)
  * or least (rightmost) significant bit. Each bit is written in turn to a data pin, after which a
  * clock pin is pulsed (taken high, then low) to indicate that the bit is available.
+ *
+ * PARAMETERS
+ *    dPin  - data pin
+ *    cPin  - clock pin
+ *    order - either MSBFIRST or LSBFIRST
+ *    val   - either HIGH or LOW
  */
 void shiftOut(uint8_t dPin, uint8_t cPin, uint8_t order, uint8_t val)
 {
@@ -429,7 +495,10 @@ void shiftOut(uint8_t dPin, uint8_t cPin, uint8_t order, uint8_t val)
  *************************************************************************************************/
 
 /**
- * Return SPI id
+ * Get SPI id
+ *
+ * RETURN
+ *    latest available SPI bus or -1 if there is none available
  */
 int getSPIId()
 {
@@ -452,6 +521,9 @@ int getSPIId()
 
 /**
  * Release SPI id
+ *
+ * PARAMETERS
+ *    id - SPI bus to release
  */
 void releaseSPIId(int id)
 {
@@ -462,6 +534,9 @@ void releaseSPIId(int id)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    spi_bus_address -
  */
 int spi_getadapter(uint32_t spi_bus_address)
 {
@@ -470,6 +545,12 @@ int spi_getadapter(uint32_t spi_bus_address)
 
 /**
  * Open SPI adapter
+ *
+ * PARAMETERS
+ *    spi_bus - SPI bus to initiate with mraa
+ * 
+ * RETURN
+ *    id in <spi_buses> assigned to the spi_bus
  */
 int spi_openadapter(uint8_t spi_bus)
 {
@@ -485,6 +566,12 @@ int spi_openadapter(uint8_t spi_bus)
 
 /**
  * Close SPI adapter
+ * 
+ * PARAMETERS
+ *    spiId - id of SPI bus in <spi_buses>
+ * 
+ * RETURN
+ *    0
  */
 int spi_closeadapter(int spiId)
 {
@@ -496,6 +583,13 @@ int spi_closeadapter(int spiId)
 
 /**
  * Set SPI mode
+ *
+ * PARAMETERS
+ *    spiId - id of SPI bus in <spi_buses>
+ *    mode  - the SPI mode, see Linux spidev
+ *
+ * RETURN
+ *     SPI context or NULL
  */
 int spi_setmode(int spiId, unsigned short mode)
 {
@@ -504,6 +598,13 @@ int spi_setmode(int spiId, unsigned short mode)
 
 /**
  * Set SPI frequency
+ *
+ * PARAMETERS
+ *    spiId - id of SPI bus in <spi_buses>
+ *    freq  - SPI frequency in Hz
+ *
+ * RETURN
+ *     the returned initialised SPI context
  */
 int spi_set_frequency(int spiId, int freq)
 {
@@ -512,6 +613,13 @@ int spi_set_frequency(int spiId, int freq)
 
 /**
  * Write byte on SPI bus
+ *
+ * PARAMETERS
+ *    spiId - id of SPI bus in <spi_buses>
+ *    byte  - byte to write
+ * 
+ * RETURN
+ *     data received on the miso line
  */
 uint8_t spi_writebyte(int spiId, uint8_t byte)
 {
@@ -520,6 +628,14 @@ uint8_t spi_writebyte(int spiId, uint8_t byte)
 
 /** 
  * Write bytes on SPI bus
+ *
+ * PARAMETERS
+ *    spiId  - id of SPI bus in <spi_buses>
+ *    bytes  - byte vector
+ *    length - length of <bytes>
+ *
+ * RETURN
+ *    data received on the miso line, same length as passed in
  */
 unsigned char *spi_writebytes(int spiId, uint8_t *bytes, uint8_t length)
 {
@@ -528,6 +644,13 @@ unsigned char *spi_writebytes(int spiId, uint8_t *bytes, uint8_t length)
 
 /**
  * Set least significant bit mode
+ *
+ * PARAMETERS
+ *    spiId  - id of SPI bus in <spi_buses>
+ *    lsb    - use least significant bit transmission. 0 for msbi
+ *
+ * RETURN
+ *    result of operation
  */
 int spi_lsb_mode(int spiId, unsigned char lsb)
 {
@@ -536,6 +659,13 @@ int spi_lsb_mode(int spiId, unsigned char lsb)
 
 /**
  * Set number of bits per word
+ *
+ * PARAMETERS
+ *    spiId  - id of SPI bus in <spi_buses>
+ *    bits   - bits per word
+ *
+ * RETURN
+ *    result of operation
  */
 int spi_bit_per_word(int spiId, unsigned int bits)
 {
@@ -550,6 +680,9 @@ int spi_bit_per_word(int spiId, unsigned int bits)
 
 /**
  * Get I2C id
+ *
+ * RETURN
+ *    latest available I2C bus or -1 if there is none available
  */
 int getI2CId()
 {
@@ -572,6 +705,9 @@ int getI2CId()
 
 /**
  * Release I2C id
+ *
+ * PARAMETERS
+ *    id - id of I2C bus in <i2c_buses>
  */
 void releaseI2CId(int id)
 {
@@ -582,6 +718,9 @@ void releaseI2CId(int id)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *   i2c_bus_address -
  */
 int i2c_getadapter(uint32_t i2c_bus_address)
 {
@@ -590,6 +729,12 @@ int i2c_getadapter(uint32_t i2c_bus_address)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    addr   - 
+ *    rw     -
+ *    value  -
+ *    length -
  */
 int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 {
@@ -598,10 +743,16 @@ int i2c_add_to_buf(uint8_t addr, uint8_t rw, uint8_t *value, int length)
 
 /**
  * Open I2C adapter
+ *
+ * PARAMETERS
+ *    i2c_bus - i2c bus
+ * 
+ * RETURN
+ *    highest available slot in <i2c_buses> the bus has been assigned to
  */
 int i2c_openadapter(uint8_t i2c_bus)
 {
-  int i2cId = getI2CId ();
+  int i2cId = getI2CId();
 
   if (i2cId >= 0)
   {
@@ -622,24 +773,45 @@ int i2c_openadapter(uint8_t i2c_bus)
 
 /**
  * Close I2C adapter
+ *
+ * PARAMETERS
+ *    i2cId - id of slot in <i2c_buses> to release
+ *
+ * RETURN
+ *    0
  */
 int i2c_closeadapter(int i2cId)
 {
-  mraa_i2c_stop (i2c_buses[i2cId]);
-  releaseI2CId (i2cId);
+  mraa_i2c_stop(i2c_buses[i2cId]);
+  releaseI2CId(i2cId);
   return 0;
 }
 
 /**
  * Set I2C slave
+ *
+ * PARAMETERS
+ *    i2cId - id of slot in <i2c_buses>
+ *    addr  - address to set for the slave (ignoring the least signifcant bit). 
+ *            If set to 0, the slave will only respond to the general call address.
+ *
+ * RETURN
+ *    result of operation
  */
 int i2c_setslave(int i2cId, uint8_t addr)
 {
-  return mraa_i2c_address (i2c_buses[i2cId], addr);
+  return mraa_i2c_address(i2c_buses[i2cId], addr);
 }
 
 /**
  * Write byte on I2C bus
+ *
+ * PARAMETERS
+ *    i2cId - id of slot in <i2c_buses>
+ *    byte  - byte to write
+ *
+ * RETURN
+ *    result of operation
  */
 int i2c_writebyte(int i2cId, uint8_t byte)
 {
@@ -648,6 +820,14 @@ int i2c_writebyte(int i2cId, uint8_t byte)
 
 /**
  * Write bytes on I2C bus
+ *
+ * PARAMETERS
+ *    i2cId  - id of slot in <i2c_buses>
+ *    byte   - byte vector
+ *    length - legth of <byte>
+ * 
+ * RETURN
+ *    result of operation
  */
 int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length)
 {
@@ -656,6 +836,12 @@ int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length)
 
 /**
  * Read byte from I2C bus
+ *
+ * PARAMETERS
+ *    i2cId - id of slot in <i2c_buses>
+ *
+ * RETURN
+ *    result of operation
  */
 int i2c_readbyte(int i2cId)
 {
@@ -663,7 +849,15 @@ int i2c_readbyte(int i2cId)
 }
 
 /**
- * Read bytes from I2C bys
+ * Read bytes from I2C bus
+ *
+ * PARAMETERS
+ *    i2cId  - id of slot in <i2c_buses>
+ *    buf    - buffer to read into
+ *    length - length of <buf>
+ *
+ * RETURN
+ *    result of operation
  */
 int i2c_readbytes(int i2cId, uint8_t *buf, int length)
 {
@@ -672,6 +866,12 @@ int i2c_readbytes(int i2cId, uint8_t *buf, int length)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    i2cId  - id of slot in <i2c_buses>
+ *
+ * RETURN
+ *    -1
  */
 int i2c_readwrite(int i2cId)
 {
@@ -686,6 +886,9 @@ int i2c_readwrite(int i2cId)
 
 /**
  * TODO
+ *
+ * RETURN
+ *    -1
  */
 int getSerialId()
 {
@@ -694,11 +897,23 @@ int getSerialId()
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    id -
+ *
+ * RETURN
+ *    -1
  */
 void releaseSerial(int id) {}
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_bus -
+ *
+ * RETURN
+ *    -1
  */
 int serial_openadapter(char *serial_bus)
 {
@@ -707,6 +922,12 @@ int serial_openadapter(char *serial_bus)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *
+ * RETURN
+ *    0
  */
 int serial_closeadapter(int serial_id)
 {
@@ -715,6 +936,13 @@ int serial_closeadapter(int serial_id)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *    baud      -
+ *
+ * RETURN
+ *    0
  */
 int serial_set_speed(int serial_id, int baud)
 {
@@ -723,6 +951,12 @@ int serial_set_speed(int serial_id, int baud)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *
+ * RETURN
+ *    0
  */
 int serial_bytes_available(int serial_id)
 {
@@ -731,6 +965,13 @@ int serial_bytes_available(int serial_id)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *    byte      -
+ *
+ * RETURN
+ *    0
  */
 int serial_writebyte(int serial_id, uint8_t byte)
 {
@@ -739,6 +980,14 @@ int serial_writebyte(int serial_id, uint8_t byte)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *    bytes     -
+ *    length    -
+ *
+ * RETURN
+ *    0
  */
 int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length)
 {
@@ -747,6 +996,12 @@ int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *
+ * RETURN
+ *    -1
  */
 uint8_t serial_readbyte(int serial_id)
 {
@@ -755,6 +1010,14 @@ uint8_t serial_readbyte(int serial_id)
 
 /**
  * TODO
+ *
+ * PARAMETERS
+ *    serial_id -
+ *    buf       -
+ *    legth     -
+ *
+ * RETURN
+ *    0
  */
 int serial_readbytes(int serial_id, uint8_t *buf, int length)
 {
@@ -763,6 +1026,12 @@ int serial_readbytes(int serial_id, uint8_t *buf, int length)
 
 /**
  * TODO
+ *
+* PARAMETERS
+ *    serial_id -
+ *
+ * RETURN
+ *    0
  */
 int serial_flush(int serial_id)
 {
