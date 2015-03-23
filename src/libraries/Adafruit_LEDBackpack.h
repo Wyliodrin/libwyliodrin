@@ -20,6 +20,10 @@
 
 
 #include "Wire.h"
+#define PROGMEM
+#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
+#define pgm_read_word(addr) (*(const unsigned short *)(addr))
+typedef unsigned char prog_uchar;
 #include "Adafruit_GFX.h"
 
 #define LED_ON 1
