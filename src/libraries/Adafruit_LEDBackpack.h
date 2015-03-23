@@ -59,7 +59,7 @@ class Adafruit_LEDBackpack {
 
   uint16_t displaybuffer[8]; 
 
-  void init(uint8_t a);
+  // void init(uint8_t a);
  protected:
   uint8_t i2c_addr;
 };
