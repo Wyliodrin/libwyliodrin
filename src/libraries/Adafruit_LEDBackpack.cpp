@@ -46,7 +46,7 @@ static const uint8_t numbertable[] = {
 	0x71, /* F */
 };
 
-static const uint16_t alphafonttable[]  =  {
+static const uint16_t alphafonttable[] PROGMEM =  {
 
 0b0000000000000001,
 0b0000000000000010,
