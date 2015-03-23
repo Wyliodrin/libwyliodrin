@@ -18,7 +18,7 @@
   MIT license, all text above must be included in any redistribution
  ****************************************************/
 
-#include "../src/wiring.h"
+#include "../wiring/wiring.h"
 #include "Wire.h"
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
