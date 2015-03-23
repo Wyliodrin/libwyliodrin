@@ -19,11 +19,7 @@
  ****************************************************/
 
 
-#ifdef __AVR_ATtiny85__
- #include <TinyWireM.h>
-#else
- #include <Wire.h>
-#endif
+#include "Wire.h"
 #include "Adafruit_GFX.h"
 
 #define LED_ON 1
