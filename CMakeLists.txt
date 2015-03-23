@@ -74,6 +74,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_GFX.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_PCD8544.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_ST7735.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_LEDBackpack.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/TM1637.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/SeeedOLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
