@@ -249,7 +249,7 @@ bool Adafruit_BMP085_Unified::begin(bmp085_mode_t mode)
     @brief  Gets the compensated pressure level in kPa
 */
 /**************************************************************************/
-void Adafruit_BMP085_Unified::getPressure(float *pressure)
+void Adafruit_BMP085_Unified::getPressure()
 {
   int32_t  ut = 0, up = 0, compp = 0;
   int32_t  x1, x2, b5, b6, x3, b3, p;
@@ -289,7 +289,14 @@ void Adafruit_BMP085_Unified::getPressure(float *pressure)
   compp = p + ((x1 + x2 + 3791) >> 4);
 
   /* Assign compensated pressure value */
-  *pressure = compp;
+  compp;
+}
+
+void Adafruit_BMP085_Unified::getPressure(float *pressure)
+{
+
+  /* Assign compensated pressure value */
+  *pressure = getPressure();
 }
 
 /**************************************************************************/
@@ -297,7 +304,7 @@ void Adafruit_BMP085_Unified::getPressure(float *pressure)
     @brief  Reads the temperatures in degrees Celsius
 */
 /**************************************************************************/
-void Adafruit_BMP085_Unified::getTemperature(float *temp)
+void Adafruit_BMP085_Unified::getTemperature()
 {
   int32_t UT, X1, X2, B5;     // following ds convention
   float t;
@@ -317,7 +324,13 @@ void Adafruit_BMP085_Unified::getTemperature(float *temp)
   t = (B5+8) >> 4;
   t /= 10;
 
-  *temp = t;
+  return t;
+}
+
+void Adafruit_BMP085_Unified::getTemperature(float *temp)
+{
+  
+  *temp = getTemperature();
 }
 
 /**************************************************************************/
