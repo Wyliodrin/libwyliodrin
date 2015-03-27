@@ -131,19 +131,19 @@ typedef struct
     int32_t  min_delay;                       /**< min delay in microseconds between events. zero = not a constant rate */
 } sensor_t;
 
-class Adafruit_Sensor {
- public:
-  // Constructor(s)
-  Adafruit_Sensor ();
-  void constructor();
+// class Adafruit_Sensor {
+//  public:
+//   // Constructor(s)
+//   Adafruit_Sensor ();
+//   void constructor();
 
-  // These must be defined by the subclass
-  virtual void enableAutoRange(bool enabled) {};
-  virtual bool getEvent(sensors_event_t*);
-  virtual void getSensor(sensor_t*);
+//   // These must be defined by the subclass
+//   virtual void enableAutoRange(bool enabled) {};
+//   virtual bool getEvent(sensors_event_t*);
+//   virtual void getSensor(sensor_t*);
   
- private:
-  bool _autoRange;
-};
+//  private:
+//   bool _autoRange;
+// };
 
 #endif
