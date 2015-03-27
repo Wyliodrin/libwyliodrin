@@ -19,7 +19,7 @@
 
 #include "../wiring/wiring.h"
 
-#include "Wire.h""
+#include "Wire.h"
 
 #include "Adafruit_Sensor.h"
 
