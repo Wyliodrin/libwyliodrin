@@ -134,7 +134,6 @@ uint8_t Adafruit_MCP23008::read8(uint8_t addr) {
   Wire.requestFrom(MCP23008_ADDRESS | i2caddr, 1);
 
   return Wire.read();
-#endif
 }
 
 
