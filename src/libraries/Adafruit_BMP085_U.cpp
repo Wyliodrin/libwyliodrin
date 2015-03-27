@@ -289,7 +289,7 @@ float Adafruit_BMP085_Unified::getPressure()
   compp = p + ((x1 + x2 + 3791) >> 4);
 
   /* Assign compensated pressure value */
-  compp;
+  return compp;
 }
 
 void Adafruit_BMP085_Unified::getPressure(float *pressure)
