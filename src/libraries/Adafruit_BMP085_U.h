@@ -88,7 +88,7 @@
     } bmp085_calib_data;
 /*=========================================================================*/
 
-class Adafruit_BMP085_Unified 
+class Adafruit_BMP085_Unified : public Adafruit_Sensor
 {
   public:
     Adafruit_BMP085_Unified(int32_t sensorID = -1);
