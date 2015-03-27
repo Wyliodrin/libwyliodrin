@@ -134,6 +134,7 @@ typedef struct
 class Adafruit_Sensor {
  public:
   // Constructor(s)
+  Adafruit_Sensor ();
   void constructor();
 
   // These must be defined by the subclass
