@@ -56,11 +56,7 @@ static void read8(byte reg, uint8_t *value)
   Wire.write((uint8_t)reg);
   Wire.endTransmission();
   Wire.requestFrom((uint8_t)BMP085_ADDRESS, (byte)1);
-  #if ARDUINO >= 100
-    *value = Wire.read();
-  #else
-    *value = Wire.receive();
-  #endif  
+  *value = Wire.read();
   Wire.endTransmission();
 }
 
@@ -75,11 +71,7 @@ static void read16(byte reg, uint16_t *value)
   Wire.write((uint8_t)reg);
   Wire.endTransmission();
   Wire.requestFrom((uint8_t)BMP085_ADDRESS, (byte)2);
-  #if ARDUINO >= 100
-    *value = (Wire.read() << 8) | Wire.read();
-  #else
-    *value = (Wire.receive() << 8) | Wire.receive();
-  #endif  
+  *value = (Wire.read() << 8) | Wire.read();
   Wire.endTransmission();
 }
 
