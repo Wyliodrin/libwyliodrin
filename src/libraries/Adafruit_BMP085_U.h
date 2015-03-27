@@ -17,16 +17,12 @@
 #ifndef __BMP085_H__
 #define __BMP085_H__
 
-#inlcude "../wiring/wiring.h"
+#include "../wiring/wiring.h"
 
-#include <Adafruit_Sensor.h>
+#include "Wire.h""
 
-#ifdef __AVR_ATtiny85__
- #include "TinyWireM.h"
- #define Wire TinyWireM
-#else
- #include <Wire.h>
-#endif
+#include "Adafruit_Sensor.h"
+
 
 /*=========================================================================
     I2C ADDRESS/BITS
