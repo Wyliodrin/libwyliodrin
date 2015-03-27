@@ -40,13 +40,8 @@ static uint8_t           _bmp085Mode;
 static void writeCommand(byte reg, byte value)
 {
   Wire.beginTransmission((uint8_t)BMP085_ADDRESS);
-  #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
-    Wire.write((uint8_t)value);
-  #else
-    Wire.send(reg);
-    Wire.send(value);
-  #endif
+  Wire.write((uint8_t)reg);
+  Wire.write((uint8_t)value);
   Wire.endTransmission();
 }
 
@@ -58,11 +53,7 @@ static void writeCommand(byte reg, byte value)
 static void read8(byte reg, uint8_t *value)
 {
   Wire.beginTransmission((uint8_t)BMP085_ADDRESS);
-  #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
-  #else
-    Wire.send(reg);
-  #endif
+  Wire.write((uint8_t)reg);
   Wire.endTransmission();
   Wire.requestFrom((uint8_t)BMP085_ADDRESS, (byte)1);
   #if ARDUINO >= 100
@@ -81,11 +72,7 @@ static void read8(byte reg, uint8_t *value)
 static void read16(byte reg, uint16_t *value)
 {
   Wire.beginTransmission((uint8_t)BMP085_ADDRESS);
-  #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
-  #else
-    Wire.send(reg);
-  #endif
+  Wire.write((uint8_t)reg);
   Wire.endTransmission();
   Wire.requestFrom((uint8_t)BMP085_ADDRESS, (byte)2);
   #if ARDUINO >= 100
