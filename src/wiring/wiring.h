@@ -68,6 +68,17 @@ typedef unsigned char uint8_t;
 
 #endif
 
+#ifdef REDPITAYA
+#define A0	0
+#define A1	1
+#define A2	2
+#define A3	3
+#define A4	4
+#define A5	5
+#define A6	6
+#define A7	7
+#endif
+
 #define LSBFIRST  0
 #define MSBFIRST  1
 
