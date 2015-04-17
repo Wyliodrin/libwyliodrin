@@ -63,7 +63,7 @@ void digitalWrite (int pin, int value)
 
 int digitalRead (int pin)
 {
-	enum rp_pinState_t value;
+	rp_pinState_t value;
 	int rc = rp_DpinGetState(pin, &value);
 	if(rc == RP_OK)
 		return value;
