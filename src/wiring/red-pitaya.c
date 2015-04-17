@@ -20,6 +20,10 @@
 extern "C" {
 #endif
 
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <rp.h>
 #include "wiring.h"
 
