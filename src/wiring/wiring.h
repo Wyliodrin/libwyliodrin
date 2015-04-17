@@ -29,6 +29,10 @@
 #define BOARD RUN_BEAGLEBONE
 #endif
 
+#ifdef REDPITAYA
+#define BOARD RUN_REDPITAYA
+#endif
+
 
 typedef unsigned char uint8_t;
 
