@@ -10,9 +10,9 @@ FIND_PATH(REDPITAYA_INCLUDE_DIR NAMES rp.h
 
 FIND_LIBRARY(WIRINGPI_LIBRARIES NAMES rp
    PATHS
-   /usr
-   /usr/local
-   /opt
+   /usr/lib
+   /usr/local/lib
+   /opt/lib
    )
 
 
