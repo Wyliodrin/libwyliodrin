@@ -29,6 +29,7 @@ set (wyliodrin_VERSION_PATCH 0})
 option (GALILEO     "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
+option (REDPITAYA  "Build for the RedPitaya."    OFF)
 
 option (GALILEO "Build for the Intel Galileo." OFF)
 option (EDISON "Build for the Intel Galileo." OFF)
@@ -51,11 +52,17 @@ elseif (RASPBERRYPI)
   find_package(Wiringpi REQUIRED)
   set(FLAGS "-DRASPBERRYPI")
   include_directories(${WIRINGPI_INCLUDE_DIR})
+  
 elseif (BEAGLEBONE)
   add_definitions(-DBEAGLEBONE)
   set(FLAGS "-DBEAGLEBONE")
+  
+elseif (REDPITAYA)
+  add_definitions(-DREDPITAYA)
+  set(FLAGS "-DREDPITAYA")
+  
 else ()
-  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON or -DBEAGLEBONE=ON")
+  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON or -DREDPITAYA=ON")
 endif ()
 
 set (wyliodrin_LIB_SRCS                                                                                   
