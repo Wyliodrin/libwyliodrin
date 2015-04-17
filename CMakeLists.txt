@@ -59,7 +59,9 @@ elseif (BEAGLEBONE)
   
 elseif (REDPITAYA)
   add_definitions(-DREDPITAYA)
+  find_package(rp REQUIRED)
   set(FLAGS "-DREDPITAYA")
+  include_directories(${REDPITAYA_INCLUDE_DIR})
   
 else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON or -DREDPITAYA=ON")
