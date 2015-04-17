@@ -53,7 +53,6 @@ void pinMode(int pin, int mode)
 	if(rc != RP_OK)
 		printf("%s\n", rp_GetError(rc));
 }
-}
 
 void digitalWrite (int pin, int value)
 {
