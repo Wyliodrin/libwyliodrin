@@ -27,6 +27,14 @@ extern "C" {
 #include <rp.h>
 #include "wiring.h"
 
+rp_dpin_t gpio[] = {RP_DIO0_P, RP_DIO1_P, RP_DIO2_P, RP_DIO3_P, RP_DIO4_P, RP_DIO5_P, RP_DIO6_P, RP_DIO7_P, RP_DIO0_N, RP_DIO1_N, RP_DIO2_N, RP_DIO3_N, RP_DIO4_N, RP_DIO5_N, RP_DIO6_N, RP_DIO7_N, RP_LED0, RP_LED1, RP_LED2, RP_LED3, RP_LED4, RP_LED5, RP_LED6, RP_LED7};
+
+rp_apin_t ain[] = {RP_AIN0, RP_AIN1, RP_AIN2, RP_AIN3};
+rp_apin_t aout[] = {RP_AOUT0, RP_AOUT1, RP_AOUT2, RP_AOUT3};
+
+#define GPIO	24
+#define AIN	4
+#define AOUT	4
 /**************************************************************************************************
  * 1.General
  *************************************************************************************************/
@@ -49,42 +57,67 @@ void pinReset (int pin)
 
 void pinMode(int pin, int mode)
 {
-	int rc = rp_DpinSetDirection(pin, mode);
-	if(rc != RP_OK)
-		printf("%s\n", rp_GetError(rc));
+	if(pin<GPIO)
+	{
+		int rc = rp_DpinSetDirection(gpio[pin], mode);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Cannot set pin mode for pin %d\n", pin);
 }
 
 void digitalWrite (int pin, int value)
 {
-	int rc = rp_DpinSetState(pin, value);
-	if(rc != RP_OK)
-		printf("%s\n", rp_GetError(rc));
+	if(pin<GPIO)
+	{
+		int rc = rp_DpinSetState(gpio[pin], value);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not a GPIO pin\n", pin);
 }
 
 int digitalRead (int pin)
 {
-	rp_pinState_t value;
-	int rc = rp_DpinGetState(pin, &value);
-	if(rc == RP_OK)
-		return value;
-	printf("%s\n", rp_GetError(rc));
+	if(pin<GPIO)
+	{
+		rp_pinState_t value;
+		int rc = rp_DpinGetState(gpio[pin], &value);
+		if(rc == RP_OK)
+			return value;
+		printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not a GPIO pin\n",pin);
 	return -1;
 }
 
 void analogWrite (int pin, int value)
 {
-	int rc = rp_ApinSetValueRaw(pin, value);
-	if(rc != RP_OK)
-		printf("%s\n", rp_GetError(rc));
-}
+	if(pin<AOUT)
+	{
+		int rc = rp_ApinSetValueRaw(aout[pin], value);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog output\n",pin);
+}	
 
 int analogRead (int pin)
 {
-	int value;
-	int rc = rp_ApinGetValueRaw(pin, &value);
-	if(rc == RP_OK)
-		return value;
-	printf("%s\n", rp_GetError(rc));
+	if(pin<AIN)
+	{
+		int value;
+		int rc = rp_ApinGetValueRaw(ain[pin], &value);
+		if(rc == RP_OK)
+			return value;
+		printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog input\n",pin);
 	return -1;
 }
 
