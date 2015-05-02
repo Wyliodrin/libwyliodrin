@@ -12,7 +12,7 @@ set_source_files_properties (wyliodrin.i PROPERTIES SWIG_FLAGS "${SWIG_FLAGS}")
 swig_add_module (wyliodrin python wyliodrin.i ${wyliodrin_LIB_SRCS})
 #swig_link_libraries (wyliodrin ${PYTHON_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${MRAA_LIBRARIES} ${CMAKE_CURRENT_BINARY_DIR}/../../src/libwyliodrin.so ${CMAKE_THREAD_LIBS_INIT} -lrt)
 #add_dependencies (${SWIG_MODULE_wyliodrin_REAL_NAME} wyliodrin)
-swig_link_libraries (wyliodrin ${PYTHON_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${WIRINGPI_LIBRARIES} ${MRAA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lrt -lrp)
+swig_link_libraries (wyliodrin ${PYTHON_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${WIRINGPI_LIBRARIES} ${MRAA_LIBRARIES} ${REDPITAYA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lrt)
 
 # Essentially do seperate_arguments but with "." instead of " "
 string (REPLACE "." ";" PYTHON_VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
