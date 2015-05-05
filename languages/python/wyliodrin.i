@@ -56,7 +56,7 @@
     PyErr_SetString(PyExc_TypeError,"not a list");
     return NULL;
   }
-}o
+}
 
 // This tells SWIG to treat char ** as a special case
 %typemap(in) unsigned int* {
