@@ -56,7 +56,7 @@
     PyErr_SetString(PyExc_TypeError,"not a list");
     return NULL;
   }
-}
+}o
 
 // This tells SWIG to treat char ** as a special case
 %typemap(in) unsigned int* {
@@ -138,7 +138,7 @@ def openConnection (label, handlerFunction):
   p = r.pubsub(ignore_subscribe_messages=True)
   p.psubscribe(**{CHANNEL_CLIENT+str(label): myHandlerFunction})
   channelClient[label] = p
-  thread = p.run_in_thread()
+  thread = p.run_in_thread(sleep_time=0.01)
 
 def sendMessage (wyliodrin_id, label, data):
   global client
