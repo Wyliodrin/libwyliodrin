@@ -1,4 +1,4 @@
-# FindRedPitaya.cmake - Try to find the wiringPi library
+# FindRedPitaya.cmake - Try to find the rp library
 
 FIND_PATH(REDPITAYA_INCLUDE_DIR NAMES rp.h
    PATHS
