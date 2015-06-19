@@ -11,7 +11,8 @@
 #define RUN_RASPBERRYPI 0
 #define RUN_GALILEO 1
 #define RUN_EDISON 2
-#define RUN_BEAGLEBONE 3p
+#define RUN_BEAGLEBONE 3
+#define RUN_SERVER 5
 
 #ifdef RASPBERRYPI
 #define BOARD RUN_RASPBERRYPI
@@ -27,6 +28,10 @@
 
 #ifdef BEAGLEBONE
 #define BOARD RUN_BEAGLEBONE
+#endif
+
+#ifdef SERVER
+#define BOARD RUN_SERVER
 #endif
 
 
@@ -121,6 +126,11 @@ uint16_t makeWord( uint8_t h, uint8_t l ) ;
 
 #define word(...) makeWord(__VA_ARGS__)
 
+// Server
+#ifdef SERVER
+int wiringSetup ();
+#endif
+
 // SPI
 
 // TODO
@@ -174,5 +184,7 @@ int serial_flush(int serial_id);
 }
 #endif
 
+
 #endif
+
 
