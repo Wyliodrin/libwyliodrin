@@ -85,8 +85,11 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_BMP085_U.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_MCP23008.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LiquidCrystal.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/HTU21D.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/TM1637.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/SeeedOLED.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/I2Cdev.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/MPU6050.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/UniPi.c

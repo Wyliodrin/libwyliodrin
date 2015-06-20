@@ -41,6 +41,11 @@ typedef unsigned char uint8_t;
 #include <stdint.h>
 #include <unistd.h>
 
+#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
+
 // Raspberry Pi
 // use wiring library
 #ifdef RASPBERRYPI
