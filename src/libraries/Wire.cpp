@@ -67,7 +67,7 @@ void TwoWire::begin(void)
 	// 	adapter_nr = 1;
 	// }
 	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
-		printf ("i2c initialization problem\n");
+		// printf ("i2c initialization problem\n");
 		return;	
 	}
 
