@@ -353,8 +353,8 @@ int sendSignalXYAndFlag(const char *name, double x, double y, const char *flag)
 	int rc;
 	char *xstr = malloc(100 *sizeof(char));
 	char *ystr = malloc(100 *sizeof(char));
-	snprintf(lat, 99, "%s_x",name);
-	snprintf(lon, 99, "%s_y",name);
+	snprintf(xstr, 99, "%s_x",name);
+	snprintf(ystr, 99, "%s_y",name);
 	if(flag != NULL)
 		rc = sendSignalsAndFlag(flag,xstr,x,ystr,y,NULL);
 	else
