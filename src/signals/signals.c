@@ -11,7 +11,7 @@
 #define REDIS_ECONNECT -1
 #define JSON_ERROR	-2
 #define REDIS_EENV	-3
-#define MESSAGES_ITEMS 100
+#define MESSAGES_ITEMS 350
 
 redisContext *c;
 const char *projectId;
