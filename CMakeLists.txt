@@ -48,7 +48,7 @@ elseif (EDISON)
 
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
-  find_package(wiringPi REQUIRED)
+  find_package(Wiringpi REQUIRED)
   set(FLAGS "-DRASPBERRYPI")
   include_directories(${WIRINGPI_INCLUDE_DIR})
 
