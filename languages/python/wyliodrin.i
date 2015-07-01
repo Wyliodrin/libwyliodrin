@@ -41,9 +41,9 @@
       PyObject *o = PyList_GetItem($input,i);
       if (PyFloat_Check(o))
 	$1[i] = PyFloat_AsDouble(PyList_GetItem($input,i));
-      else if (PyInt_Check(o))                      
+      else if (PyInt_Check(o))
         $1[i] = PyInt_AsLong(PyList_GetItem($input,i));
-      else if (PyLong_Check(o))                      
+      else if (PyLong_Check(o))
         $1[i] = PyLong_AsLong(PyList_GetItem($input,i));
       else {
 	PyErr_SetString(PyExc_TypeError,"list must contain doubles");
@@ -69,9 +69,9 @@
       PyObject *o = PyList_GetItem($input,i);
       if (PyFloat_Check(o))
   $1[i] = PyFloat_AsDouble(PyList_GetItem($input,i));
-      else if (PyInt_Check(o))                      
+      else if (PyInt_Check(o))
         $1[i] = PyInt_AsLong(PyList_GetItem($input,i));
-      else if (PyLong_Check(o))                      
+      else if (PyLong_Check(o))
         $1[i] = PyLong_AsLong(PyList_GetItem($input,i));
       else {
   PyErr_SetString(PyExc_TypeError,"list must contain doubles");
@@ -95,6 +95,7 @@
 import redis
 import os
 import json
+import msgpack
 
 port = 6379
 channelClient = {}
@@ -121,9 +122,14 @@ def myHandlerFunction (message):
   label = channel[len(CHANNEL_CLIENT):]
   myHandler = handlers[label]
 
-  mes = json.loads(message['data'])
-  fromId = mes['from']
-  data = mes['data']
+  if "wyliodrin_usemsgpack" in os.environ:
+    mes = msgpack.unpackb(message['data'])
+    fromId = mes['f']
+    data = mes['d']
+  else:
+    mes = json.loads(message['data'])
+    fromId = mes['from']
+    data = mes['data']
 
   myHandler(fromId, label, 0, data)
 
