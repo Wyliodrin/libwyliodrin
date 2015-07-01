@@ -21,12 +21,18 @@
     #include "libraries/Adafruit_ST7735.h"
     #include "libraries/Adafruit_LEDBackpack.h"
     #include "libraries/Adafruit_Sensor.h"
+    #include "libraries/I2Cdev.h"
+    #include "libraries/MPU6050.h"
+
+
+
     #include "libraries/Adafruit_BMP085_U.h"
     #include "libraries/LiquidCrystal.h"
     #include "libraries/TM1637.h"
     #include "libraries/LED_Bar.h"
     #include "libraries/CircularLED.h"
     #include "libraries/SeeedOLED.h"
+    #include "libraries/HTU21D.h"
     #include "libraries/UniPi.h"
 %}
 
@@ -60,6 +66,9 @@
 %include "libraries/Adafruit_LEDBackpack.h"
 %include "libraries/Adafruit_Sensor.h"
 %include "libraries/Adafruit_BMP085_U.h"
+%include "libraries/HTU21D.h"
+%include "libraries/I2Cdev.h"
+%include "libraries/MPU6050.h"
 %include "libraries/LiquidCrystal.h"
 %include "libraries/TM1637.h"
 %include "libraries/LED_Bar.h"

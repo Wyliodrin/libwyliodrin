@@ -36,6 +36,7 @@ TwoWire::TwoWire(void(*_beginCb)(void)) : rxBufferIndex(0), rxBufferLength(0),
 					  i2c_transfer(0)
 {
 	// Empty
+	begin ();
 }
 
 void TwoWire::begin(void)
@@ -66,6 +67,7 @@ void TwoWire::begin(void)
 	// 	adapter_nr = 1;
 	// }
 	if ((i2c_fd = i2c_openadapter(adapter_nr)) < 0) {
+		// printf ("i2c initialization problem\n");
 		return;	
 	}
 
@@ -75,6 +77,7 @@ void TwoWire::begin(uint8_t address)
 {
 	if (onBeginCallback)
 		onBeginCallback();
+	begin ();
 }
 
 void TwoWire::begin(int address)

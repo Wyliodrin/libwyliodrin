@@ -3,6 +3,7 @@
 
 #include "wiring.h"
 #include <pthread.h>
+#include <stdio.h>
 #include <math.h>
 
 static mraa_gpio_context gpio_pins[MAX_GPIO_PINS];
@@ -481,6 +482,7 @@ int i2c_setslave(int i2cId, uint8_t addr)
 
 int i2c_writebyte(int i2cId, uint8_t byte)
 {
+	// printf ("%d %d\n", i2cId, byte);
 	return mraa_i2c_write_byte (i2c_buses[i2cId], byte);
 }
 

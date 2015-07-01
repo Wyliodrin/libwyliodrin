@@ -51,9 +51,15 @@ elseif (RASPBERRYPI)
   find_package(Wiringpi REQUIRED)
   set(FLAGS "-DRASPBERRYPI")
   include_directories(${WIRINGPI_INCLUDE_DIR})
+
 elseif (BEAGLEBONE)
   add_definitions(-DBEAGLEBONE)
   set(FLAGS "-DBEAGLEBONE")
+
+elseif (SERVER)
+  add_definitions(-DSERVER)
+  set(FLAGS "-DSERVER")
+
 else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON or -DBEAGLEBONE=ON")
 endif ()
@@ -79,13 +85,17 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_BMP085_U.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_MCP23008.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LiquidCrystal.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/HTU21D.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/TM1637.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/SeeedOLED.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/I2Cdev.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/MPU6050.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/UniPi.c
   ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
   ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/server.c
   ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
@@ -95,7 +105,10 @@ set (wyliodrin_LIB_SRCS
 add_subdirectory (src)
 add_subdirectory (languages)
 
+if (SERVER)
+else ()
 install (FILES scripts/install_social DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
 install (FILES scripts/update_libwyliodrin DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
 install (FILES scripts/update_streams DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
 install (FILES scripts/say DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
+endif ()

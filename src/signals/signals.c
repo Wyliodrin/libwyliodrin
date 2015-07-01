@@ -11,7 +11,7 @@
 #define REDIS_ECONNECT -1
 #define JSON_ERROR	-2
 #define REDIS_EENV	-3
-#define MESSAGES_ITEMS 100
+#define MESSAGES_ITEMS 350
 
 redisContext *c;
 const char *projectId;
@@ -339,6 +339,28 @@ int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, 
 		rc = sendSignals(lat,latitude,lon,longitude,NULL);
 	free(lon);
 	free(lat);
+	return rc;
+
+}
+
+int sendSignalXY(const char *name, double x, double y)
+{
+	return sendSignalXYAndFlag(name, x, y, NULL);
+}
+
+int sendSignalXYAndFlag(const char *name, double x, double y, const char *flag)
+{
+	int rc;
+	char *xstr = malloc(100 *sizeof(char));
+	char *ystr = malloc(100 *sizeof(char));
+	snprintf(xstr, 99, "x_%s",name);
+	snprintf(ystr, 99, "y_%s",name);
+	if(flag != NULL)
+		rc = sendSignalsAndFlag(flag,xstr,x,ystr,y,NULL);
+	else
+		rc = sendSignals(xstr,x,ystr,y,NULL);
+	free(xstr);
+	free(ystr);
 	return rc;
 
 }
