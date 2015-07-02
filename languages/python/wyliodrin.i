@@ -151,10 +151,16 @@ def sendMessage (wyliodrin_id, label, data):
   if isinstance(wyliodrin_id, list):
     for id in wyliodrin_id:
       message = {"id":id, "data":data}
-      client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
+      if "wyliodrin_usemsgpack" in os.environ:
+        client.publish(CHANNEL_SERVER+"mp:"+str(label), msgpack.packb(message))
+      else:
+        client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
   else:
     message = {"id":wyliodrin_id, "data":data}
-    client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
+    if "wyliodrin_usemsgpack" in os.environ:
+      client.publish(CHANNEL_SERVER+"mp:"+str(label), msgpack.packb(message))
+    else:
+      client.publish(CHANNEL_SERVER+str(label), json.dumps(message))
 
 def closeConnection(label):
   global threads
