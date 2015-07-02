@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.8)                                                                                                                           
+cmake_minimum_required (VERSION 2.8.8)
 project (libwyliodrin)
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
@@ -64,10 +64,11 @@ else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON or -DBEAGLEBONE=ON")
 endif ()
 
-set (wyliodrin_LIB_SRCS                                                                                   
+set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
   ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
+  ${PROJECT_SOURCE_DIR}/src/cmp/cmp.c
   ${PROJECT_SOURCE_DIR}/src/libraries/lcd.c
   ${PROJECT_SOURCE_DIR}/src/libraries/Print.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/rgb_lcd.cpp

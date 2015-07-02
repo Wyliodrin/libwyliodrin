@@ -12,6 +12,7 @@ file (GLOB wyiliodrin_headers
   "signals/*.h"
   "libraries/*.h"
   "wiring/*.h"
+  "cmp/cmp.h"
 )
 
 install (TARGETS wyliodrin DESTINATION lib)
