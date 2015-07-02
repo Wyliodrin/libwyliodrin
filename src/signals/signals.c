@@ -383,7 +383,7 @@ int sendSignalAndFlag(const char *tag, const char *name, double value) {
       }
 
       char *to_push = strdup(storage);
-      redisCommand(c, "rpush %s %s", projectId, to_push);
+      redisCommand(c, "rpush %s %b", projectId, to_push, writer_offset);
       free(to_push);
       redisCommand(c, "publish wyliodrin signalmp:%s", projectId);
     } else {
