@@ -95,7 +95,8 @@
 import redis
 import os
 import json
-import msgpack
+if "wyliodrin_usemsgpack" in os.environ:
+  import msgpack
 
 port = 6379
 channelClient = {}
