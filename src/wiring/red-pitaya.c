@@ -94,7 +94,7 @@ int digitalRead (int pin)
 	return -1;
 }
 
-void analogWrite (int pin, int value)
+void analogWrite (int pin, float value)
 {
 	if(pin<AOUT)
 	{
@@ -106,7 +106,34 @@ void analogWrite (int pin, int value)
 		printf("Pin %d is not analog output\n",pin);
 }	
 
-int analogRead (int pin)
+void analogWriteRaw (int pin, uint32_t value)
+{
+	if(pin<AOUT)
+	{
+		int rc = rp_ApinSetValueRaw(aout[pin], value);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog output\n",pin);
+}
+
+float analogRead (int pin)
+{
+	if(pin<AIN)
+	{
+		float value;
+		int rc = rp_ApinGetValue(ain[pin], &value);
+		if(rc == RP_OK)
+			return value;
+		printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog input\n",pin);
+	return -1;
+}
+
+int analogReadRaw (int pin)
 {
 	if(pin<AIN)
 	{
