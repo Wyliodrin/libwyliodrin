@@ -35,6 +35,10 @@ rp_apin_t aout[] = {RP_AOUT0, RP_AOUT1, RP_AOUT2, RP_AOUT3};
 #define GPIO	24
 #define AIN	4
 #define AOUT	4
+#define AWRITE_MAX_VALUE	255
+#define AREAD_MAX_VALUE		1023
+#define RP_AWRITE_MAX_VALUE	156
+#define RP_AREAD_MAX_VALUE	2047
 /**************************************************************************************************
  * 1.General
  *************************************************************************************************/
@@ -94,11 +98,13 @@ int digitalRead (int pin)
 	return -1;
 }
 
-void analogWrite (int pin, float value)
+void analogWrite (int pin, int value)
 {
+	//Scale values from 0-1023 to 0-2047
+	int scaled_value = value*RP_AWRITE_MAX_VALUE/AWRITE_MAX_VALUE;
 	if(pin<AOUT)
 	{
-		int rc = rp_ApinSetValueRaw(aout[pin], value);
+		int rc = rp_ApinSetValueRaw(aout[pin], scaled_value);
 		if(rc != RP_OK)
 			printf("%s\n", rp_GetError(rc));
 	}
@@ -106,11 +112,11 @@ void analogWrite (int pin, float value)
 		printf("Pin %d is not analog output\n",pin);
 }	
 
-void analogWriteRaw (int pin, uint32_t value)
+void analogWriteVoltage (int pin, float value)
 {
 	if(pin<AOUT)
 	{
-		int rc = rp_ApinSetValueRaw(aout[pin], value);
+		int rc = rp_ApinSetValue(aout[pin], value);
 		if(rc != RP_OK)
 			printf("%s\n", rp_GetError(rc));
 	}
@@ -118,14 +124,19 @@ void analogWriteRaw (int pin, uint32_t value)
 		printf("Pin %d is not analog output\n",pin);
 }
 
-float analogRead (int pin)
+int analogRead (int pin)
 {
+	int scaled_value;
 	if(pin<AIN)
 	{
-		float value;
-		int rc = rp_ApinGetValue(ain[pin], &value);
+		int value;
+		int rc = rp_ApinGetValueRaw(ain[pin], &value);
 		if(rc == RP_OK)
-			return value;
+		{
+			//scale read value from 0-156 to 0-255
+			scaled_value = value*RP_AREAD_MAX_VALUE/AREAD_MAX_VALUE;
+			return scaled_value;
+		}
 		printf("%s\n", rp_GetError(rc));
 	}
 	else
@@ -133,12 +144,12 @@ float analogRead (int pin)
 	return -1;
 }
 
-int analogReadRaw (int pin)
+float analogReadVoltage (int pin)
 {
 	if(pin<AIN)
 	{
-		int value;
-		int rc = rp_ApinGetValueRaw(ain[pin], &value);
+		float value;
+		int rc = rp_ApinGetValue(ain[pin], &value);
 		if(rc == RP_OK)
 			return value;
 		printf("%s\n", rp_GetError(rc));

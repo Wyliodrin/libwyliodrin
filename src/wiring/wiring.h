@@ -77,10 +77,6 @@ typedef unsigned char uint8_t;
 #define A1	1
 #define A2	2
 #define A3	3
-#define A4	4
-#define A5	5
-#define A6	6
-#define A7	7
 #endif
 
 #define LSBFIRST  0
@@ -91,6 +87,10 @@ typedef unsigned char uint8_t;
 #define INPUT 0
 #define OUTPUT 1
 
+#endif
+
+
+
 #include "binary.h"
 #include "BitsAndBytes.h"
 
@@ -99,6 +99,11 @@ typedef unsigned short uint16_t;
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef REDPITAYA
+void analogWriteVoltage (int pin, float value);
+float analogReadVoltage (int pin);
 #endif
 
 int wiringSetup ();
@@ -189,5 +194,5 @@ int serial_flush(int serial_id);
 }
 #endif
 
-#endif
+//#endif
 
