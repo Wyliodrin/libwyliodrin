@@ -112,6 +112,34 @@ void analogWrite (int pin, int value)
 		printf("Pin %d is not analog output\n",pin);
 }	
 
+int analogReadRaw (int pin)
+{
+	if(pin<AIN)
+	{
+		int value;
+		int rc = rp_ApinGetValueRaw(ain[pin], &value);
+		if(rc == RP_OK)
+			return value;
+		printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog input\n",pin);
+	return -1;
+}
+
+void analogWriteRaw (int pin, int value)
+{
+	if(pin<AOUT)
+	{
+		int rc = rp_ApinSetValueRaw(aout[pin], value);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog output\n",pin);
+}
+
+
 void analogWriteVoltage (int pin, float value)
 {
 	if(pin<AOUT)

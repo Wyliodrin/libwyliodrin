@@ -116,6 +116,8 @@ void digitalWrite (int pin, int value);
 int digitalRead (int pin);
 void analogWrite (int pin, int value);
 int analogRead (int pin);
+int analogReadRaw (int pin);
+void analogWriteRaw (int pin, int value);
 
 //#ifndef RASPBERRYPI 
 void delay (unsigned int milliseconds);
