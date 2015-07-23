@@ -120,22 +120,28 @@ def initCommunication (redis_port=6379):
   return 0
 
 def initDebug ():
+  global stop
   stop = threading.Lock()
   return 0
 
 def breakpoint ():
+  global stop
   stop.acquire()
-  openConnection("signal:__debug", debugHandler)
+  openConnection("__debug", debugHandler)
   stop.acquire()
+  closeConnection("__debug")
   stop.release()  
 
 def debugHandler (sender, channel, error, message):
-  print (message)
+  global stop
+  global run
+  run = message
   stop.release()
 
-def step ();
-  if (run == 'step'):
-    breakpoin()
+def step ():
+  global run
+  if run == 'step':
+    breakpoint()
 
 def myHandlerFunction (message):
   global handlers
