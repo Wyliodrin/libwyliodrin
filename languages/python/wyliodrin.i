@@ -109,6 +109,7 @@ client = None
 debugClient = None
 stop = None
 run = 'run'
+debugLabel = None
 
 def initCommunication (redis_port=6379):
   global port
@@ -121,20 +122,26 @@ def initCommunication (redis_port=6379):
 
 def initDebug ():
   global stop
+  global debugLabel
+
   stop = threading.Lock()
+  debugLabel = '__debug'+os.getenv("wyliodrin_project")
   return 0
 
 def breakpoint ():
   global stop
+  global debugLabel
+
   stop.acquire()
-  openConnection("__debug", debugHandler)
+  openConnection(debugLabel, debugHandler)
   stop.acquire()
-  closeConnection("__debug")
+  closeConnection(debugLabel)
   stop.release()  
 
 def debugHandler (sender, channel, error, message):
   global stop
   global run
+  
   run = message
   stop.release()
 
