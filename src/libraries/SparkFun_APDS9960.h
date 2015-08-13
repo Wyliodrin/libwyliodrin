@@ -99,8 +99,8 @@
 #define APDS9960_GVALID         0b00000001
 
 /* On/Off definitions */
-#define OFF                     0
-#define ON                      1
+//#define OFF                     0
+//#define ON                      1
 
 /* Acceptable parameters for setMode */
 #define POWER                   0
