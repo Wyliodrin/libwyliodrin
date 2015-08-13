@@ -85,7 +85,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_Sensor.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_BMP085_U.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_MCP23008.cpp
-  ${PROJECT_SOURCE_DIR}/libraries/SparkFun_APDS9960.cpp
+  ${PROJECT_SOURCE_DIR}/src/libraries/SparkFun_APDS9960.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LiquidCrystal.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/HTU21D.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/TM1637.cpp
