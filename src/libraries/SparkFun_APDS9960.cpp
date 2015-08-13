@@ -16,6 +16,10 @@
  *   Gesture in progress:   35mA
  */
  
+ /* On/Off definitions */
+#define OFF                     0
+#define ON                      1
+ 
  #include "Wire.h"
  
  #include "SparkFun_APDS9960.h"
