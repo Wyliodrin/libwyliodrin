@@ -1,6 +1,23 @@
 #!/bin/sh
 
+# Raspberry Pi install script
+#
+# !!! BEFORE RUNNING THIS SCRIPT !!!
+# apt-get install raspi-config
+# raspi-config
+# Select 1 Expand Filesystem.
+# Select 8 Advanced Options and then  A7 I2C - Enable/Disable automatic loading.
+# A prompt will appear asking "Would you like the ARM I2C interface to be
+# enabled?". Select Yes, exit the utility and reboot your raspberry pi.
+# add "dtparam=i2c1=on" and "dtparam=i2c_arm=on" in /boot/config.txt.
+# add "i2c-dev" in /etc/modules.
+# Follow [1] for more details on how to enable I2C on your raspberry pi.
+# add "/usr/local/bin/supervisord -c /etc/supervisord.conf" in /etc/rc.local.
+#
+# [1] https://www.abelectronics.co.uk/i2c-raspbian-wheezy/info.aspx
+
 # Install some stuff
+apt-get update
 apt-get install -y git gcc g++ gcc-4.7 g++-4.7 make pkg-config libexpat1-dev  \
   libssl-dev libhiredis-dev dh-autoreconf libfuse-dev libcurl4-gnutls-dev     \
   libevent-dev redis-server python-dev libi2c-dev python-pip libjansson-dev   \
