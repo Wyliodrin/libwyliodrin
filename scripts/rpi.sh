@@ -51,37 +51,10 @@ cd libstrophe
 make
 make install
 
-# Install wyliodrin-server
-cd /etc/sandbox
-git clone https://github.com/alexandruradovici/wyliodrin-server.git
-cd wyliodrin-server
-git checkout clean
-mkdir build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ..
-make
-make install
-
-# Set boardtype to raspberry
-mkdir /etc/wyliodrin
-echo -n raspberrypi > /etc/wyliodrin/boardtype
-
-# Create mount and build directories
-mkdir /etc/wyliodrin/mnt
-mkdir /etc/wyliodrin/build
-
-# Create settings_raspberry.json
-printf "{\n\
-  \"config_file\": \"/boot/wyliodrin.json\",\n\
-  \"mountFile\": \"/etc/wyliodrin/mnt\",\n\
-  \"buildFile\": \"/etc/wyliodrin/build\",\n\
-  \"board\": \"raspberrypi\"\n\
-}\n" > /etc/wyliodrin/settings_raspberrypi.json
-
 # Install node
 cd /etc/sandbox
 wget https://nodejs.org/dist/v0.10.28/node-v0.10.28.tar.gz
-tar -xzf node-v0.10.28
+tar -xzf node-v0.10.28.tar.gz
 rm node-v0.10.28.tar.gz
 cd node-v0.10.28
 ./configure --prefix=/usr
@@ -129,6 +102,33 @@ cd build
 cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DRASPBERRYPI=ON ..
 make
 make install
+
+# Install wyliodrin-server
+cd /etc/sandbox
+git clone https://github.com/alexandruradovici/wyliodrin-server.git
+cd wyliodrin-server
+git checkout clean
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ..
+make
+make install
+
+# Set boardtype to raspberry
+mkdir /etc/wyliodrin
+echo -n raspberrypi > /etc/wyliodrin/boardtype
+
+# Create mount and build directories
+mkdir /etc/wyliodrin/mnt
+mkdir /etc/wyliodrin/build
+
+# Create settings_raspberry.json
+printf "{\n\
+  \"config_file\": \"/boot/wyliodrin.json\",\n\
+  \"mountFile\": \"/etc/wyliodrin/mnt\",\n\
+  \"buildFile\": \"/etc/wyliodrin/build\",\n\
+  \"board\": \"raspberrypi\"\n\
+}\n" > /etc/wyliodrin/settings_raspberrypi.json
 
 # I2C support
 cd /etc/sandbox
