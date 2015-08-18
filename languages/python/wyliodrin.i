@@ -95,6 +95,7 @@
 import redis
 import os
 import json
+import threading
 if "wyliodrin_usemsgpack" in os.environ:
   import msgpack
 
@@ -105,6 +106,10 @@ handlers = {}
 CHANNEL_SERVER = "communication_server:"
 CHANNEL_CLIENT = "communication_client:"
 client = None
+debugClient = None
+stop = None
+run = 'run'
+debugLabel = None
 
 def initCommunication (redis_port=6379):
   global port
@@ -114,6 +119,36 @@ def initCommunication (redis_port=6379):
   client = redis.StrictRedis(host='localhost', port=redis_port, db=0)
   port = redis_port
   return 0
+
+def initDebug ():
+  global stop
+  global debugLabel
+
+  stop = threading.Lock()
+  debugLabel = '__debug'+os.getenv("wyliodrin_project")
+  return 0
+
+def breakpoint ():
+  global stop
+  global debugLabel
+
+  stop.acquire()
+  openConnection(debugLabel, debugHandler)
+  stop.acquire()
+  closeConnection(debugLabel)
+  stop.release()  
+
+def debugHandler (sender, channel, error, message):
+  global stop
+  global run
+  
+  run = message
+  stop.release()
+
+def step ():
+  global run
+  if run == 'step':
+    breakpoint()
 
 def myHandlerFunction (message):
   global handlers
