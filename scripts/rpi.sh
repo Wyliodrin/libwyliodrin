@@ -130,6 +130,9 @@ printf "{\n\
   \"board\": \"raspberrypi\"\n\
 }\n" > /etc/wyliodrin/settings_raspberrypi.json
 
+# Create running_projects file
+touch /etc/wyliodrin/running_projects
+
 # I2C support
 cd /etc/sandbox
 apt-get install -y python3-dev
