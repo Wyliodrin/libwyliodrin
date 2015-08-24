@@ -17,7 +17,7 @@ set_source_files_properties (wyliodrin.i PROPERTIES CPLUSPLUS ON)
 swig_add_module (wyliodrinjs javascript wyliodrin.i  ${wyliodrin_LIB_SRCS})
 #swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${MRAA_LIBRARIES} ${CMAKE_CURRENT_BINARY_DIR}/../../src/libwyliodrin.so ${CMAKE_THREAD_LIBS_INIT} -lrt)
 #add_dependencies (${SWIG_MODULE_wyliodrinjs_REAL_NAME} wyliodrin)
-swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${WIRINGPI_LIBRARIES} ${MRAA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lrt)
+swig_link_libraries (wyliodrinjs ${NODE_LIBRARIES} ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${WIRINGPI_LIBRARIES} ${MRAA_LIBRARIES} ${REDPITAYA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lrt)
 
 set_target_properties (wyliodrinjs PROPERTIES
   PREFIX ""

@@ -29,6 +29,7 @@ set (wyliodrin_VERSION_PATCH 0})
 option (GALILEO     "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
+option (REDPITAYA  "Build for the RedPitaya."    OFF)
 
 option (GALILEO "Build for the Intel Galileo." OFF)
 option (EDISON "Build for the Intel Galileo." OFF)
@@ -60,8 +61,14 @@ elseif (SERVER)
   add_definitions(-DSERVER)
   set(FLAGS "-DSERVER")
 
+elseif (REDPITAYA)
+  add_definitions(-DREDPITAYA)
+  find_package(rp REQUIRED)
+  set(FLAGS "-DREDPITAYA")
+  include_directories(${REDPITAYA_INCLUDE_DIR})
+
 else ()
-  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON or -DBEAGLEBONE=ON")
+  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON or -DREDPITAYA=ON")
 endif ()
 
 set (wyliodrin_LIB_SRCS
@@ -102,6 +109,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/wiring/math.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/red-pitaya.c
 )
 
 add_subdirectory (src)

@@ -1,4 +1,4 @@
-#if defined(RASPBERRYPI) || defined(BEAGLEBONE)
+#if defined(RASPBERRYPI) || defined(BEAGLEBONE) || defined(REDPITAYA)
 
 #ifdef RASPBERRYPI
 #include "raspberrypi.h"
@@ -6,6 +6,10 @@
 
 #ifdef BEAGLEBONE
 #include "beagleboneConfig.h"
+#endif
+
+#ifdef REDPITAYA
+#include "red-pitaya.h"
 #endif
 
 #include "wiring.h"

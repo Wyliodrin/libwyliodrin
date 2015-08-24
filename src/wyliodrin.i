@@ -46,6 +46,10 @@
 %include "wiring/raspberrypi.h"
 #endif
 
+#if defined(REDPITAYA)
+%include "wiring/red-pitaya.h"
+#endif
+
 
 %include "wiring/wiring.h"
 %include "wiring/binary.h"

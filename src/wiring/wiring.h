@@ -34,6 +34,10 @@
 #define BOARD RUN_SERVER
 #endif
 
+#ifdef REDPITAYA
+#define BOARD RUN_REDPITAYA
+#endif
+
 
 typedef unsigned char uint8_t;
 
@@ -78,6 +82,13 @@ typedef unsigned char uint8_t;
 
 #endif
 
+#ifdef REDPITAYA
+#define A0	0
+#define A1	1
+#define A2	2
+#define A3	3
+#endif
+
 #define LSBFIRST  0
 #define MSBFIRST  1
 
@@ -85,6 +96,10 @@ typedef unsigned char uint8_t;
 #define LOW 0
 #define INPUT 0
 #define OUTPUT 1
+
+#endif
+
+
 
 #include "binary.h"
 #include "BitsAndBytes.h"
@@ -94,6 +109,11 @@ typedef unsigned short uint16_t;
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef REDPITAYA
+void analogWriteVoltage (int pin, float value);
+float analogReadVoltage (int pin);
 #endif
 
 int wiringSetup ();
@@ -106,8 +126,10 @@ void digitalWrite (int pin, int value);
 int digitalRead (int pin);
 void analogWrite (int pin, int value);
 int analogRead (int pin);
+int analogReadRaw (int pin);
+void analogWriteRaw (int pin, int value);
 
-//#ifndef RASPBERRYPI 
+//#ifndef RASPBERRYPI
 void delay (unsigned int milliseconds);
 void delayMicroseconds (unsigned int microseconds);
 unsigned int millis (void);
@@ -189,7 +211,11 @@ int serial_flush(int serial_id);
 }
 #endif
 
+<<<<<<< HEAD
 
 #endif
+=======
+//#endif
+>>>>>>> red-pitaya
 
 
