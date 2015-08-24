@@ -1,6 +1,5 @@
-
-#ifndef WIRING__H
-#define WIRING__H
+#ifndef _WIRING_H
+#define _WIRING_H
 
 #define	LSBFIRST	0
 #define	MSBFIRST	1
@@ -16,28 +15,27 @@
 
 #ifdef RASPBERRYPI
 #define BOARD RUN_RASPBERRYPI
-#endif
+#endif /* RASPBERRYPI */
 
 #ifdef ARDUINOGALILEO
 #define BOARD RUN_GALILEO
-#endif
+#endif /* ARDUINOGALILEO */
 
 #ifdef EDISON
 #define BOARD RUN_EDISON
-#endif
+#endif /* EDISON */
 
 #ifdef BEAGLEBONE
 #define BOARD RUN_BEAGLEBONE
-#endif
+#endif /* BEAGLEBONE */
 
 #ifdef SERVER
 #define BOARD RUN_SERVER
-#endif
+#endif /* SERVER */
 
 #ifdef REDPITAYA
 #define BOARD RUN_REDPITAYA
-#endif
-
+#endif /* REDPITAYA */
 
 typedef unsigned char uint8_t;
 
@@ -56,7 +54,7 @@ typedef unsigned char uint8_t;
 #include <wiringPi.h>
 #include "raspberrypi.h"
 #define MAX_I2C_PINS	10
-#endif
+#endif /* RASPBERRYPI */
 
 // Arduino Galileo
 // use the mraa library
@@ -80,14 +78,14 @@ typedef unsigned char uint8_t;
 #define A5	19
 #define A6	20
 
-#endif
+#endif /* defined(ARDUINOGALILEO) || defined(EDISON) */
 
 #ifdef REDPITAYA
 #define A0	0
 #define A1	1
 #define A2	2
 #define A3	3
-#endif
+#endif /* REDPITAYA */
 
 #define LSBFIRST  0
 #define MSBFIRST  1
@@ -96,8 +94,6 @@ typedef unsigned char uint8_t;
 #define LOW 0
 #define INPUT 0
 #define OUTPUT 1
-
-#endif
 
 
 
@@ -109,12 +105,12 @@ typedef unsigned short uint16_t;
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* __cplusplus */
 
 #ifdef REDPITAYA
 void analogWriteVoltage (int pin, float value);
 float analogReadVoltage (int pin);
-#endif
+#endif /* REDPITAYA */
 
 int wiringSetup ();
 
@@ -156,7 +152,7 @@ uint16_t makeWord( uint8_t h, uint8_t l ) ;
 // Server
 #ifdef SERVER
 int wiringSetup ();
-#endif
+#endif /* SERVER */
 
 // SPI
 
@@ -209,13 +205,6 @@ int serial_flush(int serial_id);
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* __cplusplus */
 
-<<<<<<< HEAD
-
-#endif
-=======
-//#endif
->>>>>>> red-pitaya
-
-
+#endif /* _WIRING_H */
