@@ -29,8 +29,10 @@ typedef struct {
 
 
 static redisContext *c = NULL;
+static redisAsyncContext *ac = NULL;
 static bool is_connetion_in_progress = false;
 static connection_t connections[MAX_CONNECTIONS];
+static pthread_t communication_thread;
 
 
 /**
@@ -61,9 +63,7 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 
 
 void init_communication() {
-  pthread_t t;
-  pthread_create(&t, NULL, init_communication_routine, NULL);
-  pthread_join(t, NULL);
+  pthread_create(&communication_thread, NULL, init_communication_routine, NULL);
 
   int i;
   for (i = 0; i < MAX_CONNECTIONS; i++) {
@@ -100,20 +100,18 @@ static void start_subscriber() {
 
 
 static void *start_subscriber_routine(void *arg) {
-  redisAsyncContext *c;
-
   signal(SIGPIPE, SIG_IGN);
   struct event_base *base = event_base_new();
 
-  c = redisAsyncConnect(REDIS_HOST, REDIS_PORT);
-  if (c->err != 0) {
-    fprintf(stderr, "redisAsyncConnect error: %s\n", c->errstr);
+  ac = redisAsyncConnect(REDIS_HOST, REDIS_PORT);
+  if (ac->err != 0) {
+    fprintf(stderr, "redisAsyncConnect error: %s\n", ac->errstr);
     return NULL;
   }
 
-  redisLibeventAttach(c, base);
-  redisAsyncSetConnectCallback(c, connectCallback);
-  redisAsyncCommand(c, onMessage, NULL, "PSUBSCRIBE %s:*", CLIENT_CHANNEL);
+  redisLibeventAttach(ac, base);
+  redisAsyncSetConnectCallback(ac, connectCallback);
+  redisAsyncCommand(ac, onMessage, NULL, "PSUBSCRIBE %s:*", CLIENT_CHANNEL);
   event_base_dispatch(base);
 
   return NULL;
@@ -193,4 +191,7 @@ void close_communication() {
       connections[i].label = NULL;
     }
   }
+
+  redisAsyncDisconnect(ac);
+  pthread_join(communication_thread, NULL);
 }
