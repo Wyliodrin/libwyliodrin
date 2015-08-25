@@ -75,6 +75,7 @@ void digitalWrite (int pin, int value)
 {
 	if(pin<GPIO)
 	{
+		pinMode (pin, OUTPUT);
 		int rc = rp_DpinSetState(gpio[pin], value);
 		if(rc != RP_OK)
 			printf("%s\n", rp_GetError(rc));
@@ -87,6 +88,7 @@ int digitalRead (int pin)
 {
 	if(pin<GPIO)
 	{
+		pinMode (pin, INPUT);
 		rp_pinState_t value;
 		int rc = rp_DpinGetState(gpio[pin], &value);
 		if(rc == RP_OK)
