@@ -82,6 +82,9 @@ int i2c_openadapter(uint8_t i2c_bus)
 		#ifdef BEAGLEBONE
 		i2c_bus = 1;
 		#endif
+		#ifdef REDPITAYA
+		i2c_bus = 0;
+		#endif
 	}
 	char filepath[32];
 // printf ("i2c_bus: %d\n", i2c_bus);
