@@ -1,18 +1,32 @@
-#ifndef COMMUNICATION__H
-#define COMMUNICATION__H
+#ifndef _COMMUNICATION_H
+#define _COMMUNICATION_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-//sends messages
-int initCommunication (int redis_port);
-void openConnection (int communication_port, void (*f)(int err, char *data));
-int sendMessage (char *id, int communication_port, char *data);
-int closeCommunication ();
 
-#ifdef __cplusplus
-}
-#endif
+/**
+ * TODO: Description here
+ */
+void initCommunication();
 
-#endif
+/**
+ * TODO: Description here
+ */
+void openConnection(const char *label,
+                    void (*handler_function)(const char *sender,
+                                             const char *label,
+                                             int error,
+                                             const char *data));
+
+/**
+ * TODO: Description here
+ */
+void sendMessage(const char *to, const char *label, const char *data);
+
+/**
+ * TODO: Description here
+ */
+void closeCommunication();
+
+
+
+#endif /* _COMMUNICATION_H */
