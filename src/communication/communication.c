@@ -61,7 +61,6 @@ static void *init_communication_routine(void *args) {
   while (true) {
     c = redisConnectWithTimeout(REDIS_HOST, REDIS_PORT, timeout);
     if (c == NULL || c->err != 0) {
-      werr();
       fprintf(stderr, "redis connect error: %s\n", c->err != 0 ? c->errstr : "context is NULL");
       sleep(1);
     } else {
