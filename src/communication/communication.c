@@ -174,7 +174,7 @@ void send_message(const char *to, const char *label, const char *data) {
   char to_publish[to_publish_size];
   char pub_channel[pub_channel_size];
 
-  snprintf(to_publish, to_publish_size, "{\"id\":%s, \"data\":%s }", to, data);
+  snprintf(to_publish, to_publish_size, "{\"id\": \"%s\", \"data\": \"%s\"}", to, data);
   snprintf(pub_channel, pub_channel_size, "%s:%s", SERVER_CHANNEL, label);
 
   redisReply *reply = redisCommand(c, "PUBLISH %s %s", pub_channel, to_publish);
