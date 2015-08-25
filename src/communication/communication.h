@@ -7,6 +7,7 @@
 #define REDIS_PORT 6379
 
 #define CLIENT_CHANNEL "communication_client"
+#define SERVER_CHANNEL "communication_server"
 
 
 /**

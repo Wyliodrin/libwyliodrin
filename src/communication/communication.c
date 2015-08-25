@@ -14,9 +14,23 @@
 
 
 
+#define MAX_CONNECTIONS 128
+
+
+
+typedef struct {
+  char *label;
+  void (*handler_function)(const char *sender,
+                           const char *label,
+                           int error,
+                           const char *data);
+} connection_t;
+
+
+
 static redisContext *c = NULL;
 static bool is_connetion_in_progress = false;
-
+static connection_t connections[MAX_CONNECTIONS];
 
 
 /**
@@ -50,6 +64,11 @@ void init_communication() {
   pthread_t t;
   pthread_create(&t, NULL, init_communication_routine, NULL);
   pthread_join(t, NULL);
+
+  int i;
+  for (i = 0; i < MAX_CONNECTIONS; i++) {
+    connections[i].label = NULL;
+  }
 }
 
 
@@ -112,7 +131,13 @@ static void connectCallback(const redisAsyncContext *c, int status) {
 
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   printf("I got a message\n");
-  redisAsyncDisconnect(c);
+
+  redisReply *r = reply;
+  int i;
+
+  for (i = 0; i < r->elements; i++) {
+    printf("%s\n", r->element[i]->str);
+  }
 }
 
 
@@ -121,15 +146,47 @@ void open_connection(const char *label,
                                              const char *label,
                                              int error,
                                              const char *data)) {
+  int conn_index;
 
+  for (conn_index = 0; conn_index < MAX_CONNECTIONS; conn_index++) {
+    if (connections[conn_index].label != NULL) {
+      break;
+    }
+  }
+  if (conn_index == MAX_CONNECTIONS) {
+    fprintf(stderr, "Maximum number of allowed connections\n");
+    return;
+  }
+
+  connections[conn_index].label = strdup(label);
+  connections[conn_index].handler_function = handler_function;
 }
 
 
 void send_message(const char *to, const char *label, const char *data) {
+  int to_publish_size = strlen(to) + strlen(data) + 16;
+  int pub_channel_size = strlen(label) + 32;
+  char to_publish[to_publish_size];
+  char pub_channel[pub_channel_size];
 
+  snprintf(to_publish, to_publish_size, "{\"id\":%s, \"data\":%s }", to, data);
+  snprintf(pub_channel, pub_channel_size, "%s:%s", SERVER_CHANNEL, label);
+
+  redisReply *reply = redisCommand(c, "PUBLISH %s %s", pub_channel, to_publish);
+  if (reply == NULL) {
+    fprintf(stderr, "Failed to publish on %s: %s\n", pub_channel, c->errstr);
+  }
+  freeReplyObject(reply);
 }
 
 
 void close_communication() {
+  int i;
 
+  for (i = 0; i < MAX_CONNECTIONS; i++) {
+    if (connections[i].label != NULL) {
+      free(connections[i].label);
+      connections[i].label = NULL;
+    }
+  }
 }
