@@ -19,6 +19,33 @@ static bool is_connetion_in_progress = false;
 
 
 
+/**
+ * TODO: Description here
+ */
+static void *init_communication_routine(void *args);
+
+/**
+ * TODO: Description here
+ */
+static void start_subscriber();
+
+/**
+ * TODO: Description here
+ */
+static void *start_subscriber_routine(void *arg);
+
+/**
+ * TODO: Description here
+ */
+static void connectCallback(const redisAsyncContext *c, int status);
+
+/**
+ * TODO: Description here
+ */
+static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
+
+
+
 void init_communication() {
   pthread_t t;
   pthread_create(&t, NULL, init_communication_routine, NULL);
@@ -26,7 +53,7 @@ void init_communication() {
 }
 
 
-void *init_communication_routine(void *args) {
+static void *init_communication_routine(void *args) {
   struct timeval timeout = {1, 500000};
 
   is_connetion_in_progress = true;
@@ -47,14 +74,14 @@ void *init_communication_routine(void *args) {
 }
 
 
-void start_subscriber() {
+static void start_subscriber() {
   pthread_t t;
   pthread_create(&t, NULL, start_subscriber_routine, NULL);
   pthread_detach(t);
 }
 
 
-void *start_subscriber_routine(void *arg) {
+static void *start_subscriber_routine(void *arg) {
   redisAsyncContext *c;
 
   signal(SIGPIPE, SIG_IGN);
@@ -75,14 +102,14 @@ void *start_subscriber_routine(void *arg) {
 }
 
 
-void connectCallback(const redisAsyncContext *c, int status) {
+static void connectCallback(const redisAsyncContext *c, int status) {
   if (status != REDIS_OK) {
     fprintf(stderr, "connect error: %s\n", c->errstr);
   }
 }
 
 
-void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
+static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   printf("I got a message\n");
 }
 

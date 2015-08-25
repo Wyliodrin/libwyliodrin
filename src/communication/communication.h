@@ -17,31 +17,6 @@ void init_communication();
 /**
  * TODO: Description here
  */
-void *init_communication_routine(void *args);
-
-/**
- * TODO: Description here
- */
-void start_subscriber();
-
-/**
- * TODO: Description here
- */
-void *start_subscriber_routine(void *arg);
-
-/**
- * TODO: Description here
- */
-void connectCallback(const redisAsyncContext *c, int status);
-
-/**
- * TODO: Description here
- */
-void onMessage(redisAsyncContext *c, void *reply, void *privdata);
-
-/**
- * TODO: Description here
- */
 void open_connection(const char *label,
                      void (*handler_function)(const char *sender,
                                              const char *label,
