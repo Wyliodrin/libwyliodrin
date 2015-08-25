@@ -49,7 +49,7 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 void init_communication() {
   pthread_t t;
   pthread_create(&t, NULL, init_communication_routine, NULL);
-  pthread_detach(t);
+  pthread_join(t, NULL);
 }
 
 
@@ -76,7 +76,7 @@ static void *init_communication_routine(void *args) {
 static void start_subscriber() {
   pthread_t t;
   pthread_create(&t, NULL, start_subscriber_routine, NULL);
-  pthread_detach(t);
+  pthread_join(t, NULL);
 }
 
 
@@ -104,12 +104,15 @@ static void *start_subscriber_routine(void *arg) {
 static void connectCallback(const redisAsyncContext *c, int status) {
   if (status != REDIS_OK) {
     fprintf(stderr, "connect error: %s\n", c->errstr);
+  } else {
+    printf("Connection success\n");
   }
 }
 
 
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   printf("I got a message\n");
+  redisAsyncDisconnect(c);
 }
 
 
