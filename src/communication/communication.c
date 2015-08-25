@@ -64,7 +64,6 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 
 void init_communication() {
   pthread_create(&communication_thread, NULL, init_communication_routine, NULL);
-
   int i;
   for (i = 0; i < MAX_CONNECTIONS; i++) {
     connections[i].label = NULL;
@@ -134,7 +133,7 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   int i;
 
   for (i = 0; i < r->elements; i++) {
-    if (r->element[i]->str != NULL) {
+    if (r->element[i] != NULL && r->element[i]->str != NULL) {
       printf("%d: %s\n", i, r->element[i]->str);
     } else {
       printf("%d: NULL\n", i);
@@ -193,5 +192,6 @@ void close_communication() {
   }
 
   redisAsyncDisconnect(ac);
+  sleep(10);
   pthread_join(communication_thread, NULL);
 }
