@@ -136,7 +136,11 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   int i;
 
   for (i = 0; i < r->elements; i++) {
-    printf("%s\n", r->element[i]->str);
+    if (r->element[i]->str != NULL) {
+      printf("%d: %s\n", i, r->element[i]->str);
+    } else {
+      printf("%d: NULL\n", i);
+    }
   }
 }
 
