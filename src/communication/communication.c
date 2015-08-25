@@ -132,12 +132,16 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   redisReply *r = reply;
   int i;
 
-  for (i = 0; i < r->elements; i++) {
-    if (r->element[i] != NULL && r->element[i]->str != NULL) {
-      printf("%d: %s\n", i, r->element[i]->str);
-    } else {
-      printf("%d: NULL\n", i);
+  if (r != NULL) {
+    for (i = 0; i < r->elements; i++) {
+      if (r->element[i] != NULL && r->element[i]->str != NULL) {
+        printf("%d: %s\n", i, r->element[i]->str);
+      } else {
+        printf("%d: NULL\n", i);
+      }
     }
+  } else {
+    printf("NULL reply\n");
   }
 }
 
