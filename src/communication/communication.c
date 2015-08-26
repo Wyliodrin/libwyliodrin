@@ -78,8 +78,6 @@ void init_communication() {
 static void *init_communication_routine(void *args) {
   struct timeval timeout = {1, 500000};
 
-  is_connetion_in_progress = true;
-
   while (true) {
     c = redisConnectWithTimeout(REDIS_HOST, REDIS_PORT, timeout);
     if (c == NULL || c->err != 0) {
@@ -87,8 +85,6 @@ static void *init_communication_routine(void *args) {
       sleep(1);
     } else {
       start_subscriber();
-
-      is_connetion_in_progress = false;
       return NULL;
     }
   }
@@ -124,52 +120,62 @@ static void *start_subscriber_routine(void *arg) {
 
 static void connectCallback(const redisAsyncContext *c, int status) {
   if (status != REDIS_OK) {
-    fprintf(stderr, "connect error: %s\n", c->errstr);
-  } else {
-    printf("Connection success\n");
+    fprintf(stderr, "Connect error: %s\n", c->errstr);
   }
 }
 
 
 static void disconnectCallback(const redisAsyncContext *c, int status) {
   if (status != REDIS_OK) {
-    fprintf(stderr, "disconnect error: %s\n", c->errstr);
-  } else {
-    printf("Disconnection success\n");
+    fprintf(stderr, "Disconnect error: %s\n", c->errstr);
   }
 }
 
 
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
-  printf("I got a message\n");
-
   redisReply *r = reply;
   int i;
 
   if (r != NULL) {
     if (r->elements >= 1 && strncmp(r->element[0]->str, "punsubscribe", 12) == 0) {
-      printf("Disconnection on punsubscribe\n");
       redisAsyncDisconnect(c);
+      return;
     }
 
-    for (i = 0; i < r->elements; i++) {
-      if (r->element[i] != NULL && r->element[i]->str != NULL) {
-        printf("%d: %s\n", i, r->element[i]->str);
+    // for (i = 0; i < r->elements; i++) {
+    //   if (r->element[i] != NULL && r->element[i]->str != NULL) {
+    //     printf("%d: %s\n", i, r->element[i]->str);
+    //   } else {
+    //     printf("%d: NULL\n", i);
+    //   }
+    // }
+
+    if (r->elements >= 1 && strncmp(r->element[0]->str, "pmessage", 8) == 0) {
+      char *label = strchr(r->element[2]->str, ':');
+      if (label != NULL) {
+        label++;
       } else {
-        printf("%d: NULL\n", i);
+        fprintf(stderr, "Unexpected channel: %s\n", r->element[2]->str);
+        return;
       }
+
+      for (i = 0; i < MAX_CONNECTIONS; i++) {
+        if (connections[i].label != NULL && strcmp(connections[i].label, label) == 0) {
+          connections[i].handler_function("sender", label, 0, "data");
+          return;
+        }
+      }
+      fprintf(stderr, "There is no connection on label %s\n", label);
     }
-  } else {
-    printf("NULL reply\n");
   }
 }
 
 
 void open_connection(const char *label,
                      void (*handler_function)(const char *sender,
-                                             const char *label,
-                                             int error,
-                                             const char *data)) {
+                                              const char *label,
+                                              int error,
+                                              const char *data)) {
   int conn_index;
 
   for (conn_index = 0; conn_index < MAX_CONNECTIONS; conn_index++) {
