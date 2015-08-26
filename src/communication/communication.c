@@ -148,14 +148,6 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
       return;
     }
 
-    // for (i = 0; i < r->elements; i++) {
-    //   if (r->element[i] != NULL && r->element[i]->str != NULL) {
-    //     printf("%d: %s\n", i, r->element[i]->str);
-    //   } else {
-    //     printf("%d: NULL\n", i);
-    //   }
-    // }
-
     if (r->elements >= 1 && strncmp(r->element[0]->str, "pmessage", 8) == 0) {
       char *label = strchr(r->element[2]->str, ':');
       if (label != NULL) {
@@ -167,13 +159,14 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
 
       for (i = 0; i < MAX_CONNECTIONS; i++) {
         if (connections[i].label != NULL && strcmp(connections[i].label, label) == 0) {
-          /* Get id value */
+          /* Get sender */
           char *colon = strchr(r->element[3]->str, ':');
           char *first_qm = strchr(colon, '\"');
           char *second_qm = strchr(first_qm + 1, '\"');
           char sender[second_qm - first_qm];
           snprintf(sender, second_qm - first_qm, "%s", first_qm + 1);
-          /* Get data value */
+
+          /* Get data */
           colon = strchr(second_qm, ':');
           first_qm = strchr(colon, '\"');
           second_qm = strchr(first_qm + 1, '\"');
@@ -195,7 +188,26 @@ void open_connection(const char *label,
                                               const char *label,
                                               int error,
                                               const char *data)) {
+  /* Sanity checks */
+  if (label == NULL || strlen(label) == 0) {
+    fprintf(stderr, "Null or empty label is not accepted\n");
+    return;
+  }
+  if (handler_function == NULL) {
+    fprintf(stderr, "Null handler_function is not accepted\n");
+    return;
+  }
+
   int conn_index;
+
+  /* Update handler_function */
+  for (conn_index = 0; conn_index < MAX_CONNECTIONS; conn_index++) {
+    if (connections[conn_index].label != NULL &&
+        strcmp(connections[conn_index].label, label) == 0) {
+      connections[conn_index].handler_function = handler_function;
+      return;
+    }
+  }
 
   for (conn_index = 0; conn_index < MAX_CONNECTIONS; conn_index++) {
     if (connections[conn_index].label == NULL) {
@@ -209,6 +221,27 @@ void open_connection(const char *label,
 
   connections[conn_index].label = strdup(label);
   connections[conn_index].handler_function = handler_function;
+}
+
+
+void close_connection(const char *label) {
+  if (label == NULL || strlen(label) == 0) {
+    fprintf(stderr, "Null or empty label is not accepted\n");
+    return;
+  }
+
+  int conn_index;
+
+  for (conn_index = 0; conn_index < MAX_CONNECTIONS; conn_index++) {
+    if (connections[conn_index].label != NULL &&
+        strcmp(connections[conn_index].label, label) == 0) {
+      free(connections[conn_index].label);
+      connections[conn_index].label = NULL;
+      return;
+    }
+  }
+
+  fprintf(stderr, "There is no open connection with label %s\n", label);
 }
 
 
@@ -235,7 +268,6 @@ void close_communication() {
   for (i = 0; i < MAX_CONNECTIONS; i++) {
     if (connections[i].label != NULL) {
       free(connections[i].label);
-      connections[i].label = NULL;
     }
   }
 

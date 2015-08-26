@@ -27,6 +27,11 @@ void open_connection(const char *label,
 /**
  * TODO: Description here
  */
+void close_connection(const char *label);
+
+/**
+ * TODO: Description here
+ */
 void send_message(const char *to, const char *label, const char *data);
 
 /**
