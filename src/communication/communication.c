@@ -58,6 +58,11 @@ static void connectCallback(const redisAsyncContext *c, int status);
 /**
  * TODO: Description here
  */
+static void disconnectCallback(const redisAsyncContext *c, int status);
+
+/**
+ * TODO: Description here
+ */
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 
 
@@ -110,6 +115,7 @@ static void *start_subscriber_routine(void *arg) {
 
   redisLibeventAttach(ac, base);
   redisAsyncSetConnectCallback(ac, connectCallback);
+  redisAsyncSetDisconnectCallback(ac, disconnectCallback);
   redisAsyncCommand(ac, onMessage, NULL, "PSUBSCRIBE %s:*", CLIENT_CHANNEL);
   event_base_dispatch(base);
 
@@ -122,6 +128,15 @@ static void connectCallback(const redisAsyncContext *c, int status) {
     fprintf(stderr, "connect error: %s\n", c->errstr);
   } else {
     printf("Connection success\n");
+  }
+}
+
+
+static void disconnectCallback(const redisAsyncContext *c, int status) {
+  if (status != REDIS_OK) {
+    fprintf(stderr, "disconnect error: %s\n", c->errstr);
+  } else {
+    printf("Disconnection success\n");
   }
 }
 
@@ -169,7 +184,7 @@ void open_connection(const char *label,
 
 
 void send_message(const char *to, const char *label, const char *data) {
-  int to_publish_size = strlen(to) + strlen(data) + 16;
+  int to_publish_size = strlen(to) + strlen(data) + 32;
   int pub_channel_size = strlen(label) + 32;
   char to_publish[to_publish_size];
   char pub_channel[pub_channel_size];
@@ -196,6 +211,5 @@ void close_communication() {
   }
 
   redisAsyncDisconnect(ac);
-  sleep(10);
   pthread_join(communication_thread, NULL);
 }
