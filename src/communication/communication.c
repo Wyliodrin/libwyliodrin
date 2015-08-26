@@ -62,6 +62,12 @@ static void disconnectCallback(const redisAsyncContext *c, int status);
 
 /**
  * TODO: Description here
+ *
+ * Example of pmessage reply:
+ * 0: pmessage
+ * 1: communication_client:*
+ * 2: communication_client:myLabel
+ * 3: {"from": "matei94_pie@wyliodrin.com/c16f6698", "data": "evrika"}
  */
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 
@@ -161,7 +167,20 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
 
       for (i = 0; i < MAX_CONNECTIONS; i++) {
         if (connections[i].label != NULL && strcmp(connections[i].label, label) == 0) {
-          connections[i].handler_function("sender", label, 0, "data");
+          /* Get id value */
+          char *colon = strchr(r->element[3]->str, ':');
+          char *first_qm = strchr(colon, '\"');
+          char *second_qm = strchr(first_qm + 1, '\"');
+          char sender[second_qm - first_qm];
+          snprintf(sender, second_qm - first_qm - 1, "%s", first_qm + 1);
+          /* Get data value */
+          colon = strchr(second_qm, ':');
+          first_qm = strchr(colon, '\"');
+          second_qm = strchr(first_qm + 1, '\"');
+          char data[second_qm - first_qm];
+          snprintf(data, second_qm - first_qm - 1, "%s", first_qm + 1);
+
+          connections[i].handler_function(sender, label, 0, data);
           return;
         }
       }
@@ -179,7 +198,7 @@ void open_connection(const char *label,
   int conn_index;
 
   for (conn_index = 0; conn_index < MAX_CONNECTIONS; conn_index++) {
-    if (connections[conn_index].label != NULL) {
+    if (connections[conn_index].label == NULL) {
       break;
     }
   }
