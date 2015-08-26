@@ -14,7 +14,7 @@ static mraa_i2c_context i2c_buses[MAX_I2C_BUSES];
 
 // struct i2c_msg {
 // 	__u16 addr;	/* slave address			*/
-// 	unsigned short flags;		
+// 	unsigned short flags;
 // #define I2C_M_TEN	0x10	/* we have a ten bit chip address	*/
 // #define I2C_M_RD	0x01
 // #define I2C_M_NOSTART	0x4000
@@ -41,7 +41,7 @@ int getSerialId()
 
 void releaseSerial(int id)
 {
-	
+
 }
 
 int getSPIId ()
@@ -114,7 +114,7 @@ void pinReset (int pin)
 void pwmReset (pin)
 {
 	mraa_pwm_context p = mraa_pwm_init (pin);
-	if (p) 
+	if (p)
 	{
 		mraa_pwm_enable (p, 0);
 		mraa_pwm_close (p);
@@ -267,14 +267,14 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
 {
   long timeout = 1000000L;
   int timeoutFlag = 0;
-  
+
   unsigned long time_a;
   unsigned long time_b;
   unsigned long timeBFlag = 0;
   unsigned long time_c;
 
   time_a = micros();
-  
+
   //wait for previous pulse to end or timeout
   while(digitalRead(pin) == state)
   {
@@ -358,7 +358,7 @@ uint8_t shiftIn (uint8_t dPin, uint8_t cPin, uint8_t order)
 {
   uint8_t value = 0 ;
   int8_t  i ;
- 
+
   if (order == MSBFIRST)
     for (i = 7 ; i >= 0 ; --i)
     {
@@ -435,7 +435,7 @@ unsigned char * spi_writebytes(int spiId, uint8_t *bytes, uint8_t length)
 
 int spi_lsb_mode(int spiId, unsigned char lsb)
 {
-	return mraa_spi_lsbmode (spi_buses[spiId], lsb);	
+	return mraa_spi_lsbmode (spi_buses[spiId], lsb);
 }
 
 int spi_bit_per_word(int spiId, unsigned int bits)
@@ -493,7 +493,7 @@ int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length)
 
 int i2c_readbyte(int i2cId)
 {
-	return mraa_i2c_read_byte (i2c_buses[i2cId]);	
+	return mraa_i2c_read_byte (i2c_buses[i2cId]);
 }
 
 int i2c_readbytes(int i2cId, uint8_t *buf, int length)
@@ -571,5 +571,12 @@ int serial_flush(int serial_id)
 {
 	return 0;
 }
+
+/* Not implemented yet */
+int analogReadRaw (int pin) {
+  return 0;
+}
+void analogWriteRaw (int pin, int value) {}
+
 #endif
 
