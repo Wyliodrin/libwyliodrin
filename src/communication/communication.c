@@ -65,11 +65,6 @@ static void disconnectCallback(const redisAsyncContext *c, int status);
  */
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 
-/**
- * TODO: Description here
- */
-static void onPunsubscribe(redisAsyncContext *c, void *reply, void *privdata);
-
 
 void init_communication() {
   pthread_create(&communication_thread, NULL, init_communication_routine, NULL);
@@ -152,7 +147,7 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   int i;
 
   if (r != NULL) {
-    if (r->elements >= 1 && strncmp(r->element[0], "punsubscribe", 12) == 0) {
+    if (r->elements >= 1 && strncmp(r->element[0]->str, "punsubscribe", 12) == 0) {
       printf("Disconnection on punsubscribe\n");
       redisAsyncDisconnect(c);
     }
@@ -167,11 +162,6 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   } else {
     printf("NULL reply\n");
   }
-}
-
-static void onPunsubscribe(redisAsyncContext *c, void *reply, void *privdata) {
-  printf("onPunsubscribe\n");
-  redisAsyncDisconnect(c);
 }
 
 
@@ -224,6 +214,6 @@ void close_communication() {
     }
   }
 
-  redisAsyncCommand(ac, onPunsubscribe, NULL, "PUNSUBSCRIBE %s:*", CLIENT_CHANNEL);
+  redisAsyncCommand(ac, NULL, NULL, "PUNSUBSCRIBE %s:*", CLIENT_CHANNEL);
   pthread_join(communication_thread, NULL);
 }
