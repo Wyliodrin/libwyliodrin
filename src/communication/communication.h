@@ -20,9 +20,9 @@ void init_communication();
  */
 void open_connection(const char *label,
                      void (*handler_function)(const char *sender,
-                                             const char *label,
-                                             int error,
-                                             const char *data));
+                                              const char *label,
+                                              int error,
+                                              const char *data));
 
 /**
  * TODO: Description here
