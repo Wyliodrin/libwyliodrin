@@ -65,6 +65,10 @@ static void disconnectCallback(const redisAsyncContext *c, int status);
  */
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
 
+/**
+ * TODO: Description here
+ */
+static void onPunsubscribe(redisAsyncContext *c, void *reply, void *privdata);
 
 
 void init_communication() {
@@ -160,6 +164,10 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   }
 }
 
+static void onPunsubscribe(redisAsyncContext *c, void *reply, void *privdata) {
+  redisAsyncDisconnect(c);
+}
+
 
 void open_connection(const char *label,
                      void (*handler_function)(const char *sender,
@@ -210,6 +218,6 @@ void close_communication() {
     }
   }
 
-  redisAsyncDisconnect(ac);
+  redisAsyncCommand(ac, onPunsubscribe, NULL, "PUNSUBSCRIBE %s:*", CLIENT_CHANNEL);
   pthread_join(communication_thread, NULL);
 }
