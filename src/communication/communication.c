@@ -172,13 +172,13 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
           char *first_qm = strchr(colon, '\"');
           char *second_qm = strchr(first_qm + 1, '\"');
           char sender[second_qm - first_qm];
-          snprintf(sender, second_qm - first_qm - 1, "%s", first_qm + 1);
+          snprintf(sender, second_qm - first_qm, "%s", first_qm + 1);
           /* Get data value */
           colon = strchr(second_qm, ':');
           first_qm = strchr(colon, '\"');
           second_qm = strchr(first_qm + 1, '\"');
           char data[second_qm - first_qm];
-          snprintf(data, second_qm - first_qm - 1, "%s", first_qm + 1);
+          snprintf(data, second_qm - first_qm, "%s", first_qm + 1);
 
           connections[i].handler_function(sender, label, 0, data);
           return;
