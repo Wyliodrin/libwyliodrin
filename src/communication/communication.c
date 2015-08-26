@@ -152,6 +152,11 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
   int i;
 
   if (r != NULL) {
+    if (r->elements >= 1 && strncmp(r->element[0], "punsubscribe", 12) == 0) {
+      printf("Disconnection on punsubscribe\n");
+      redisAsyncDisconnect(c);
+    }
+
     for (i = 0; i < r->elements; i++) {
       if (r->element[i] != NULL && r->element[i]->str != NULL) {
         printf("%d: %s\n", i, r->element[i]->str);
@@ -165,6 +170,7 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
 }
 
 static void onPunsubscribe(redisAsyncContext *c, void *reply, void *privdata) {
+  printf("onPunsubscribe\n");
   redisAsyncDisconnect(c);
 }
 
