@@ -38,7 +38,7 @@ typedef struct {
 
 static redisContext *c = NULL;
 static redisAsyncContext *ac = NULL;
-static bool is_connetion_in_progress = false;
+static bool is_connected_to_redis = false;
 static connection_t connections[MAX_CONNECTIONS];
 static pthread_t communication_thread;
 
@@ -89,9 +89,14 @@ static void signal_handler(int signum);
 
 void init_communication() {
   pthread_create(&communication_thread, NULL, init_communication_routine, NULL);
+
   int i;
   for (i = 0; i < MAX_CONNECTIONS; i++) {
     connections[i].label = NULL;
+  }
+
+  while (!is_connected_to_redis) {
+    usleep(100000); /* 0.1 seconds */
   }
 }
 
@@ -105,6 +110,7 @@ static void *init_communication_routine(void *args) {
       fprintf(stderr, "redis connect error: %s\n", c->err != 0 ? c->errstr : "context is NULL");
       sleep(1);
     } else {
+      is_connected_to_redis = true;
       start_subscriber();
       return NULL;
     }
