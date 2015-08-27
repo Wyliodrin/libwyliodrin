@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ * Communication API.
+ *
+ * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
+ * Date last modified: August 2015
+ *************************************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +12,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <jansson.h>
 
 #include <hiredis/hiredis.h>
 #include <hiredis/async.h>
@@ -33,6 +41,7 @@ static redisAsyncContext *ac = NULL;
 static bool is_connetion_in_progress = false;
 static connection_t connections[MAX_CONNECTIONS];
 static pthread_t communication_thread;
+
 
 
 /**
@@ -70,6 +79,12 @@ static void disconnectCallback(const redisAsyncContext *c, int status);
  * 3: {"from": "matei94_pie@wyliodrin.com/c16f6698", "data": "evrika"}
  */
 static void onMessage(redisAsyncContext *c, void *reply, void *privdata);
+
+/**
+ * TODO: Description here
+ */
+static void signal_handler(int signum);
+
 
 
 void init_communication() {
@@ -160,18 +175,50 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
       for (i = 0; i < MAX_CONNECTIONS; i++) {
         if (connections[i].label != NULL && strcmp(connections[i].label, label) == 0) {
           /* Get sender */
-          char *colon = strchr(r->element[3]->str, ':');
-          char *first_qm = strchr(colon, '\"');
-          char *second_qm = strchr(first_qm + 1, '\"');
-          char sender[second_qm - first_qm];
-          snprintf(sender, second_qm - first_qm, "%s", first_qm + 1);
+          // char *colon = strchr(r->element[3]->str, ':');
+          // char *first_qm = strchr(colon, '\"');
+          // char *second_qm = strchr(first_qm + 1, '\"');
+          // char sender[second_qm - first_qm];
+          // snprintf(sender, second_qm - first_qm, "%s", first_qm + 1);
 
           /* Get data */
-          colon = strchr(second_qm, ':');
-          first_qm = strchr(colon, '\"');
-          second_qm = strchr(first_qm + 1, '\"');
-          char data[second_qm - first_qm];
-          snprintf(data, second_qm - first_qm, "%s", first_qm + 1);
+          // colon = strchr(second_qm, ':');
+          // first_qm = strchr(colon, '\"');
+          // second_qm = strchr(first_qm + 1, '\"');
+          // char data[second_qm - first_qm];
+          // snprintf(data, second_qm - first_qm, "%s", first_qm + 1);
+
+          json_error_t json_error;
+          json_t *json_message = json_loads(r->element[3]->str, 0, &json_error);
+          if(json_message == NULL) {
+            fprintf(stderr, "Message received on subscription is not a valid json: %s\n",
+                    r->element[3]->str);
+            return;
+          }
+
+          /* Get sender */
+          json_t *sender_json = json_object_get(json_message, "from");
+          if (sender_json == NULL) {
+            fprintf(stderr, "No sender field in received json\n");
+            return;
+          }
+          if (!json_is_string(sender_json)) {
+            fprintf(stderr, "Field sender is not a string\n");
+            return;
+          }
+          const char *sender = json_string_value(sender_json);
+
+          /* Get data */
+          json_t *data_json = json_object_get(json_message, "data");
+          if (data_json == NULL) {
+            fprintf(stderr, "No data field in received json\n");
+            return;
+          }
+          if (!json_is_string(data_json)) {
+            fprintf(stderr, "Field data is not a string\n");
+            return;
+          }
+          const char *data = json_string_value(data_json);
 
           connections[i].handler_function(sender, label, 0, data);
           return;
@@ -183,11 +230,11 @@ static void onMessage(redisAsyncContext *c, void *reply, void *privdata) {
 }
 
 
-void open_connection(const char *label,
-                     void (*handler_function)(const char *sender,
-                                              const char *label,
-                                              int error,
-                                              const char *data)) {
+void set_handler_for_label(const char *label,
+                           void (*handler_function)(const char *sender,
+                                                    const char *label,
+                                                    int error,
+                                                    const char *data)) {
   /* Sanity checks */
   if (label == NULL || strlen(label) == 0) {
     fprintf(stderr, "Null or empty label is not accepted\n");
@@ -224,7 +271,7 @@ void open_connection(const char *label,
 }
 
 
-void close_connection(const char *label) {
+void clear_handler_for_label(const char *label) {
   if (label == NULL || strlen(label) == 0) {
     fprintf(stderr, "Null or empty label is not accepted\n");
     return;
@@ -259,6 +306,27 @@ void send_message(const char *to, const char *label, const char *data) {
     fprintf(stderr, "Failed to publish on %s: %s\n", pub_channel, c->errstr);
   }
   freeReplyObject(reply);
+}
+
+
+void wait_for_messages(int seconds) {
+  if (seconds <= 0) {
+    if (signal(SIGINT, signal_handler) == SIG_ERR) {
+      fprintf(stderr, "Unable to catch SIGINT");
+    }
+    pause();
+  } else {
+    sleep(seconds);
+  }
+}
+
+
+static void signal_handler(int signum) {
+  if (signum == SIGINT) {
+    if (signal(SIGINT, SIG_DFL) == SIG_ERR) {
+      fprintf(stderr, "Unable to catch SIGINT");
+    }
+  }
 }
 
 
