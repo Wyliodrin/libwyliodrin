@@ -39,6 +39,7 @@ rp_apin_t aout[] = {RP_AOUT0, RP_AOUT1, RP_AOUT2, RP_AOUT3};
 #define AREAD_MAX_VALUE		1023
 #define RP_AWRITE_MAX_VALUE	156
 #define RP_AREAD_MAX_VALUE	2047
+
 /**************************************************************************************************
  * 1.General
  *************************************************************************************************/
@@ -57,7 +58,9 @@ void pinReset (int pin)
 	printf("%s function not implemented\n",__func__);
 }
 
-
+/**************************************************************************************************
+ * Digital pins
+ *************************************************************************************************/
 
 void pinMode(int pin, int mode)
 {
@@ -100,6 +103,10 @@ int digitalRead (int pin)
 	return -1;
 }
 
+/**************************************************************************************************
+ * Analog pins
+ *************************************************************************************************/
+
 void analogWrite (int pin, int value)
 {
 	//Scale values from 0-1023 to 0-2047
@@ -114,21 +121,6 @@ void analogWrite (int pin, int value)
 		printf("Pin %d is not analog output\n",pin);
 }	
 
-int analogReadRaw (int pin)
-{
-	if(pin<AIN)
-	{
-		int value;
-		int rc = rp_ApinGetValueRaw(ain[pin], &value);
-		if(rc == RP_OK)
-			return value;
-		printf("%s\n", rp_GetError(rc));
-	}
-	else
-		printf("Pin %d is not analog input\n",pin);
-	return -1;
-}
-
 void analogWriteRaw (int pin, int value)
 {
 	if(pin<AOUT)
@@ -140,7 +132,6 @@ void analogWriteRaw (int pin, int value)
 	else
 		printf("Pin %d is not analog output\n",pin);
 }
-
 
 void analogWriteVoltage (int pin, float value)
 {
@@ -174,6 +165,21 @@ int analogRead (int pin)
 	return -1;
 }
 
+int analogReadRaw (int pin)
+{
+	if(pin<AIN)
+	{
+		int value;
+		int rc = rp_ApinGetValueRaw(ain[pin], &value);
+		if(rc == RP_OK)
+			return value;
+		printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog input\n",pin);
+	return -1;
+}
+
 float analogReadVoltage (int pin)
 {
 	if(pin<AIN)
@@ -188,6 +194,10 @@ float analogReadVoltage (int pin)
 		printf("Pin %d is not analog input\n",pin);
 	return -1;
 }
+
+/**************************************************************************************************
+ * delays
+ *************************************************************************************************/
 
 void delay (unsigned int milliseconds)
 {
@@ -218,7 +228,7 @@ unsigned int micros()
 
 unsigned long pulseIn(uint8_t pin, uint8_t state)
 {
-	printf ("pulseIn is not implemented for BeagleBone Black");
+	printf ("pulseIn is not implemented for Red Pitaya");
   	return 0;
 }
 
