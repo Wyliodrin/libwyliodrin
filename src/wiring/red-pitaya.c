@@ -35,10 +35,10 @@ rp_apin_t aout[] = {RP_AOUT0, RP_AOUT1, RP_AOUT2, RP_AOUT3};
 #define GPIO	24
 #define AIN	4
 #define AOUT	4
-#define AWRITE_MAX_VALUE	255
-#define AREAD_MAX_VALUE		1023
+#define AWRITE_MAX_VALUE	0xFF
+#define AREAD_MAX_VALUE		0x3FF
 #define RP_AWRITE_MAX_VALUE	156
-#define RP_AREAD_MAX_VALUE	2047
+#define RP_AREAD_MAX_VALUE	0xFFF
 
 /**************************************************************************************************
  * 1.General
@@ -109,7 +109,6 @@ int digitalRead (int pin)
 
 void analogWrite (int pin, int value)
 {
-	//Scale values from 0-1023 to 0-2047
 	int scaled_value = value*RP_AWRITE_MAX_VALUE/AWRITE_MAX_VALUE;
 	if(pin<AOUT)
 	{
@@ -154,8 +153,7 @@ int analogRead (int pin)
 		int rc = rp_ApinGetValueRaw(ain[pin], &value);
 		if(rc == RP_OK)
 		{
-			//scale read value from 0-156 to 0-255
-			scaled_value = value*RP_AREAD_MAX_VALUE/AREAD_MAX_VALUE;
+			scaled_value = value * AREAD_MAX_VALUE/RP_AREAD_MAX_VALUE;
 			return scaled_value;
 		}
 		printf("%s\n", rp_GetError(rc));
