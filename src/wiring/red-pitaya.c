@@ -146,14 +146,13 @@ void analogWriteVoltage (int pin, float value)
 
 int analogRead (int pin)
 {
-	int scaled_value;
 	if(pin<AIN)
 	{
 		int value;
 		int rc = rp_ApinGetValueRaw(ain[pin], &value);
 		if(rc == RP_OK)
 		{
-			scaled_value = value * AREAD_MAX_VALUE/RP_AREAD_MAX_VALUE;
+			int scaled_value = value * 2*AREAD_MAX_VALUE/RP_AREAD_MAX_VALUE;
 			return scaled_value;
 		}
 		printf("%s\n", rp_GetError(rc));
@@ -182,10 +181,14 @@ float analogReadVoltage (int pin)
 {
 	if(pin<AIN)
 	{
-		float value;
-		int rc = rp_ApinGetValue(ain[pin], &value);
+		int value;
+		float scaled_value;
+		int rc = rp_ApinGetValueRaw(ain[pin], &value);
 		if(rc == RP_OK)
-			return value;
+		{
+			scaled_value = (float) value * 10.0/RP_AREAD_MAX_VALUE;
+			return scaled_value;
+		}
 		printf("%s\n", rp_GetError(rc));
 	}
 	else
