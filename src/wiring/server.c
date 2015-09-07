@@ -88,7 +88,7 @@ void analogWriteRaw (int pin, int value)
 	printf ("analogWriteRaw is not available for server\n");
 }
 
-int analogRead (int pin)
+int analogReadRaw (int pin)
 {
 	printf ("analogReadRaw is not available for server\n");
 	return 0;
