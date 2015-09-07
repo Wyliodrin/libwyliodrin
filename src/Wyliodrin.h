@@ -22,6 +22,9 @@ extern "C" {
 // Intialize wyliodrin
 void wyliodrinSetup (void);
 
+int get_version_major();
+int get_version_minor();
+
 //  send signal value
 
 #ifdef __cplusplus

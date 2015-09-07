@@ -4,9 +4,18 @@
 #include <unistd.h>
 #include <errno.h>
 #include "signals/signals.h"
+#include "Wyliodrin.h"
 //#include "wiring/wiring.h"
 
 // #define VERBOSE
+
+int get_version_major() {
+	return LIBWYLIODRIN_VERSION_MAJOR;
+}
+
+int get_version_minor() {
+	return LIBWYLIODRIN_VERSION_MINOR;
+}
 
 static int sock = -1;
 
