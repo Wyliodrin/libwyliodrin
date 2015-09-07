@@ -148,7 +148,7 @@ int spi_set_frequency(int spi_id, int freq)
 	{
 		close(spi_buses[spi_id]);
 		spi_buses[spi_id] = -2;
-		spi_freq[spi_id] = freq;		
+		spi_freq[spi_id] = freq;
 		return 0;
 	}
 	return -1;
@@ -189,7 +189,7 @@ unsigned char * spi_writebytes(int spi_id, uint8_t *bytes, uint8_t length)
 
 int spi_lsb_mode(int spi_bus, unsigned char lsb)
 {
-	//return mraa_spi_lsbmode (spi_buses[spi_bus], lsb);	
+	//return mraa_spi_lsbmode (spi_buses[spi_bus], lsb);
 	return -1;
 }
 
@@ -246,7 +246,7 @@ int serial_closeadapter(int serial_id)
 	if(sb->fd > 0)
 	{
 		serialClose(sb->fd);
-	}	
+	}
 	return 0;
 }
 int serial_writebyte(int serial_id, uint8_t byte)
@@ -321,4 +321,21 @@ int serial_flush(int serial_id)
 	serialFlush (sb->fd);
 	return 0;
 }
-#endif
+
+int analogRead(int pin) {
+	fprintf(stderr, "analogRead is not supported on raspberrypi\n");
+}
+
+void analogWrite(int pin, int value) {
+	fprintf(stderr, "analogWrite is not supported on raspberrypi\n");
+}
+
+int analogReadRaw(int pin) {
+	fprintf(stderr, "analogReadRaw is not supported on raspberrypi\n");
+}
+
+void analogWriteRaw(int pin, int value) {
+	fprintf(stderr, "analogWriteRaw is not supported on raspberrypi\n");
+}
+
+#endif /* RASPBERRYPI */

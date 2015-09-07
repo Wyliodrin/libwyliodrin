@@ -210,6 +210,28 @@ void analogWrite (int pin, int value)
 	}
 }
 
+void analogWriteRaw (int pin, int value)
+{
+  if (!isPwmPin (pin))
+  {
+    resetPin (pin);
+    pwm_pins[pin] = mraa_pwm_init (pin);
+    if (pwm_pins[pin])
+    {
+      mraa_pwm_period_us(pwm_pins[pin], 1200);
+      mraa_pwm_enable (pwm_pins[pin], 1);
+    }
+  }
+  if (pwm_pins[pin])
+  {
+    mraa_pwm_write (pwm_pins[pin], value);
+  }
+  else
+  {
+    perror ("analogWrite");
+  }
+}
+
 int analogRead (int pin)
 {
 	pinValue (pin);
@@ -234,6 +256,27 @@ int analogRead (int pin)
 		perror ("analogRead");
 		return 0;
 	}
+}
+
+int analogReadRaw (int pin)
+{
+  pinValue (pin);
+  // printf ("%p\n", aio_pins[pin]);
+  if (!isAioPin (pin))
+  {
+    resetPin (pin);
+    aio_pins[pin] = mraa_aio_init (pin);
+    // printf ("%p\n", aio_pins[pin]);
+  }
+  if (isAioPin (pin))
+  {
+    return mraa_aio_read (aio_pins[pin]);
+  }
+  else
+  {
+    perror ("analogRead");
+    return 0;
+  }
 }
 
 void delay (unsigned int milliseconds)
@@ -572,11 +615,4 @@ int serial_flush(int serial_id)
 	return 0;
 }
 
-/* Not implemented yet */
-int analogReadRaw (int pin) {
-  return 0;
-}
-void analogWriteRaw (int pin, int value) {}
-
 #endif
-

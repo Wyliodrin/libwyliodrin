@@ -11,7 +11,7 @@ int getSerialId()
 
 void releaseSerial(int id)
 {
-	
+
 }
 
 int getSPIId ()
@@ -31,7 +31,7 @@ int getI2CId ()
 
 void releaseI2CId (int id)
 {
-	
+
 }
 
 void resetPin (int pin);
@@ -53,12 +53,12 @@ void pwmReset (pin)
 
 void resetPin (int pin)
 {
-	
+
 }
 
 void pinMode (int pin, int mode)
 {
-	
+
 }
 
 void digitalWrite (int pin, int value)
@@ -80,6 +80,17 @@ void analogWrite (int pin, int value)
 int analogRead (int pin)
 {
 	printf ("analogRead is not available for server\n");
+	return 0;
+}
+
+void analogWriteRaw (int pin, int value)
+{
+	printf ("analogWriteRaw is not available for server\n");
+}
+
+int analogRead (int pin)
+{
+	printf ("analogReadRaw is not available for server\n");
 	return 0;
 }
 

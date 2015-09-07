@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * Author: Razvan Madalin MATEI <matei.rm94@gmail.com>
  * Date last modified: July 2014
- * 
+ *
  * This file contains the definitions of all wiring functions for the BeagleBone Black.
  *
  * CONTENT
@@ -51,7 +51,7 @@ void pinReset(int pin_pos) {
   if (pin == -1) {
     return;
   }
-  
+
   if(ledIsValid(pin)) {
     ledReset(pin);
     return;
@@ -102,7 +102,7 @@ int getPinByKey(const char* key) {
  * Configures the specified pin to behave either as an input or an output.
  *
  * PARAMETERS:
- * pin  - the number of the pin whose pin you wish to set 
+ * pin  - the number of the pin whose pin you wish to set
  * mode - INPUT or OUTPUT
  */
 void pinMode(int pin_pos, int mode) {
@@ -124,7 +124,7 @@ void pinMode(int pin_pos, int mode) {
     return;
   }
 
-  // Handle case where pin is AIN 
+  // Handle case where pin is AIN
   if(ainIsValid(pin)) {
     if(mode != INPUT) {
       debug("pinMode only supports mode INPUT for AIN pins");
@@ -201,7 +201,7 @@ void digitalWrite(int pin_pos, int value) {
  * PARAMETERS:
  * pin: the number of the digital pin you want to read
  *
- * RETURNS: 
+ * RETURNS:
  * LOW or HIGH
  */
 int digitalRead(int pin_pos) {
@@ -238,7 +238,7 @@ int digitalRead(int pin_pos) {
  *************************************************************************************************/
 
 /**
- * Writes an analog value (PWM wave) to a pin. 
+ * Writes an analog value (PWM wave) to a pin.
  *
  * Can be used to light a LED at varying brightnesses or drive a motor at various speeds.
  *
@@ -280,7 +280,7 @@ void analogWrite(int pin_pos, int value) {
  * Reads the voltage at an analog input pin.
  * The Beaglebone Black has 7 analog input pins.
  * Maximum input voltage is 1.8V.
- * 
+ *
  * PARAMETERS:
  * pin - analog pin
  *
@@ -302,6 +302,39 @@ int analogRead(int pin_pos) {
   return ainGetValue(pin) / 18;
 }
 
+/**
+ * Not supported.
+ */
+void analogWriteRaw(int pin_pos, int value) {
+  fprintf(stderr, "analogWriteRaw not supported. Use analogWrite instead.\n");
+}
+
+/**
+ * Reads the voltage at an analog input pin.
+ * The Beaglebone Black has 7 analog input pins.
+ * Maximum input voltage is 1.8V.
+ *
+ * PARAMETERS:
+ * pin - analog pin
+ *
+ * RETURN:
+ * value between 0 and 1800 (coresponding to 1.8V)
+ */
+int analogReadRaw(int pin_pos) {
+  int pin = getGpioByPos(pin_pos);
+
+  if (pin == -1) {
+    return;
+  }
+
+  if(!(200 <= pin && pin <= 206)) {
+    debug("Value of pin should be in [200, 206] interval");
+    return -1;
+  }
+
+  return ainGetValue(pin);
+}
+
 
 
 /**************************************************************************************************
@@ -315,11 +348,11 @@ unsigned long pulseIn(uint8_t pin, uint8_t state)
 }
 
 /**
- * Shifts in a byte of data one bit at a time. Starts from either the most (i.e. the leftmost) or 
+ * Shifts in a byte of data one bit at a time. Starts from either the most (i.e. the leftmost) or
  * least (rightmost) significant bit. For each bit, the clock pin is pulled high, the next bit is
  * read from the data line, and then the clock pin is taken low.
  * If you're interfacing with a device that's clocked by rising edges, you'll need to make sure
- * that the clock pin is low before the first call to shiftIn(), e.g. with a call to 
+ * that the clock pin is low before the first call to shiftIn(), e.g. with a call to
  * digitalWrite(clockPin, LOW).
  */
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
@@ -356,7 +389,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) 
     } else {
       digitalWrite(dataPin, !!(val & (1 << (7 - i))));
     }
-        
+
     digitalWrite(clockPin, HIGH);
     digitalWrite(clockPin, LOW);
   }
@@ -369,7 +402,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) 
  *************************************************************************************************/
 
 /**
- * Pauses the program for the amount of time (in miliseconds) specified as parameter. 
+ * Pauses the program for the amount of time (in miliseconds) specified as parameter.
  * There are 1000 milliseconds in a second.
  *
  * PARAMETERS:
@@ -380,7 +413,7 @@ void delay(unsigned int milliseconds) {
 }
 
 /**
- * Pauses the program for the amount of time (in microseconds) specified as parameter. 
+ * Pauses the program for the amount of time (in microseconds) specified as parameter.
  * There are a thousand microseconds in a millisecond, and a million microseconds in a second.
  *
  * PARAMETERS:
