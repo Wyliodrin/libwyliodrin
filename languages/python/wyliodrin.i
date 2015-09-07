@@ -136,12 +136,12 @@ def breakpoint ():
   openConnection(debugLabel, debugHandler)
   stop.acquire()
   closeConnection(debugLabel)
-  stop.release()  
+  stop.release()
 
 def debugHandler (sender, channel, error, message):
   global stop
   global run
-  
+
   run = message
   stop.release()
 
@@ -212,6 +212,10 @@ def closeCommunication():
   global channelClient
   for c in channelClient:
     c.close()
+
+# function aliases
+setHandlerForLabel = openConnection
+
 %}
 
 

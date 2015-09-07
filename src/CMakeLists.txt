@@ -9,6 +9,7 @@ set_target_properties (
 )
 
 file (GLOB wyiliodrin_headers
+  "communication/*.h"
   "signals/*.h"
   "libraries/*.h"
   "wiring/*.h"
