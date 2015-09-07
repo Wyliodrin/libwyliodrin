@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 #define LIBWYLIODRIN_VERSION_MAJOR 1
-#define LIBWYLIODRIN_VERSION_MINOR 0
+#define LIBWYLIODRIN_VERSION_MINOR 14
 
 // Intialize wyliodrin
 void wyliodrinSetup (void);
