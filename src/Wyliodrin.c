@@ -4,10 +4,12 @@
 #include <unistd.h>
 #include <errno.h>
 #include "signals/signals.h"
-#include "Wyliodrin.h"
 //#include "wiring/wiring.h"
 
 // #define VERBOSE
+
+#define LIBWYLIODRIN_VERSION_MAJOR 1
+#define LIBWYLIODRIN_VERSION_MINOR 15
 
 int get_version_major() {
 	return LIBWYLIODRIN_VERSION_MAJOR;
