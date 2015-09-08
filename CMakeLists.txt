@@ -22,6 +22,8 @@ include_directories(${HIREDIS_INCLUDE_DIR})
 find_package(Jansson REQUIRED)
 include_directories(${JANSSON_INCLUDE_DIR})
 
+pkg_check_modules (EVENT REQUIRED libevent)
+
 set (wyliodrin_VERSION_MAJOR 1)
 set (wyliodrin_VERSION_MINOR 4)
 set (wyliodrin_VERSION_PATCH 0})
@@ -34,6 +36,7 @@ option (REDPITAYA  "Build for the RedPitaya."    OFF)
 option (GALILEO "Build for the Intel Galileo." OFF)
 option (EDISON "Build for the Intel Galileo." OFF)
 option (RASPBERRYPI "Build for the RaspberryPi." OFF)
+
 
 if (GALILEO)
   add_definitions(-DARDUINOGALILEO)
