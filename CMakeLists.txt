@@ -16,10 +16,6 @@ endif ()
 
 find_package (PkgConfig REQUIRED)
 
-find_package(NodeJS REQUIRED)
-include_directories(${NODEJS_INCLUDE_DIR})
-include_directories(${NODEJS_UV_INCLUDE_DIR})
-
 find_package(Hiredis REQUIRED)
 include_directories(${HIREDIS_INCLUDE_DIR})
 
