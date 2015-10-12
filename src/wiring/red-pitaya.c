@@ -186,7 +186,7 @@ float analogReadVoltage (int pin)
 		int rc = rp_ApinGetValueRaw(ain[pin], &value);
 		if(rc == RP_OK)
 		{
-			scaled_value = (float) value * 10.0/RP_AREAD_MAX_VALUE;
+			scaled_value = (float) value * 7.0/RP_AREAD_MAX_VALUE;
 			return scaled_value;
 		}
 		printf("%s\n", rp_GetError(rc));
