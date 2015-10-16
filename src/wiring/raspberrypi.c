@@ -322,20 +322,12 @@ int serial_flush(int serial_id)
 	return 0;
 }
 
-int analogRead(int pin) {
-	fprintf(stderr, "analogRead is not supported on raspberrypi\n");
-}
-
-void analogWrite(int pin, int value) {
-	fprintf(stderr, "analogWrite is not supported on raspberrypi\n");
-}
-
 int analogReadRaw(int pin) {
-	fprintf(stderr, "analogReadRaw is not supported on raspberrypi\n");
+	return analogREad (pin);
 }
 
 void analogWriteRaw(int pin, int value) {
-	fprintf(stderr, "analogWriteRaw is not supported on raspberrypi\n");
+	analogWrite (pin, value);
 }
 
 #endif /* RASPBERRYPI */
