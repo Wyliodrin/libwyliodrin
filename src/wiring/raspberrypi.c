@@ -323,7 +323,7 @@ int serial_flush(int serial_id)
 }
 
 int analogReadRaw(int pin) {
-	return analogREad (pin);
+	return analogRead (pin);
 }
 
 void analogWriteRaw(int pin, int value) {
