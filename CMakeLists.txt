@@ -118,7 +118,6 @@ set (wyliodrin_LIB_SRCS
 
 add_subdirectory (src)
 add_subdirectory (languages)
-add_subdirectory (wylio)
 
 if (SERVER)
 else ()
