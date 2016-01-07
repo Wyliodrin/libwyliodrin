@@ -29,13 +29,13 @@ Javascript
 
 Install
 -------
-    
+
     mkdir build
     cd build
-    cmake -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI or BEAGLEBONE
+    cmake -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI, BEAGLEBONE or UDOONEO
     make
     sudo make install
-  
 
-      
+
+
 
