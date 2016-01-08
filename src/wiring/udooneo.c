@@ -4,10 +4,34 @@
 
 /*** INCLUDES ************************************************************************************/
 
+#include <sys/types.h> /* open */
+#include <sys/stat.h>  /* open */
+#include <fcntl.h>     /* open */
+
+
 #include <stdint.h> /* integers */
 #include <unistd.h> /* usleep   */
 
 #include "debug.h"
+#include "wiring.h"
+
+/*************************************************************************************************/
+
+
+
+/*** DEFINES *************************************************************************************/
+
+#define GPIO_PATH "/sys/class/gpio"
+
+/*************************************************************************************************/
+
+
+
+/*** STATIC FUNCTIONS DECLARATIONS ***************************************************************/
+
+static int export_gpio(int pin);
+static int set_gpio_direction(int pin, int mode);
+static int set_gpio_value(int pin, int value);
 
 /*************************************************************************************************/
 
@@ -32,15 +56,24 @@ void pinReset(int pin) {
 }
 
 void pinMode(int pin, int mode) {
+  error(!((4 <= pin) && (pin <= 203)), return, "invalid pin");
+  error(mode != INPUT && mode != OUTPUT, return, "mode can be either INPUT or OUTPUT");
 
+  int export_gpio_rc = export_gpio(pin);
+  error(export_gpio_rc != 0, return, "Can't export pin %d", pin);
+
+  int set_gpio_direction_rc = set_gpio_direction(pin, mode);
+  error(set_gpio_direction_rc != 0, return, "Can't set to pin %d direction %d", pin, mode);
 }
 
-void digitalWrite   (int pin, int value) {
+void digitalWrite(int pin, int value) {
+  error(!((4 <= pin) && (pin <= 203)), return, "invalid pin");
+  error(value != LOW && value != HIGH, return, "value can be either LOW or HIGH");
 
+  set_gpio_value(pin, value);
 }
 
 int  digitalRead    (int pin) {
-  syserror(1 == 1, return 0, "digitalRead %d", 3);
   return 0;
 }
 
@@ -193,6 +226,69 @@ int     serial_readbytes       (int serial_id, uint8_t *buf, int length) {
 }
 
 int     serial_flush           (int serial_id) {
+  return 0;
+}
+
+/*************************************************************************************************/
+
+
+
+/*** STATIC FUNCTIONS IMPLEMENTATION *************************************************************/
+
+static int export_gpio(int pin) {
+  error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+
+  int fd = open(GPIO_PATH "/export", O_WRONLY);
+  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/export");
+
+  char buf[4];
+  snprintf(buf, 4, "%d", pin);
+  int write_rc = write(fd, buf, sizeof(buf));
+  close(fd);
+  syserror(write_rc == -1, return -1, "Can't write to " GPIO_PATH "/export");
+
+  return 0;
+}
+
+
+static int set_gpio_direction(int pin, int mode) {
+  error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+  error(mode != INPUT && mode != OUTPUT, return -1, "mode can be either INPUT or OUTPUT");
+
+  char buf[64];
+  snprintf(buf, 64, GPIO_PATH "/gpio%d/direction", pin);
+  int fd = open(buf, O_WRONLY);
+  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/gpio%d/direction", pin);
+
+  if (mode == INPUT) {
+    write(fd, "in", 3);
+  } else {
+    write(fd, "out", 4);
+  }
+
+  close(fd);
+
+  return 0;
+}
+
+
+static int set_gpio_value(int pin, int value) {
+  error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+  error(value != LOW && value != HIGH, return -1, "value can be either LOW or HIGH");
+
+  char buf[64];
+  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  int fd = open(buf, O_WRONLY);
+  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/gpio%d/value", pin);
+
+  if (value == LOW) {
+    write(fd, "0", 2);
+  } else {
+    write(fd, "1", 2);
+  }
+
+  close(fd);
+
   return 0;
 }
 
