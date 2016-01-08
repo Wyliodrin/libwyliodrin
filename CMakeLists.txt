@@ -26,8 +26,14 @@ include_directories (${JANSSON_INCLUDE_DIR})
 pkg_check_modules (EVENT REQUIRED libevent)
 
 # Version
-set (wyliodrin_VERSION_MAJOR 1)
-set (wyliodrin_VERSION_MINOR 4)
+set (VERSION_MAJOR 3)
+set (VERSION_MINOR 0)
+
+# Configuration file
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/config.h.in"
+  "${PROJECT_BINARY_DIR}/config.h"
+)
 
 # Options
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
@@ -76,6 +82,8 @@ elseif (UDOONEO)
 else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON or -DUDOONEO=ON")
 endif ()
+
+include_directories (${PROJECT_BINARY_DIR})
 
 # Sources
 set (wyliodrin_LIB_SRCS

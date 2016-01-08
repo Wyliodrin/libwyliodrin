@@ -4,8 +4,8 @@ target_link_libraries (wyliodrin ${HIREDIS_LIBRARIES} ${JANSSON_LIBRARIES} ${MRA
 set_target_properties (
   wyliodrin
   PROPERTIES
-  SOVERSION ${wyliodrin_VERSION_MAJOR}
-  VERSION ${wyliodrin_VERSION_MINOR}
+  SOVERSION ${VERSION_MAJOR}
+  VERSION ${VERSION_MINOR}
 )
 
 file (GLOB wyiliodrin_headers
