@@ -1,32 +1,47 @@
-#ifndef WYLIODRIN_H
-#define WYLIODRIN_H
+#ifndef _WYLIODRIN_H
+#define _WYLIODRIN_H
+
+
+
+/*** INCLUDES ************************************************************************************/
 
 #include <stdlib.h>
 
-// Signals library
 #include <Wyliodrin/signals.h>
-
-// Include the wiring library
 #include <Wyliodrin/wiring.h>
-
-// Plugins
 #include <Wyliodrin/lcd.h>
+
+/*************************************************************************************************/
+
+
+
+/*** API *****************************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// Intialize wyliodrin
-void wyliodrinSetup (void);
+/**
+ * Signals initialization
+ */
+void wyliodrinSetup();
 
+/**
+ * Return version major
+ */
 int get_version_major();
-int get_version_minor();
 
-//  send signal value
+/**
+ * Return version minor
+ */
+int get_version_minor();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // WYLIODRIN_H
+/*************************************************************************************************/
 
+
+
+#endif /* _WYLIODRIN_H */
