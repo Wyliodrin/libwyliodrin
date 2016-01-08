@@ -126,6 +126,7 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
   ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
   ${PROJECT_SOURCE_DIR}/src/wiring/red-pitaya.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/udooneo.c
 )
 
 add_subdirectory (src)
