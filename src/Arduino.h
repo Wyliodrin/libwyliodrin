@@ -1,40 +1,47 @@
+#ifndef _ARDUINO_H
+#define _ARDUINO_H
 
-#ifndef ARDUINO__H
-#define ARDUINO__H
 
-#include <Wyliodrin.h>
+
+/*** INCLUDES ************************************************************************************/
+
 #include <stdlib.h>
 #include <string.h>
 
-#define PROGMEM
+#include <Wyliodrin.h>
 
-/*
-#define max(x, y) (((x) > (y)) ? (x) : (y))
-#define min(x, y) (((x) < (y)) ? (x) : (y))
-*/
+/*************************************************************************************************/
 
-// main fucntion for Arduino
+
+
+#define PROGMEM /* Put this information in flash memory */
+
+
+
+/*** ARDUINO *************************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void setup ();
-void loop ();
-
+void setup();
+void loop();
 
 #ifdef __cplusplus
 }
 #endif
 
-int main ()
-{
-	wyliodrinSetup ();
-	setup ();
-	for (;;)
-	{
-		loop ();
+int main() {
+	wyliodrinSetup();
+
+	setup();
+	for (;;) {
+		loop();
 	}
 }
 
-#endif
+/*************************************************************************************************/
+
+
+
+#endif /* _ARDUINO_H */

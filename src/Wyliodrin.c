@@ -1,9 +1,8 @@
 /*** INCLUDES ************************************************************************************/
 
-#include <stdlib.h> /* getenv */
+#include <stdlib.h> /* getenv  */
 
-#include "config.h"          /* version    */
-#include "signals/signals.h" /* initSignal */
+#include "config.h" /* version */
 
 /*************************************************************************************************/
 
