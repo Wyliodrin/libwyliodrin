@@ -83,6 +83,8 @@ else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON or -DUDOONEO=ON")
 endif ()
 
+add_definitions ("-Wall -DDEBUG")
+
 include_directories (${PROJECT_BINARY_DIR})
 
 # Sources

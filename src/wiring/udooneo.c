@@ -4,7 +4,10 @@
 
 /*** INCLUDES ************************************************************************************/
 
-#include "wiring.h"
+#include <stdint.h> /* integers */
+#include <unistd.h> /* usleep   */
+
+#include "debug.h"
 
 /*************************************************************************************************/
 
@@ -19,15 +22,16 @@ extern "C" {
 /*** API IMPLEMENTATION **************************************************************************/
 
 int wiringSetup() {
+  /* Do nothing */
+
   return 0;
 }
 
 void pinReset(int pin) {
-
+  /* Do nothing */
 }
 
-/* I/O */
-void pinMode        (int pin, int mode) {
+void pinMode(int pin, int mode) {
 
 }
 
@@ -36,6 +40,7 @@ void digitalWrite   (int pin, int value) {
 }
 
 int  digitalRead    (int pin) {
+  syserror(1 == 1, return 0, "digitalRead %d", 3);
   return 0;
 }
 
@@ -69,12 +74,12 @@ unsigned long pulseIn  (uint8_t pin, uint8_t state) {
 }
 
 /* Time */
-void delay             (unsigned int milliseconds) {
-
+void delay(unsigned int milliseconds) {
+  usleep(milliseconds * 1000);
 }
 
-void delayMicroseconds (unsigned int microseconds) {
-
+void delayMicroseconds(unsigned int microseconds) {
+  usleep(microseconds);
 }
 
 unsigned int millis    (void) {
