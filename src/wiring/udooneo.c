@@ -8,7 +8,6 @@
 #include <sys/stat.h>  /* open */
 #include <fcntl.h>     /* open */
 
-
 #include <stdint.h> /* integers */
 #include <unistd.h> /* usleep   */
 
@@ -60,7 +59,7 @@ void pinMode(int pin, int mode) {
   error(mode != INPUT && mode != OUTPUT, return, "mode can be either INPUT or OUTPUT");
 
   int export_gpio_rc = export_gpio(pin);
-  error(export_gpio_rc != 0, return, "Can't export pin %d", pin);
+  error(export_gpio_rc != 0, /* Do nothing */, "Can't export pin %d", pin);
 
   int set_gpio_direction_rc = set_gpio_direction(pin, mode);
   error(set_gpio_direction_rc != 0, return, "Can't set to pin %d direction %d", pin, mode);
