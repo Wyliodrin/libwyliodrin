@@ -2,7 +2,9 @@
 
 #include <stdlib.h> /* getenv  */
 
-#include "config.h" /* version */
+#include "signals/signals.h" /* initSignal  */
+#include "wiring/wiring.h"   /* wiringSetup */
+#include "config.h"          /* version     */
 
 /*************************************************************************************************/
 
