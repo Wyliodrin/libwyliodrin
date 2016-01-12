@@ -120,7 +120,7 @@ int digitalRead(int pin) {
   char ch;
   int read_rc = read(fd, &ch, 1);
   close(fd);
-  error(read_rc != 2, return -1, "invalid read from " GPIO_PATH "/gpio%d/value", pin);
+  error(read_rc != 1, return -1, "invalid read from " GPIO_PATH "/gpio%d/value", pin);
 
   if (ch == '0') {
     return LOW;
