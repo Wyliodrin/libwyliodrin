@@ -8,21 +8,17 @@ set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable.
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
+# Dependencies
 find_package (Threads)
-
 find_package (SWIG)
 if (SWIG_FOUND)
   include (${SWIG_USE_FILE})
 endif ()
-
 find_package (PkgConfig REQUIRED)
-
 find_package (Hiredis REQUIRED)
 include_directories (${HIREDIS_INCLUDE_DIR})
-
 find_package (Jansson REQUIRED)
 include_directories (${JANSSON_INCLUDE_DIR})
-
 pkg_check_modules (EVENT REQUIRED libevent)
 
 # Version
@@ -42,7 +38,9 @@ option (EDISON      "Build for the Intel Galileo." OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
 option (REDPITAYA   "Build for the RedPitaya."     OFF)
 option (UDOONEO     "Build for the UDOO NEO."      OFF)
+option (SERVER      "Build for the Server."        OFF)
 
+# Option management
 if (GALILEO)
   add_definitions (-DARDUINOGALILEO)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
@@ -65,10 +63,6 @@ elseif (BEAGLEBONE)
   add_definitions (-DBEAGLEBONE)
   set (FLAGS "-DBEAGLEBONE")
 
-elseif (SERVER)
-  add_definitions (-DSERVER)
-  set(FLAGS "-DSERVER")
-
 elseif (REDPITAYA)
   add_definitions (-DREDPITAYA)
   find_package (rp REQUIRED)
@@ -79,9 +73,14 @@ elseif (UDOONEO)
   add_definitions (-DUDOONEO)
   set(FLAGS "-DUDOONEO")
 
+elseif (SERVER)
+  add_definitions (-DSERVER)
+  set(FLAGS "-DSERVER")
+
 else ()
-  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON or -DUDOONEO=ON")
+  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DEDISON=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON, -DUDOONEO=ON or -DSERVER=ON")
 endif ()
+
 
 add_definitions ("-Wall -DDEBUG")
 
@@ -89,11 +88,23 @@ include_directories (${PROJECT_BINARY_DIR})
 
 # Sources
 set (wyliodrin_LIB_SRCS
+  # Core
   ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
   ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/communication/communication.c
   ${PROJECT_SOURCE_DIR}/src/cmp/cmp.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/server.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/math.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/red-pitaya.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/udooneo.c
+
+  # Auxiliary
   ${PROJECT_SOURCE_DIR}/src/libraries/lcd.c
   ${PROJECT_SOURCE_DIR}/src/libraries/Print.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/rgb_lcd.cpp
@@ -120,15 +131,6 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/UniPi.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/server.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/math.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/red-pitaya.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/udooneo.c
 )
 
 add_subdirectory (src)

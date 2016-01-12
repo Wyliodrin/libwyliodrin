@@ -1,6 +1,9 @@
 libwyliodrin
 ============
 
+TODO - description here
+
+
 
 Requirements
 ------------
@@ -27,17 +30,22 @@ Javascript
   * npm
 
 
+
 Install
 -------
+```
+  mkdir build
+  cd build
+  cmake -DBOARD=ON .. // BOARD can be RASPBERRYPI, GALILEO, EDISON, BEAGLEBONE, REDPITAYA, UDOONEO or SERVER
+  make
+  sudo make install
+```
 
-    mkdir build
-    cd build
-    cmake -DBOARD=ON .. - BOARD can be GALILEO or RASPBERRYPI, BEAGLEBONE or UDOONEO
-    make
-    sudo make install
+
 
 Files
 -----
+```
 /usr/bin/install_social
 /usr/bin/update_libwyliodrin
 /usr/bin/update_streams
@@ -56,3 +64,4 @@ Files
 
 /usr/lib/node_modules/wyliodrin/package.json
 /usr/lib/node_modules/wyliodrin/wyliodrin.node
+```
