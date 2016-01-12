@@ -8,10 +8,10 @@
 #include <sys/stat.h>  /* open */
 #include <fcntl.h>     /* open */
 
-#include <time.h>    /* time     */
-#include <stdint.h>  /* integers */
-#include <unistd.h>  /* usleep   */
-#include <stdbool.h> /* booleans */
+#include <time.h>    /* time         */
+#include <stdint.h>  /* integers     */
+#include <unistd.h>  /* usleep, read */
+#include <stdbool.h> /* booleans     */
 
 #include "debug.h"
 #include "wiring.h"
@@ -23,6 +23,9 @@
 /*** DEFINES *************************************************************************************/
 
 #define GPIO_PATH "/sys/class/gpio"
+
+#define MIN_PIN 4
+#define MAX_PIN 203
 
 #define EXPORT   0
 #define UNEXPORT 1
@@ -57,22 +60,24 @@ int wiringSetup() {
 
 
 void pinReset(int pin) {
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
+
   /* Try to open value */
   char buf[64];
   snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
   int fd = open(buf, O_RDONLY);
 
-  /* Export if can't open value */
+  /* Unexport if value is available */
   if (fd != -1) {
     close(fd);
     int export_gpio_rc = export_or_unexport_gpio(pin, UNEXPORT);
-    error(export_gpio_rc != 0, return, "Can't unexport pin %d", pin);
+    error(export_gpio_rc != 0, return, "can't unexport pin %d", pin);
   }
 }
 
 
 void pinMode(int pin, int mode) {
-  error(!((4 <= pin) && (pin <= 203)), return, "invalid pin");
+  error(!((4 <= MIN_PIN) && (pin <= MAX_PIN)), return, "invalid pin");
   error(mode != INPUT && mode != OUTPUT, return, "mode can be either INPUT or OUTPUT");
 
   /* Try to open value */
@@ -93,8 +98,9 @@ void pinMode(int pin, int mode) {
   error(set_gpio_direction_rc != 0, return, "Can't set to pin %d direction %d", pin, mode);
 }
 
+
 void digitalWrite(int pin, int value) {
-  error(!((4 <= pin) && (pin <= 203)), return, "invalid pin");
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
   error(value != LOW && value != HIGH, return, "value can be either LOW or HIGH");
 
   set_gpio_value(pin, value);
@@ -102,9 +108,28 @@ void digitalWrite(int pin, int value) {
 
 
 int digitalRead(int pin) {
-  error(true, return -1, "digitalRead not implemented yet");
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
 
-  return 0;
+  /* Open value */
+  char buf[64];
+  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  int fd = open(buf, O_RDONLY);
+  syserror(fd == -1, return -1, "can't open " GPIO_PATH "/gpio%d/value", pin);
+
+  /* Read value */
+  buf[2] = 0;
+  int read_rc = read(fd, buf, 2);
+  close(fd);
+  error(read_rc != 2, return -1, "invalid read from " GPIO_PATH "/gpio%d/value", pin);
+
+  if (strncmp(buf, "0", 2) == 0) {
+    return LOW;
+  } else if (strncmp(buf, "1", 2) == 0) {
+    return HIGH;
+  }
+
+  error(true, /* Do nothing */, "invalid value %s found in " GPIO_PATH "/gpio%d/value", buf, pin);
+  return -1;
 }
 
 
@@ -367,7 +392,7 @@ int serial_flush(int serial_id) {
 /*** STATIC FUNCTIONS IMPLEMENTATION *************************************************************/
 
 static int export_or_unexport_gpio(int pin, int export_or_unexport) {
-  error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
   error(!(export_or_unexport == EXPORT || export_or_unexport == UNEXPORT), return -1,
         "export_or_unexport parameter can be either EXPORT or UNEXPORT");
 
@@ -395,7 +420,7 @@ static int export_or_unexport_gpio(int pin, int export_or_unexport) {
 
 
 static int set_gpio_direction(int pin, int mode) {
-  error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
   error(mode != INPUT && mode != OUTPUT, return -1, "mode can be either INPUT or OUTPUT");
 
   char buf[64];
@@ -416,7 +441,7 @@ static int set_gpio_direction(int pin, int mode) {
 
 
 static int set_gpio_value(int pin, int value) {
-  error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
   error(value != LOW && value != HIGH, return -1, "value can be either LOW or HIGH");
 
   char buf[64];
