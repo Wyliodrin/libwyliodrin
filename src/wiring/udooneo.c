@@ -117,18 +117,18 @@ int digitalRead(int pin) {
   syserror(fd == -1, return -1, "can't open " GPIO_PATH "/gpio%d/value", pin);
 
   /* Read value */
-  buf[2] = 0;
-  int read_rc = read(fd, buf, 2);
+  char ch;
+  int read_rc = read(fd, &ch, 1);
   close(fd);
   error(read_rc != 2, return -1, "invalid read from " GPIO_PATH "/gpio%d/value", pin);
 
-  if (strncmp(buf, "0", 2) == 0) {
+  if (ch == '0') == 0) {
     return LOW;
-  } else if (strncmp(buf, "1", 2) == 0) {
+  } else if (ch == '1') {
     return HIGH;
   }
 
-  error(true, /* Do nothing */, "invalid value %s found in " GPIO_PATH "/gpio%d/value", buf, pin);
+  error(true, /* Do nothing */, "invalid value found in " GPIO_PATH "/gpio%d/value", pin);
   return -1;
 }
 
