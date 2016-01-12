@@ -8,6 +8,7 @@
 #include <sys/stat.h>  /* open */
 #include <fcntl.h>     /* open */
 
+#include <time.h>    /* time     */
 #include <stdint.h>  /* integers */
 #include <unistd.h>  /* usleep   */
 #include <stdbool.h> /* booleans */
@@ -32,7 +33,7 @@
 
 /*** STATIC FUNCTIONS DECLARATIONS ***************************************************************/
 
-static int export_or_unexport(int pin);
+static int export_or_unexport_gpio(int pin, int export_or_unexport);
 static int set_gpio_direction(int pin, int mode);
 static int set_gpio_value(int pin, int value);
 
@@ -54,6 +55,7 @@ int wiringSetup() {
   return 0;
 }
 
+
 void pinReset(int pin) {
   /* Try to open value */
   char buf[64];
@@ -63,10 +65,11 @@ void pinReset(int pin) {
   /* Export if can't open value */
   if (fd != -1) {
     close(fd);
-    int export_gpio_rc = export_or_unexport(pin, UNEXPORT);
+    int export_gpio_rc = export_or_unexport_gpio(pin, UNEXPORT);
     error(export_gpio_rc != 0, return, "Can't unexport pin %d", pin);
   }
 }
+
 
 void pinMode(int pin, int mode) {
   error(!((4 <= pin) && (pin <= 203)), return, "invalid pin");
@@ -81,7 +84,7 @@ void pinMode(int pin, int mode) {
   if (fd != -1) {
     close(fd);
   } else {
-    int export_gpio_rc = export_or_unexport(pin, EXPORT);
+    int export_gpio_rc = export_or_unexport_gpio(pin, EXPORT);
     error(export_gpio_rc != 0, return, "Can't export pin %d", pin);
   }
 
@@ -97,159 +100,263 @@ void digitalWrite(int pin, int value) {
   set_gpio_value(pin, value);
 }
 
-int  digitalRead    (int pin) {
+
+int digitalRead(int pin) {
+  error(true, return -1, "digitalRead not implemented yet");
+
   return 0;
 }
 
-void analogWrite    (int pin, int value) {
 
+void analogWrite(int pin, int value) {
+  error(true, return, "analogWrite not implemented yet");
 }
 
-int  analogRead     (int pin) {
+
+int analogRead(int pin) {
+  error(true, return -1, "analogRead not implemented yet");
+
   return 0;
 }
 
-int  analogReadRaw  (int pin) {
+
+int analogReadRaw(int pin) {
+  error(true, return -1, "analogReadRaw not implemented yet");
+
   return 0;
 }
 
-void analogWriteRaw (int pin, int value) {
 
+void analogWriteRaw(int pin, int value) {
+  error(true, return, "analogWriteRaw not implemented yet");
 }
 
 /* Advanced I/O */
-void          shiftOut (uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) {
-
+void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) {
+  error(true, return, "shiftOut not implemented yet");
 }
 
-uint8_t       shiftIn  (uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
+
+uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
+  error(true, return 1, "shiftIn not implemented yet");
+
   return 0;
 }
 
-unsigned long pulseIn  (uint8_t pin, uint8_t state) {
+
+unsigned long pulseIn(uint8_t pin, uint8_t state) {
+  error(true, return 1, "pulseIn not implemented yet");
+
   return 0;
 }
+
 
 /* Time */
 void delay(unsigned int milliseconds) {
   usleep(milliseconds * 1000);
 }
 
+
 void delayMicroseconds(unsigned int microseconds) {
   usleep(microseconds);
 }
 
-unsigned int millis    (void) {
+
+unsigned int millis(void) {
+  return micros() / 1000;;
+}
+
+
+unsigned int micros(void) {
+  struct timespec t;
+
+  t.tv_sec  = 0;
+  t.tv_nsec = 0;
+
+  clock_gettime(CLOCK_REALTIME, &t);
+
+  return (unsigned long)(t.tv_sec) * 1000000L + t.tv_nsec / 1000L ;
+}
+
+
+int spi_getadapter(uint32_t spi_bus_address) {
+  error(true, return 1, "spi_getadapter not implemented yet");
+
   return 0;
 }
 
-unsigned int micros    (void) {
+
+int spi_openadapter(uint8_t spi_bus) {
+  error(true, return 1, "spi_openadapter not implemented yet");
+
   return 0;
 }
 
-int             spi_getadapter    (uint32_t spi_bus_address) {
+
+int spi_setmode(int spiId, unsigned short mode) {
+  error(true, return 1, "spi_setmode not implemented yet");
+
   return 0;
 }
 
-int             spi_openadapter   (uint8_t spi_bus) {
+
+int spi_set_frequency(int spiId, int freq) {
+  error(true, return 1, "spi_set_frequency not implemented yet");
+
   return 0;
 }
 
-int             spi_setmode       (int spiId, unsigned short mode) {
+
+uint8_t spi_writebyte(int spiId, uint8_t byte) {
+  error(true, return 1, "spi_writebyte not implemented yet");
+
   return 0;
 }
 
-int             spi_set_frequency (int spiId, int freq) {
-  return 0;
-}
 
-uint8_t         spi_writebyte     (int spiId, uint8_t byte) {
-  return 0;
-}
+unsigned char * spi_writebytes(int spiId, uint8_t *bytes, uint8_t length) {
+  error(true, return NULL, "pulseIn not implemented yet");
 
-unsigned char * spi_writebytes    (int spiId, uint8_t *bytes, uint8_t length) {
   return NULL;
 }
 
-int             spi_lsb_mode      (int spiId, unsigned char lsb) {
-  return 0;
-}
 
-int             spi_bit_per_word  (int spiId, unsigned int bits) {
-  return 0;
-}
+int spi_lsb_mode(int spiId, unsigned char lsb) {
+  error(true, return 1, "spi_lsb_mode not implemented yet");
 
-int             spi_closeadapter  (int spiId) {
-  return 0;
-}
-
-int i2c_openadapter  (uint8_t i2c_bus) {
-  return 0;
-}
-
-int i2c_setslave     (int i2cId, uint8_t addr) {
-  return 0;
-}
-
-int i2c_writebyte    (int i2cId, uint8_t byte) {
-  return 0;
-}
-
-int i2c_writebytes   (int i2cId, uint8_t *bytes, uint8_t length) {
-  return 0;
-}
-
-int i2c_readbyte     (int i2cId) {
-  return 0;
-}
-
-int i2c_closeadapter (int i2cId) {
-  return 0;
-}
-
-int i2c_readbytes    (int i2cId, uint8_t *buf, int length) {
-  return 0;
-}
-
-int i2c_readwrite    (int i2cId) {
   return 0;
 }
 
 
+int spi_bit_per_word(int spiId, unsigned int bits) {
+  error(true, return 1, "spi_bit_per_word not implemented yet");
 
-int     serial_openadapter     (char *serial_bus) {
   return 0;
 }
 
-int     serial_set_speed       (int serial_id, int baud) {
+
+int spi_closeadapter(int spiId) {
+  error(true, return 1, "spi_closeadapter not implemented yet");
+
   return 0;
 }
 
-int     serial_bytes_available (int serial_id) {
+
+int i2c_openadapter(uint8_t i2c_bus) {
+  error(true, return 1, "i2c_openadapter not implemented yet");
+
   return 0;
 }
 
-int     serial_closeadapter    (int serial_id) {
+
+int i2c_setslave(int i2cId, uint8_t addr) {
+  error(true, return 1, "i2c_setslave not implemented yet");
+
   return 0;
 }
 
-int     serial_writebyte       (int serial_id, uint8_t byte) {
+
+int i2c_writebyte(int i2cId, uint8_t byte) {
+  error(true, return 1, "i2c_writebyte not implemented yet");
+
   return 0;
 }
 
-int     serial_writebytes      (int serial_id, uint8_t *bytes, uint8_t length) {
+
+int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length) {
+  error(true, return 1, "i2c_writebytes not implemented yet");
+
   return 0;
 }
 
-uint8_t serial_readbyte        (int serial_id) {
+
+int i2c_readbyte(int i2cId) {
+  error(true, return 1, "i2c_readbyte not implemented yet");
+
   return 0;
 }
 
-int     serial_readbytes       (int serial_id, uint8_t *buf, int length) {
+
+int i2c_closeadapter(int i2cId) {
+  error(true, return 1, "i2c_closeadapter not implemented yet");
+
   return 0;
 }
 
-int     serial_flush           (int serial_id) {
+
+int i2c_readbytes(int i2cId, uint8_t *buf, int length) {
+  error(true, return 1, "i2c_readbytes not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_readwrite(int i2cId) {
+  error(true, return 1, "i2c_readwrite not implemented yet");
+
+  return 0;
+}
+
+
+int serial_openadapter(char *serial_bus) {
+  error(true, return 1, "serial_openadapter not implemented yet");
+
+  return 0;
+}
+
+
+int serial_set_speed(int serial_id, int baud) {
+  error(true, return 1, "serial_set_speed not implemented yet");
+
+  return 0;
+}
+
+
+int serial_bytes_available(int serial_id) {
+  error(true, return 1, "serial_bytes_available not implemented yet");
+
+  return 0;
+}
+
+
+int serial_closeadapter(int serial_id) {
+  error(true, return 1, "serial_closeadapter not implemented yet");
+
+  return 0;
+}
+
+
+int serial_writebyte (int serial_id, uint8_t byte) {
+  error(true, return 1, "serial_writebyte not implemented yet");
+
+  return 0;
+}
+
+
+int serial_writebytes(int serial_id, uint8_t *bytes, uint8_t length) {
+  error(true, return 1, "serial_writebytes not implemented yet");
+
+  return 0;
+}
+
+
+uint8_t serial_readbyte(int serial_id) {
+  error(true, return 1, "serial_readbyte not implemented yet");
+
+  return 0;
+}
+
+
+int serial_readbytes(int serial_id, uint8_t *buf, int length) {
+  error(true, return 1, "serial_readbytes not implemented yet");
+
+  return 0;
+}
+
+
+int serial_flush(int serial_id) {
+  error(true, return 1, "serial_flush not implemented yet");
+
   return 0;
 }
 
