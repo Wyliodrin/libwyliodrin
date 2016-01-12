@@ -15,7 +15,7 @@ rm -rf                                                                         \
                                                                                \
   /usr/include/Arduino.h                                                       \
   /usr/include/Wyliodrin.h                                                     \
-  /usr/include/Wyliodrin/*                                                     \
+  /usr/include/Wyliodrin                                                       \
                                                                                \
   /usr/lib/python2.7/dist-packages/_wyliodrin.so                               \
   /usr/lib/python2.7/dist-packages/wyliodrin.py                                \
