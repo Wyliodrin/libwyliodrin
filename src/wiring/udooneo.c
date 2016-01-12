@@ -8,8 +8,9 @@
 #include <sys/stat.h>  /* open */
 #include <fcntl.h>     /* open */
 
-#include <stdint.h> /* integers */
-#include <unistd.h> /* usleep   */
+#include <stdint.h>  /* integers */
+#include <unistd.h>  /* usleep   */
+#include <stdbool.h> /* booleans */
 
 #include "debug.h"
 #include "wiring.h"
@@ -22,13 +23,16 @@
 
 #define GPIO_PATH "/sys/class/gpio"
 
+#define EXPORT   0
+#define UNEXPORT 1
+
 /*************************************************************************************************/
 
 
 
 /*** STATIC FUNCTIONS DECLARATIONS ***************************************************************/
 
-static int export_gpio(int pin);
+static int export_or_unexport(int pin);
 static int set_gpio_direction(int pin, int mode);
 static int set_gpio_value(int pin, int value);
 
@@ -51,16 +55,37 @@ int wiringSetup() {
 }
 
 void pinReset(int pin) {
-  /* Do nothing */
+  /* Try to open value */
+  char buf[64];
+  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  int fd = open(buf, O_RDONLY);
+
+  /* Export if can't open value */
+  if (fd != -1) {
+    close(fd);
+    int export_gpio_rc = export_or_unexport(pin, UNEXPORT);
+    error(export_gpio_rc != 0, return, "Can't unexport pin %d", pin);
+  }
 }
 
 void pinMode(int pin, int mode) {
   error(!((4 <= pin) && (pin <= 203)), return, "invalid pin");
   error(mode != INPUT && mode != OUTPUT, return, "mode can be either INPUT or OUTPUT");
 
-  int export_gpio_rc = export_gpio(pin);
-  error(export_gpio_rc != 0, /* Do nothing */, "Can't export pin %d", pin);
+  /* Try to open value */
+  char buf[64];
+  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  int fd = open(buf, O_RDONLY);
 
+  /* Export if can't open value */
+  if (fd != -1) {
+    close(fd);
+  } else {
+    int export_gpio_rc = export_or_unexport(pin, EXPORT);
+    error(export_gpio_rc != 0, return, "Can't export pin %d", pin);
+  }
+
+  /* Set direction */
   int set_gpio_direction_rc = set_gpio_direction(pin, mode);
   error(set_gpio_direction_rc != 0, return, "Can't set to pin %d direction %d", pin, mode);
 }
@@ -234,17 +259,29 @@ int     serial_flush           (int serial_id) {
 
 /*** STATIC FUNCTIONS IMPLEMENTATION *************************************************************/
 
-static int export_gpio(int pin) {
+static int export_or_unexport_gpio(int pin, int export_or_unexport) {
   error(!((4 <= pin) && (pin <= 203)), return -1, "invalid pin");
+  error(!(export_or_unexport == EXPORT || export_or_unexport == UNEXPORT), return -1,
+        "export_or_unexport parameter can be either EXPORT or UNEXPORT");
 
-  int fd = open(GPIO_PATH "/export", O_WRONLY);
-  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/export");
+  int fd;
+  if (export_or_unexport == EXPORT) {
+    fd = open(GPIO_PATH "/export", O_WRONLY);
+    syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/export");
+  } else {
+    fd = open(GPIO_PATH "/unexport", O_WRONLY);
+    syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/unexport");
+  }
 
   char buf[4];
   snprintf(buf, 4, "%d", pin);
   int write_rc = write(fd, buf, sizeof(buf));
   close(fd);
-  syserror(write_rc == -1, return -1, "Can't write to " GPIO_PATH "/export");
+  if (export_or_unexport == EXPORT) {
+    syserror(write_rc == -1, return -1, "Can't write to " GPIO_PATH "/export");
+  } else {
+    syserror(write_rc == -1, return -1, "Can't write to " GPIO_PATH "/unexport");
+  }
 
   return 0;
 }
