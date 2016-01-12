@@ -23,7 +23,7 @@ pkg_check_modules (EVENT REQUIRED libevent)
 
 # Version
 set (VERSION_MAJOR 3)
-set (VERSION_MINOR 0)
+set (VERSION_MINOR 1)
 
 # Configuration file
 configure_file (
@@ -89,7 +89,8 @@ include_directories (${PROJECT_BINARY_DIR})
 # Sources
 set (wyliodrin_LIB_SRCS
   # Core
-  ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
+  ${PROJECT_SOURCE_DIR}/src/version.c
+  ${PROJECT_SOURCE_DIR}/src/setup.c
   ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/communication/communication.c

@@ -14,6 +14,8 @@ file (GLOB wyiliodrin_headers
   "libraries/*.h"
   "wiring/*.h"
   "cmp/cmp.h"
+  "setup.h"
+  "version.h"
 )
 
 install (TARGETS wyliodrin DESTINATION lib)
