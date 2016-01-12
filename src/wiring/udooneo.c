@@ -108,7 +108,7 @@ void digitalWrite(int pin, int value) {
 
 
 int digitalRead(int pin) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
+  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
 
   /* Open value */
   char buf[64];
