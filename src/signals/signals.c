@@ -302,7 +302,6 @@ int sendSignalAndFlag(const char *tag, const char *name, double value) {
     if (getenv("wyliodrin_usemsgpack") != NULL) {
       cmp_ctx_t cmp;
       uint32_t map_size;
-      char sbuf[SBUFSIZE] = {0};
       char storage[STORAGESIZE] = {0};
 
       map_size = 3; /* timespamp, userid and signals */
@@ -431,11 +430,8 @@ int putFlag(const char *signal, const char *flag) {
   char newsig[200];
   snprintf(newsig, 199, "debug_%s",signal);
   sendSignalAndFlag(flag,newsig, 0.0);
-}
 
-
-int sendCoordinates(const char *name, double latitude, double longitude) {
-  return sendCoordinatesAndFlag(name, latitude, longitude, NULL);
+  return 0;
 }
 
 
@@ -458,8 +454,8 @@ int sendCoordinatesAndFlag(const char *name, double latitude, double longitude, 
 }
 
 
-int sendSignalXY(const char *name, double x, double y) {
-  return sendSignalXYAndFlag(name, x, y, NULL);
+int sendCoordinates(const char *name, double latitude, double longitude) {
+  return sendCoordinatesAndFlag(name, latitude, longitude, NULL);
 }
 
 
@@ -479,6 +475,11 @@ int sendSignalXYAndFlag(const char *name, double x, double y, const char *flag) 
   free(ystr);
 
   return rc;
+}
+
+
+int sendSignalXY(const char *name, double x, double y) {
+  return sendSignalXYAndFlag(name, x, y, NULL);
 }
 
 /*************************************************************************************************/
