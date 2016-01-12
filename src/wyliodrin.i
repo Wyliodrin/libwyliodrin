@@ -3,10 +3,9 @@
 %include "stdint.i"
 
 %{
-    #include "Wyliodrin.h"
+    #include "setup.h"
     #include "signals/signals.h"
     #include "wiring/wiring.h"
-    #include "wiring/debug.h"
     #include "libraries/lcd.h"
     #include "libraries/Print.h"
     #include "libraries/SPI.h"
@@ -49,7 +48,6 @@
 %include "wiring/wiring.h"
 %include "wiring/binary.h"
 %include "wiring/BitsAndBytes.h"
-%include "wiring/debug.h"
 %include "signals/signals.h"
 %include "libraries/lcd.h"
 %include "libraries/Print.h"
