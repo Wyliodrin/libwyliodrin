@@ -23,7 +23,7 @@ pkg_check_modules (EVENT REQUIRED libevent)
 
 # Version
 set (VERSION_MAJOR 3)
-set (VERSION_MINOR 2)
+set (VERSION_MINOR 0)
 
 # Configuration file
 configure_file (
