@@ -74,6 +74,10 @@
   #define MAX_I2C_PINS  10
 #endif /* RASPBERRYPI */
 
+#ifdef UDOONEO
+  #define MAX_I2C_PINS  10
+#endif /* UDOONEO */
+
 #if defined(ARDUINOGALILEO) || defined(EDISON)
   #include <mraa/gpio.h>
   #include <mraa/aio.h>
