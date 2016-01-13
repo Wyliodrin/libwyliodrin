@@ -1,4 +1,4 @@
-#if defined(RASPBERRYPI) || defined(BEAGLEBONE) || defined(REDPITAYA) || defined(UDOONEO)
+#if defined(RASPBERRYPI) || defined(BEAGLEBONE) || defined(REDPITAYA)
 
 #ifdef RASPBERRYPI
 #include "raspberrypi.h"

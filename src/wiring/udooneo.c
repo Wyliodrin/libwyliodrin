@@ -267,6 +267,62 @@ int spi_closeadapter(int spiId) {
 }
 
 
+int i2c_openadapter(uint8_t i2c_bus) {
+  // error(true, return 1, "i2c_openadapter not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_setslave(int i2cId, uint8_t addr) {
+  error(true, return 1, "i2c_setslave not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_writebyte(int i2cId, uint8_t byte) {
+  error(true, return 1, "i2c_writebyte not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_writebytes(int i2cId, uint8_t *bytes, uint8_t length) {
+  error(true, return 1, "i2c_writebytes not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_readbyte(int i2cId) {
+  error(true, return 1, "i2c_readbyte not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_closeadapter(int i2cId) {
+  error(true, return 1, "i2c_closeadapter not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_readbytes(int i2cId, uint8_t *buf, int length) {
+  error(true, return 1, "i2c_readbytes not implemented yet");
+
+  return 0;
+}
+
+
+int i2c_readwrite(int i2cId) {
+  error(true, return 1, "i2c_readwrite not implemented yet");
+
+  return 0;
+}
+
+
 int serial_openadapter(char *serial_bus) {
   error(true, return 1, "serial_openadapter not implemented yet");
 
