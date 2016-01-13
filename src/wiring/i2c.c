@@ -1,4 +1,4 @@
-#if defined(RASPBERRYPI) || defined(BEAGLEBONE) || defined(REDPITAYA)
+#if defined(RASPBERRYPI) || defined(BEAGLEBONE) || defined(REDPITAYA) || defined(UDOONEO)
 
 #ifdef RASPBERRYPI
 #include "raspberrypi.h"
@@ -93,7 +93,7 @@ int i2c_openadapter(uint8_t i2c_bus)
         fprintf(stderr, "Failed to open requested i2c port %s\n", filepath);
 	perror ("bus");
     }
-	
+
 	// printf ("id: %d\n", id);
 	return id;
 }
@@ -149,7 +149,7 @@ int i2c_readbyte(int i2c_id)
 	// data = wiringPiI2CRead (i2c_buses[i2c_id]);
 	if (data < 0) return -1;
 	else return data;
-	//return mraa_i2c_read_byte (i2c_buses[i2c_bus]);	
+	//return mraa_i2c_read_byte (i2c_buses[i2c_bus]);
 }
 
 int i2c_readbytes(int i2c_id, uint8_t *buf, int length)
