@@ -1,5 +1,5 @@
 
-#if defined(ARDUINOGALILEO) || defined (EDISON)
+#if defined(ARDUINOGALILEO) || defined (EDISON) || defined (MINNOWBOARDMAX)
 
 #include "wiring.h"
 #include <pthread.h>
@@ -511,6 +511,9 @@ int i2c_openadapter(uint8_t i2c_bus)
 			#endif
 			#ifdef EDISON
 			i2c_bus = 6;
+			#endif
+			#ifdef MINNOWBOARDMAX
+			i2c_bus = 0;
 			#endif
 		}
 		i2c_buses[i2cId] = mraa_i2c_init (i2c_bus);
