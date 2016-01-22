@@ -50,6 +50,13 @@ elseif (EDISON)
   message (INFO " found libmraa version: ${MRAA_VERSION}")
   set(FLAGS "-DEDISON")
 
+elseif (MINNOWBOARDMAX)
+  add_definitions(-DMINNOWBOARDMAX)
+  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
+  message (INFO " found libmraa version: ${MRAA_VERSION}")
+  set(FLAGS "-DMINNOWBOARDMAX")
+
+
 elseif (RASPBERRYPI)
   add_definitions(-DRASPBERRYPI)
   find_package(Wiringpi REQUIRED)
