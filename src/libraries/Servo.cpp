@@ -23,7 +23,7 @@ Servo::Servo()
     this->index = INVALID_SERVO;  // too many servos
   }
   
-  #ifdef ARDUINOGALILEO
+  #ifdef DEVICEINTEL
   m_currentAngle = 180;
   #endif
 
@@ -70,7 +70,7 @@ uint8_t Servo::attach(int pin, int min, int max)
     this->is188hz = true;
     this->isAttached = true;
 
-    #ifdef ARDUINOGALILEO
+    #ifdef DEVICEINTEL
       m_pwmServoContext = mraa_pwm_init (this->pin);
       write (0);
     #endif
@@ -116,7 +116,7 @@ void Servo::write(int val)
     else if (val > 180)
       val = 180;
 
-    #ifdef ARDUINOGALILEO
+    #ifdef DEVICEINTEL
       int period = (max - min) / 180;
       
       int cycles = (int)(100.0 * ((float)abs (m_currentAngle - val) / 180));
@@ -133,7 +133,7 @@ void Servo::write(int val)
       // std::cout << "angle = " << angle << " ,pulse = " << calcPulseTraveling(angle) << ", cycles " << cycles << std::endl;
       
       m_currentAngle = val;
-  #endif
+    #endif
   }
   else
   {
@@ -145,7 +145,7 @@ void Servo::write(int val)
 
 int Servo::read()
 {
-  #ifdef ARDUINOGALILEO
+  #ifdef DEVICEINTEL
   return this->m_currentAngle;
   #else
   return 0;

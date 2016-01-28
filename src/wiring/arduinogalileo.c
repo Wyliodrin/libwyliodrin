@@ -1,9 +1,10 @@
 
-#if defined(ARDUINOGALILEO) || defined (EDISON) || defined (MINNOWBOARDMAX)
+#if defined(DEVICEINTEL) // defined(ARDUINOGALILEO) || defined (EDISON) || defined (MINNOWBOARDMAX)
 
 #include "wiring.h"
 #include <pthread.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 static mraa_gpio_context gpio_pins[MAX_GPIO_PINS];
@@ -102,6 +103,7 @@ int wiringSetup ()
 	adc_power = pow (2, adc_raw_bits)-1;
 	pthread_mutex_init(&lockspi, NULL);
 	pthread_mutex_init(&locki2c, NULL);
+	return 0;
 }
 
 void pinReset (int pin)
@@ -506,15 +508,21 @@ int i2c_openadapter(uint8_t i2c_bus)
 	{
 		if (i2c_bus == 255)
 		{
-			#ifdef ARDUINOGALILEO
-			i2c_bus = 0;
-			#endif
-			#ifdef EDISON
-			i2c_bus = 6;
-			#endif
-			#ifdef MINNOWBOARDMAX
-			i2c_bus = 0;
-			#endif
+			const char *platform = mraa_get_platform_name ();
+			if (strncmp (platform, "Intel Galileo ", 14)==0)
+			{
+				i2c_bus = 0;
+			}
+			else if (strncmp (platform, "Intel Edison", 12)==0)
+			{
+				i2c_bus = 6;
+			}
+			else if (strncmp (platform, "MinnowBoard MAX",15)==0)
+			{  
+				i2c_bus = 0;
+			}
+			else 
+				i2c_bus = 0;
 		}
 		i2c_buses[i2cId] = mraa_i2c_init (i2c_bus);
 	}

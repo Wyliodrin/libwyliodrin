@@ -33,32 +33,18 @@ configure_file (
 
 # Options
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
-option (GALILEO     "Build for the Intel Galileo." OFF)
-option (EDISON      "Build for the Intel Galileo." OFF)
+option (DEVICEINTEL     "Build for the Intel Galileo." OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
-option (MINNOWBOARDMAX  "Build for the Minnowboard Max."    OFF)
 option (REDPITAYA   "Build for the RedPitaya."     OFF)
 option (UDOONEO     "Build for the UDOO NEO."      OFF)
 option (SERVER      "Build for the Server."        OFF)
 
 # Option management
-if (GALILEO)
-  add_definitions (-DARDUINOGALILEO)
+if (DEVICEINTEL)
+  add_definitions (-DDEVICEINTEL)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
   message (INFO "found libmraa version: ${MRAA_VERSION}")
-  set(FLAGS "-DARDUINOGALILEO")
-
-elseif (EDISON)
-  add_definitions (-DEDISON)
-  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
-  message (INFO "found libmraa version: ${MRAA_VERSION}")
-  set(FLAGS "-DEDISON")
-
-elseif (MINNOWBOARDMAX)
-  add_definitions (-DMINNOWBOARDMAX)
-  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
-  message (INFO "found libmraa version: ${MRAA_VERSION}")
-  set(FLAGS "-DMINNOWBOARDMAX")
+  set(FLAGS "-DDEVICEINTEL")
 
 elseif (RASPBERRYPI)
   add_definitions (-DRASPBERRYPI)
@@ -143,6 +129,8 @@ set (wyliodrin_LIB_SRCS
 
 add_subdirectory (src)
 add_subdirectory (languages)
+
+add_subdirectory (wylio)
 
 if (SERVER)
 else ()
