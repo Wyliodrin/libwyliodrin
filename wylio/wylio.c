@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../src/Wyliodrin.h"
+#include "../src/version.h"
 
 int main(int argc, char **argv) {
   if (argc == 2) {
