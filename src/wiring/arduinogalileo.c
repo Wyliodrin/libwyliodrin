@@ -519,7 +519,7 @@ int i2c_openadapter(uint8_t i2c_bus)
 			}
 			else if (strncmp (platform, "MinnowBoard MAX",15)==0)
 			{  
-				i2c_bus = 0;
+				i2c_bus = 7;
 			}
 			else 
 				i2c_bus = 0;
