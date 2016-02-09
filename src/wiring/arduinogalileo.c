@@ -509,6 +509,11 @@ int i2c_openadapter(uint8_t i2c_bus)
 		if (i2c_bus == 255)
 		{
 			const char *platform = mraa_get_platform_name ();
+			if (platform == NULL)
+			{
+				i2c_bus = 6;
+			}
+			else
 			if (strncmp (platform, "Intel Galileo ", 14)==0)
 			{
 				i2c_bus = 0;
