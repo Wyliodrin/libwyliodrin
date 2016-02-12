@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-#ifdef ARDUINOGALILEO
+#ifdef DEVICEINTEL
 #include <mraa/pwm.h>
 
 #define MAX_PERIOD    7968
@@ -58,7 +58,7 @@ private:
    bool is188hz;
    int lastByteInDuty;          // to avoid jitter caused by analogWrite()
    int calcPulseTraveling (int value);
-   #ifdef ARDUINOGALILEO
+   #ifdef DEVICEINTEL
    int m_currentAngle;
    mraa_pwm_context m_pwmServoContext;
    #endif

@@ -1,7 +1,6 @@
-
 %module(docstring="Python interface to libwyliodrin") wyliodrin
 
-%include "stdint.i" 
+%include "stdint.i"
 
 %{
     #include "setup.h"
@@ -24,9 +23,6 @@
     #include "libraries/Adafruit_Sensor.h"
     #include "libraries/I2Cdev.h"
     #include "libraries/MPU6050.h"
-
-
-
     #include "libraries/Adafruit_BMP085_U.h"
     #include "libraries/LiquidCrystal.h"
     #include "libraries/TM1637.h"
@@ -38,18 +34,16 @@
 %}
 
 %init %{
-    //Adding mraa_init() to the module initialisation process
     wyliodrinSetup();
 %}
 
 #if defined(RASPBERRYPI)
-%include "wiring/raspberrypi.h"
+    %include "wiring/raspberrypi.h"
 #endif
 
 #if defined(REDPITAYA)
-%include "wiring/red-pitaya.h"
+    %include "wiring/red-pitaya.h"
 #endif
-
 
 %include "wiring/wiring.h"
 %include "wiring/binary.h"

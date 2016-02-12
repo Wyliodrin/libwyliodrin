@@ -1,5 +1,5 @@
-#ifndef _SETUP_H
-#define _SETUP_H
+#ifndef _VERSION_H
+#define _VERSION_H
 
 
 
@@ -10,9 +10,14 @@ extern "C" {
 #endif
 
 /**
- * Signals initialization
+ * Return version major
  */
-void wyliodrinSetup();
+int get_version_major();
+
+/**
+ * Return version minor
+ */
+int get_version_minor();
 
 #ifdef __cplusplus
 }
@@ -22,4 +27,4 @@ void wyliodrinSetup();
 
 
 
-#endif /* _SETUP_H */
+#endif /* _VERSION_H */

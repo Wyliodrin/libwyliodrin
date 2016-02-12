@@ -1,54 +1,50 @@
 cmake_minimum_required (VERSION 2.8.8)
+
 project (libwyliodrin)
 
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set (CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -Wall")
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable.
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
+# Dependencies
 find_package (Threads)
-
 find_package (SWIG)
 if (SWIG_FOUND)
   include (${SWIG_USE_FILE})
 endif ()
-
 find_package (PkgConfig REQUIRED)
-
-find_package(Hiredis REQUIRED)
-include_directories(${HIREDIS_INCLUDE_DIR})
-
-find_package(Jansson REQUIRED)
-include_directories(${JANSSON_INCLUDE_DIR})
-
+find_package (Hiredis REQUIRED)
+include_directories (${HIREDIS_INCLUDE_DIR})
+find_package (Jansson REQUIRED)
+include_directories (${JANSSON_INCLUDE_DIR})
 pkg_check_modules (EVENT REQUIRED libevent)
 
-set (wyliodrin_VERSION_MAJOR 1)
-set (wyliodrin_VERSION_MINOR 4)
-set (wyliodrin_VERSION_PATCH 0})
+# Version
+set (VERSION_MAJOR 2)
+set (VERSION_MINOR 1)
 
-option (GALILEO     "Build for the Intel Galileo." OFF)
+# Configuration file
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/config.h.in"
+  "${PROJECT_BINARY_DIR}/config.h"
+)
+
+# Options
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
+option (DEVICEINTEL     "Build for the Intel Galileo." OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
-option (REDPITAYA  "Build for the RedPitaya."    OFF)
+option (REDPITAYA   "Build for the RedPitaya."     OFF)
+option (UDOONEO     "Build for the UDOO NEO."      OFF)
+option (SERVER      "Build for the Server."        OFF)
 
-option (GALILEO "Build for the Intel Galileo." OFF)
-option (EDISON "Build for the Intel Galileo." OFF)
-option (RASPBERRYPI "Build for the RaspberryPi." OFF)
-
-
-if (GALILEO)
-  add_definitions(-DARDUINOGALILEO)
+# Option management
+if (DEVICEINTEL)
+  add_definitions (-DDEVICEINTEL)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
-  message (INFO " found libmraa version: ${MRAA_VERSION}")
-  set(FLAGS "-DARDUINOGALILEO")
-
-elseif (EDISON)
-  add_definitions(-DEDISON)
-  pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
-  message (INFO " found libmraa version: ${MRAA_VERSION}")
-  set(FLAGS "-DEDISON")
+  message (INFO "found libmraa version: ${MRAA_VERSION}")
+  set(FLAGS "-DDEVICEINTEL")
 
 elseif (MINNOWBOARDMAX)
   add_definitions(-DMINNOWBOARDMAX)
@@ -58,35 +54,58 @@ elseif (MINNOWBOARDMAX)
 
 
 elseif (RASPBERRYPI)
-  add_definitions(-DRASPBERRYPI)
-  find_package(Wiringpi REQUIRED)
-  set(FLAGS "-DRASPBERRYPI")
-  include_directories(${WIRINGPI_INCLUDE_DIR})
+  add_definitions (-DRASPBERRYPI)
+  find_package (Wiringpi REQUIRED)
+  set (FLAGS "-DRASPBERRYPI")
+  include_directories (${WIRINGPI_INCLUDE_DIR})
 
 elseif (BEAGLEBONE)
-  add_definitions(-DBEAGLEBONE)
-  set(FLAGS "-DBEAGLEBONE")
-
-elseif (SERVER)
-  add_definitions(-DSERVER)
-  set(FLAGS "-DSERVER")
+  add_definitions (-DBEAGLEBONE)
+  set (FLAGS "-DBEAGLEBONE")
 
 elseif (REDPITAYA)
-  add_definitions(-DREDPITAYA)
-  find_package(rp REQUIRED)
-  set(FLAGS "-DREDPITAYA")
-  include_directories(${REDPITAYA_INCLUDE_DIR})
+  add_definitions (-DREDPITAYA)
+  find_package (rp REQUIRED)
+  set (FLAGS "-DREDPITAYA")
+  include_directories (${REDPITAYA_INCLUDE_DIR})
+
+elseif (UDOONEO)
+  add_definitions (-DUDOONEO)
+  set(FLAGS "-DUDOONEO")
+
+elseif (SERVER)
+  add_definitions (-DSERVER)
+  set(FLAGS "-DSERVER")
 
 else ()
-  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DBEAGLEBONE=ON or -DREDPITAYA=ON")
+  message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DEDISON=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON, -DUDOONEO=ON or -DSERVER=ON")
 endif ()
 
+
+add_definitions ("-Wall -DDEBUG")
+
+include_directories (${PROJECT_BINARY_DIR})
+
+# Sources
 set (wyliodrin_LIB_SRCS
-  ${PROJECT_SOURCE_DIR}/src/Wyliodrin.c
+  # Core
+  ${PROJECT_SOURCE_DIR}/src/version.c
+  ${PROJECT_SOURCE_DIR}/src/setup.c
   ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/communication/communication.c
   ${PROJECT_SOURCE_DIR}/src/cmp/cmp.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/server.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/math.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/red-pitaya.c
+  ${PROJECT_SOURCE_DIR}/src/wiring/udooneo.c
+
+  # Auxiliary
   ${PROJECT_SOURCE_DIR}/src/libraries/lcd.c
   ${PROJECT_SOURCE_DIR}/src/libraries/Print.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/rgb_lcd.cpp
@@ -113,23 +132,17 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/UniPi.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/arduinogalileo.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/raspberrypi.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/server.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/i2c.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/math.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/beaglebone.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/beagleboneConfig.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/red-pitaya.c
 )
 
 add_subdirectory (src)
 add_subdirectory (languages)
 
+add_subdirectory (wylio)
+
 if (SERVER)
 else ()
-install (FILES scripts/install_social DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
-install (FILES scripts/update_libwyliodrin DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
-install (FILES scripts/update_streams DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
-install (FILES scripts/say DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
+  install (FILES scripts/install_social      DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
+  install (FILES scripts/update_libwyliodrin DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
+  install (FILES scripts/update_streams      DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
+  install (FILES scripts/say                 DESTINATION bin/ PERMISSIONS WORLD_READ WORLD_EXECUTE)
 endif ()
