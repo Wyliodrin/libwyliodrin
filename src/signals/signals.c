@@ -186,7 +186,18 @@ int sendSignalsAndFlag(const char *text, const char *name, double value, ...) {
     redisCommand(c, "rpush %s %s", projectId, j);
     free(j);
 
-    redisCommand(c, "publish wyliodrin signal:%s",projectId);
+    char sender[100];
+
+    if (strncmp (projectId, "app-project", 11)==0)
+    {
+        strcpy (sender, "wyliodrin-project");
+    }
+    else
+    {
+        strcpy (sender, "wyliodrin");
+    }
+    // printf ("publish %s signal:%s\n", sender, projectId);
+    redisCommand(c, "publish %s signal:%s", sender, projectId);
   } else {
     printf("Too many messages/s or no projectId\n");
     return REDIS_EENV;
@@ -238,7 +249,18 @@ int sendSignals(const char *name, double value, ...) {
     redisCommand(c, "rpush %s %s", projectId, j);
     free(j);
 
-    redisCommand(c, "publish wyliodrin signal:%s",projectId);
+    char sender[100];
+
+    if (strncmp (projectId, "app-project", 11)==0)
+    {
+        strcpy (sender, "wyliodrin-project");
+    }
+    else
+    {
+        strcpy (sender, "wyliodrin");
+    }
+    // printf ("publish %s signal:%s\n", sender, projectId);
+    redisCommand (c, "publish %s signal:%s", sender, projectId);
   } else {
     printf("Too many messages/s or no projectId\n");
     return REDIS_EENV;
@@ -282,7 +304,18 @@ int sendSignalsListAndFlag(const char *flag, const char **names, double *values,
     redisCommand(c, "rpush %s %s", projectId, j);
     free(j);
 
-    redisCommand(c, "publish wyliodrin signal:%s",projectId);
+    char sender[100];
+
+    if (strncmp (projectId, "app-project", 11)==0)
+    {
+        strcpy (sender, "wyliodrin-project");
+    }
+    else
+    {
+        strcpy (sender, "wyliodrin");
+    }
+    // printf ("publish %s signal:%s\n", sender, projectId); 
+    redisCommand(c, "publish %s signal:%s", sender, projectId);
   } else {
     printf("Too many messages/s or no projectId\n");
     return REDIS_EENV;
@@ -410,7 +443,19 @@ int sendSignalAndFlag(const char *tag, const char *name, double value) {
       }
       redisCommand(c, "rpush %s %s", projectId, to_push);
       free(to_push);
-      redisCommand(c, "publish wyliodrin signal:%s", projectId);
+      
+    char sender[100];
+
+    if (strncmp (projectId, "app-project", 11)==0)
+    {
+        strcpy (sender, "wyliodrin-project");
+    }
+    else
+    {
+        strcpy (sender, "wyliodrin");
+    }
+    // printf ("publish %s signal:%s\n", sender, projectId);
+    redisCommand(c, "publish %s signal:%s", sender, projectId);
     }
   } else {
     printf("Too many messages/s or no projectId\n");
