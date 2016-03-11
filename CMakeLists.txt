@@ -82,7 +82,7 @@ else ()
 endif ()
 
 
-add_definitions ("-Wall -DDEBUG")
+add_definitions ("-Wall -DDEBUG -DSWIG_V8_VERSION=0x032873")
 
 include_directories (${PROJECT_BINARY_DIR})
 
