@@ -71,6 +71,7 @@ elseif (REDPITAYA)
 
 elseif (UDOONEO)
   add_definitions (-DUDOONEO)
+  add_definitions ("-DSWIG_V8_VERSION=0x032873")
   set(FLAGS "-DUDOONEO")
 
 elseif (SERVER)
@@ -81,8 +82,7 @@ else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DEDISON=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON, -DUDOONEO=ON or -DSERVER=ON")
 endif ()
 
-
-add_definitions ("-Wall -DDEBUG -DSWIG_V8_VERSION=0x032873")
+add_definitions ("-Wall -DDEBUG")
 
 include_directories (${PROJECT_BINARY_DIR})
 
@@ -91,7 +91,7 @@ set (wyliodrin_LIB_SRCS
   # Core
   ${PROJECT_SOURCE_DIR}/src/version.c
   ${PROJECT_SOURCE_DIR}/src/setup.c
-  ${PROJECT_SOURCE_DIR}/src/wiring/BitsAndBytes.c
+  ${PROJECT_SOURCE_DIif (UDOONEO)R}/src/wiring/BitsAndBytes.c
   ${PROJECT_SOURCE_DIR}/src/signals/signals.c
   ${PROJECT_SOURCE_DIR}/src/communication/communication.c
   ${PROJECT_SOURCE_DIR}/src/cmp/cmp.c
