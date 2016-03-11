@@ -1,0 +1,21 @@
+Source: libwyliodrin
+Priority: optional
+Maintainer: Razvan MATEI <matei.rm94@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), cmake
+Standards-Version: 3.9.4
+Section: libs
+Homepage: https://wyliodrin.com
+Vcs-Git: https://github.com/Wyliodrin/libwyliodrin.git
+Vcs-Browser: https://github.com/Wyliodrin/libwyliodrin
+
+Package: libwyliodrin-dev
+Section: libdevel
+Architecture: any
+Depends: libwyliodrin (= ${binary:Version})
+Description: libwyliodrin dev
+
+Package: libwyliodrin
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: libwyliodrin
