@@ -1,7 +1,6 @@
-find_path (NODE_ROOT_DIR "node/src/node.h" "nodejs/src/node.h")
+find_path (NODE_ROOT_DIR "nodejs/src/node.h")
 
 set (NODE_INCLUDE_DIRS
-  ${NODE_ROOT_DIR}/node/src
   ${NODE_ROOT_DIR}/nodejs/src
 )
 
