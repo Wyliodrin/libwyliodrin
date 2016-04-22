@@ -33,7 +33,7 @@ configure_file (
 
 # Options
 option (RASPBERRYPI "Build for the RaspberryPi."   OFF)
-option (DEVICEINTEL     "Build for the Intel Galileo." OFF)
+option (DEVICEINTEL "Build for the Intel Galileo." OFF)
 option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
 option (REDPITAYA   "Build for the RedPitaya."     OFF)
 option (UDOONEO     "Build for the UDOO NEO."      OFF)
@@ -42,6 +42,8 @@ option (SERVER      "Build for the Server."        OFF)
 # Option management
 if (DEVICEINTEL)
   add_definitions (-DDEVICEINTEL)
+  add_definitions ("-DSWIG_V8_VERSION=0x040567")
+  add_definitions ("-std=c++11")
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
   message (INFO "found libmraa version: ${MRAA_VERSION}")
   set(FLAGS "-DDEVICEINTEL")
