@@ -1,4 +1,4 @@
-#ifdef UDOONEO
+#ifdef ARDUINOYUN
 
 
 
@@ -24,8 +24,8 @@
 
 #define GPIO_PATH "/sys/class/gpio"
 
-#define MIN_PIN 4
-#define MAX_PIN 203
+#define MIN_PIN 0
+#define MAX_PIN 19
 
 #define EXPORT   0
 #define UNEXPORT 1
