@@ -12,6 +12,7 @@
 #include <stdint.h>  /* integers     */
 #include <unistd.h>  /* usleep, read */
 #include <stdbool.h> /* booleans     */
+#include <stdlib.h>  /* system call to lingpio */
 
 #include "debug.h"
 #include "wiring.h"
@@ -23,12 +24,10 @@
 /*** DEFINES *************************************************************************************/
 
 #define GPIO_PATH "/sys/class/gpio"
+#define PWM_PATH "/sys/class/pwm"
 
-#define MIN_PIN 0
-#define MAX_PIN 19
-
-#define EXPORT   0
-#define UNEXPORT 1
+#define MIN_PIN 2
+#define MAX_PIN 13
 
 /*************************************************************************************************/
 
@@ -36,7 +35,6 @@
 
 /*** STATIC FUNCTIONS DECLARATIONS ***************************************************************/
 
-static int export_or_unexport_gpio(int pin, int export_or_unexport);
 static int set_gpio_direction(int pin, int mode);
 static int set_gpio_value(int pin, int value);
 
@@ -53,44 +51,27 @@ extern "C" {
 /*** API IMPLEMENTATION **************************************************************************/
 
 int wiringSetup() {
-  /* Do nothing */
+  int status = system("lingpio");
+  error(status != 0, return, "failed to export pins");
 
   return 0;
 }
 
 
-void pinReset(int pin) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
-
-  /* Try to open value */
-  char buf[64];
-  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
-  int fd = open(buf, O_RDONLY);
-
-  /* Unexport if value is available */
-  if (fd != -1) {
-    close(fd);
-    int export_gpio_rc = export_or_unexport_gpio(pin, UNEXPORT);
-    error(export_gpio_rc != 0, return, "can't unexport pin %d", pin);
-  }
-}
-
 
 void pinMode(int pin, int mode) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
+  error(!(((MIN_PIN <= pin) && (pin <= MAX_PIN)) || (pin == 7), return, "invalid pin");
   error(mode != INPUT && mode != OUTPUT, return, "mode can be either INPUT or OUTPUT");
 
   /* Try to open value */
   char buf[64];
-  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  snprintf(buf, 64, GPIO_PATH "/D%d/value", pin);
   int fd = open(buf, O_RDONLY);
 
   /* Export if can't open value */
   if (fd != -1) {
     close(fd);
-  } else {
-    int export_gpio_rc = export_or_unexport_gpio(pin, EXPORT);
-    error(export_gpio_rc != 0, return, "Can't export pin %d", pin);
+    error(1, return, "Can't open value")
   }
 
   /* Set direction */
@@ -100,21 +81,21 @@ void pinMode(int pin, int mode) {
 
 
 void digitalWrite(int pin, int value) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return, "invalid pin");
+  error(!(((MIN_PIN <= pin) && (pin <= MAX_PIN)) || (pin == 7), return, "invalid pin");
   error(value != LOW && value != HIGH, return, "value can be either LOW or HIGH");
 
   set_gpio_value(pin, value);
 }
 
-
+////////////////////////////////////////
 int digitalRead(int pin) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
+  error(!(((MIN_PIN <= pin) && (pin <= MAX_PIN)) || (pin == 7), return, "invalid pin");
 
   /* Open value */
   char buf[64];
-  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  snprintf(buf, 64, GPIO_PATH "/D%d/value", pin);
   int fd = open(buf, O_RDONLY);
-  syserror(fd == -1, return -1, "can't open " GPIO_PATH "/gpio%d/value", pin);
+  syserror(fd == -1, return -1, "can't open " GPIO_PATH "/D%d/value", pin);
 
   /* Read value */
   char ch;
@@ -132,36 +113,42 @@ int digitalRead(int pin) {
   return -1;
 }
 
-
+//TBD
 void analogWrite(int pin, int value) {
   error(true, return, "analogWrite not implemented yet");
 }
 
-
+//TBD
+//0-1023
 int analogRead(int pin) {
   error(true, return -1, "analogRead not implemented yet");
 
   return 0;
 }
 
-
+//TBD
+//#ce intoarce placa
 int analogReadRaw(int pin) {
   error(true, return -1, "analogReadRaw not implemented yet");
 
   return 0;
 }
 
-
+//TBD
+//ca mai sus
 void analogWriteRaw(int pin, int value) {
   error(true, return, "analogWriteRaw not implemented yet");
 }
 
+//TBD
 /* Advanced I/O */
+//ma uit 8 digital write
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val) {
   error(true, return, "shiftOut not implemented yet");
 }
 
-
+//TBD
+//inversul de mai sus
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
   error(true, return 1, "shiftIn not implemented yet");
 
@@ -391,42 +378,15 @@ int serial_flush(int serial_id) {
 
 /*** STATIC FUNCTIONS IMPLEMENTATION *************************************************************/
 
-static int export_or_unexport_gpio(int pin, int export_or_unexport) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
-  error(!(export_or_unexport == EXPORT || export_or_unexport == UNEXPORT), return -1,
-        "export_or_unexport parameter can be either EXPORT or UNEXPORT");
-
-  int fd;
-  if (export_or_unexport == EXPORT) {
-    fd = open(GPIO_PATH "/export", O_WRONLY);
-    syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/export");
-  } else {
-    fd = open(GPIO_PATH "/unexport", O_WRONLY);
-    syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/unexport");
-  }
-
-  char buf[4];
-  snprintf(buf, 4, "%d", pin);
-  int write_rc = write(fd, buf, sizeof(buf));
-  close(fd);
-  if (export_or_unexport == EXPORT) {
-    syserror(write_rc == -1, return -1, "Can't write to " GPIO_PATH "/export");
-  } else {
-    syserror(write_rc == -1, return -1, "Can't write to " GPIO_PATH "/unexport");
-  }
-
-  return 0;
-}
-
 
 static int set_gpio_direction(int pin, int mode) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
+  error(!(((MIN_PIN <= pin) && (pin <= MAX_PIN)) || (pin == 7), return -1, "invalid pin");
   error(mode != INPUT && mode != OUTPUT, return -1, "mode can be either INPUT or OUTPUT");
 
   char buf[64];
-  snprintf(buf, 64, GPIO_PATH "/gpio%d/direction", pin);
+  snprintf(buf, 64, GPIO_PATH "/D%d/direction", pin);
   int fd = open(buf, O_WRONLY);
-  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/gpio%d/direction", pin);
+  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/D%d/direction", pin);
 
   if (mode == INPUT) {
     write(fd, "in", 3);
@@ -441,13 +401,13 @@ static int set_gpio_direction(int pin, int mode) {
 
 
 static int set_gpio_value(int pin, int value) {
-  error(!((MIN_PIN <= pin) && (pin <= MAX_PIN)), return -1, "invalid pin");
+  error(!(((MIN_PIN <= pin) && (pin <= MAX_PIN)) || (pin == 7), return -1, "invalid pin");
   error(value != LOW && value != HIGH, return -1, "value can be either LOW or HIGH");
 
   char buf[64];
-  snprintf(buf, 64, GPIO_PATH "/gpio%d/value", pin);
+  snprintf(buf, 64, GPIO_PATH "/D%d/value", pin);
   int fd = open(buf, O_WRONLY);
-  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/gpio%d/value", pin);
+  syserror(fd == -1, return -1, "Can't open " GPIO_PATH "/D%d/value", pin);
 
   if (value == LOW) {
     write(fd, "0", 2);
