@@ -38,6 +38,7 @@ option (BEAGLEBONE  "Build for the Beaglebone."    OFF)
 option (REDPITAYA   "Build for the RedPitaya."     OFF)
 option (UDOONEO     "Build for the UDOO NEO."      OFF)
 option (SERVER      "Build for the Server."        OFF)
+option (ARDUINOYUN  "Build for the Arduino Yun." OFF)
 
 # Option management
 if (DEVICEINTEL)
@@ -53,6 +54,9 @@ elseif (MINNOWBOARDMAX)
   pkg_check_modules (MRAA REQUIRED mraa>=0.4.0)
   message (INFO " found libmraa version: ${MRAA_VERSION}")
   set(FLAGS "-DMINNOWBOARDMAX")
+
+elseif (ARDUINOYUN)
+	#FA CEVA
 
 
 elseif (RASPBERRYPI)
