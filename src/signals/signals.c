@@ -39,6 +39,8 @@ const char *projectId;
 const char *sessionId;
 const char *userId;
 
+int signals_error = 0;
+
 /*************************************************************************************************/
 
 
@@ -262,7 +264,11 @@ int sendSignals(const char *name, double value, ...) {
     // printf ("publish %s signal:%s\n", sender, projectId);
     redisCommand (c, "publish %s signal:%s", sender, projectId);
   } else {
-    printf("Too many messages/s or no projectId\n");
+    if (signals_error == 0)
+    {
+      signals_error = 1;
+      printf("Too many messages/s or no projectId\n");
+    }
     return REDIS_EENV;
   }
 
@@ -317,7 +323,11 @@ int sendSignalsListAndFlag(const char *flag, const char **names, double *values,
     // printf ("publish %s signal:%s\n", sender, projectId); 
     redisCommand(c, "publish %s signal:%s", sender, projectId);
   } else {
-    printf("Too many messages/s or no projectId\n");
+    if (signals_error == 0)
+    {
+      signals_error = 1;
+      printf("Too many messages/s or no projectId\n");
+    }
     return REDIS_EENV;
   }
 
@@ -458,7 +468,11 @@ int sendSignalAndFlag(const char *tag, const char *name, double value) {
     redisCommand(c, "publish %s signal:%s", sender, projectId);
     }
   } else {
-    printf("Too many messages/s or no projectId\n");
+    if (signals_error == 0)
+    {
+      signals_error = 1;
+      printf("Too many messages/s or no projectId\n");
+    }
     return REDIS_EENV;
   }
 
