@@ -23,7 +23,7 @@ pkg_check_modules (EVENT REQUIRED libevent)
 
 # Version
 set (VERSION_MAJOR 2)
-set (VERSION_MINOR 5)
+set (VERSION_MINOR 6)
 
 # Configuration file
 configure_file (
@@ -58,6 +58,7 @@ elseif (MINNOWBOARDMAX)
 elseif (RASPBERRYPI)
   add_definitions (-DRASPBERRYPI)
   find_package (Wiringpi REQUIRED)
+  add_definitions ("-DSWIG_V8_VERSION=0x040567")
   set (FLAGS "-DRASPBERRYPI")
   include_directories (${WIRINGPI_INCLUDE_DIR})
 
