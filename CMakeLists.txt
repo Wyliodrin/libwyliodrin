@@ -22,8 +22,8 @@ include_directories (${JANSSON_INCLUDE_DIR})
 pkg_check_modules (EVENT REQUIRED libevent)
 
 # Version
-set (VERSION_MAJOR 2)
-set (VERSION_MINOR 6)
+set (VERSION_MAJOR 3)
+set (VERSION_MINOR 0)
 
 # Configuration file
 configure_file (
@@ -85,6 +85,7 @@ else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DEDISON=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON, -DUDOONEO=ON or -DSERVER=ON")
 endif ()
 
+add_definitions(-DBUILDING_NODE_EXTENSION)
 add_definitions ("-Wall -DDEBUG")
 
 include_directories (${PROJECT_BINARY_DIR})
@@ -118,23 +119,9 @@ set (wyliodrin_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/libraries/Wire.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/WString.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/SPI.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_GFX.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_PCD8544.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_ST7735.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_LEDBackpack.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_Sensor.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_BMP085_U.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/Adafruit_MCP23008.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/SparkFun_APDS9960.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/LiquidCrystal.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/HTU21D.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/TM1637.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/SeeedOLED.cpp
   ${PROJECT_SOURCE_DIR}/src/libraries/I2Cdev.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/MPU6050.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/LED_Bar.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/CircularLED.cpp
-  ${PROJECT_SOURCE_DIR}/src/libraries/UniPi.c
 )
 
 add_subdirectory (src)

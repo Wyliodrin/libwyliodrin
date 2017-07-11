@@ -1,4 +1,4 @@
 #! /bin/bash
 
 echo "Updating libwyliodrin streams"
-curl -L -k https://www.wyliodrin.com/public/scripts/update_streams.sh | bash
+curl -L -k https://raw.githubusercontent.com/Wyliodrin/scripts/master/libwyliodrin/update_streams.sh | bash
