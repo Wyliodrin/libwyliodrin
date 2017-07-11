@@ -85,6 +85,7 @@ else ()
   message (FATAL_ERROR "You need to choose between -DRASPBERRYPI=ON, -DGALILEO=ON, -DEDISON=ON, -DBEAGLEBONE=ON, -DREDPITAYA=ON, -DUDOONEO=ON or -DSERVER=ON")
 endif ()
 
+add_definitions(-DBUILDING_NODE_EXTENSION)
 add_definitions ("-Wall -DDEBUG")
 
 include_directories (${PROJECT_BINARY_DIR})
