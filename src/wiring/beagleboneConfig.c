@@ -299,7 +299,7 @@ result_t loadDeviceTree(const char *name) {
   char line      [256];
 
   if(strcmp(pathCapemgr, "") == 0) {
-    if(buildPath("/sys/devices", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
+    if(buildPath("/sys/devices/platform", "bone_capemgr", pathCapemgr, sizeof(pathCapemgr)) == ERROR) {
       debug("Could not build path to bone_capemgr");
       return ERROR;
     }
@@ -1212,9 +1212,8 @@ byte pwmGetRun(const char* key) {
  */
 void ainInit() {
   if(!ainInitialized) {
-    loadDeviceTree("cape-bone-iio");
-    buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
-    buildPath(pathOcp, "helper", pathHelper, sizeof(pathHelper));
+    loadDeviceTree("BB-ADC");
+    buildPath("/sys/bus/iio/devices", "iio", pathHelper, sizeof(pathHelper));
     ainInitialized = true;
   }
 }
@@ -1238,7 +1237,7 @@ int ainGetValue(const byte gpio) {
     ainInit();
   }
 
-  snprintf(pathAin, sizeof(pathAin), "%s/AIN%d", pathHelper, gpio - 200);
+  snprintf(pathAin, sizeof(pathAin), "%s/in_voltage%d_raw", pathHelper, gpio - 200);
 
   if((fdAin = open(pathAin, O_RDONLY)) < 0) {
     debug("Could not open file %s", pathAin);
