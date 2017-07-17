@@ -991,15 +991,15 @@ result_t pwmEnable(const char *key) {
   pwm_t *p;
   get_pwm_by_key(key,&p);
   
-  if(build_path(pathOcp, p->chip, pwm_dev_path, sizeof(pwm_dev_path)) == ERROR) {
+  if(buildPath(pathOcp, p->chip, pwm_dev_path, sizeof(pwm_dev_path)) == ERROR) {
     debug("Could not build path to %s", p->chip);
     return ERROR;
   }
-  if(build_path(pwm_dev_path, p->addr, pwm_addr_path, sizeof(pwm_addr_path)) == ERROR) {
+  if(buildPath(pwm_dev_path, p->addr, pwm_addr_path, sizeof(pwm_addr_path)) == ERROR) {
     debug("Could not build path to %s", p->addr);
     return ERROR;
   }
-  if(build_path(pwm_addr_path, "pwm/pwmchip", pwm_chip_path, sizeof(pwm_chip_path)) == ERROR) {
+  if(buildPath(pwm_addr_path, "pwm/pwmchip", pwm_chip_path, sizeof(pwm_chip_path)) == ERROR) {
     debug("Could not build path to %s", "pwm/pwmchip");
     return ERROR;
   }
