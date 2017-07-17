@@ -953,10 +953,10 @@ result_t get_pwm_by_key(const char *key, pwm_t **pwm)
         if (strcmp(p->key, key) == 0) {
             // Return the pwm_t struct
             *pwm = p;
-            return BBIO_OK;
+            return SUCCESS;
         }
     }
-    return SUCCESS;
+    return ERROR;
 }
 
 /**
@@ -988,7 +988,6 @@ result_t pwmEnable(const char *key) {
   char period_path[90];
   char polarity_path[90];
   char enable_path[90];
-  char pin_mode[PIN_MODE_LEN]; // "pwm" or "pwm2"
   pwm_t *p;
   get_pwm_by_key(key,&p);
   
