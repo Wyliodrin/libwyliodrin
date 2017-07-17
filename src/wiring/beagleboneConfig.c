@@ -981,6 +981,7 @@ result_t pwmEnable(const char *key) {
   FILE *f = NULL;
   char pwm_dev_path[45]; // "/sys/devices/platform/ocp/48300000.epwmss"
   char pwm_addr_path[60]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm"
+  char pwm_addr_path2[60]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm"
   char pwm_chip_path[75]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0"
   char pwm_export_path[80]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/export"
   char pwm_path[80]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/pwm1"
@@ -999,8 +1000,12 @@ result_t pwmEnable(const char *key) {
     debug("Could not build path to %s", p->addr);
     return ERROR;
   }
-  if(buildPath(pwm_addr_path, "pwm/pwmchip", pwm_chip_path, sizeof(pwm_chip_path)) == ERROR) {
-    debug("Could not build path to %s", "pwm/pwmchip");
+  if(buildPath(pwm_addr_path, "pwm", pwm_addr_path2, sizeof(pwm_addr_path2)) == ERROR) {
+    debug("Could not build path to %s", "pwm");
+    return ERROR;
+  }
+  if(buildPath(pwm_addr_path2, "pwmchip", pwm_chip_path, sizeof(pwm_chip_path)) == ERROR) {
+    debug("Could not build path to %s", "pwmchip");
     return ERROR;
   }
   snprintf(pwm_path, sizeof(pwm_path), "%s/pwm%d", pwm_chip_path, p->index);
