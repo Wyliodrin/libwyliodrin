@@ -149,6 +149,24 @@ pin_t pinTable[] = {
   {"DGND"      , "P9_44", 0  , -1, -1, -1 },
   {"DGND"      , "P9_45", 0  , -1, -1, -1 },
   {"DGND"      , "P9_46", 0  , -1, -1, -1 }};
+  
+pwm_t pwm_table[] = {
+  { "ehrpwm2", 6, 1, 4, "ehrpwm.2:1", "EHRPWM2B", "48304000", "48304200", "P8_13"},
+  { "ehrpwm2", 5, 0, 4, "ehrpwm.2:0", "EHRPWM2A", "48304000", "48304200", "P8_19"},
+  { "ehrpwm1", 4, 1, 2, "ehrpwm.1:1", "EHRPWM1B", "48302000", "48302200", "P8_34"},
+  { "ehrpwm1", 3, 0, 2, "ehrpwm.1:0", "EHRPWM1A", "48302000", "48302200", "P8_36"},
+  { "ehrpwm2", 5, 0, 3, "ehrpwm.2:0", "EHRPWM2A", "48304000", "48304200", "P8_45"},
+  { "ehrpwm2", 6, 1, 3, "ehrpwm.2:1", "EHRPWM2B", "48304000", "48304200", "P8_46"},
+  { "ehrpwm1", 3, 0, 6, "ehrpwm.1:0", "EHRPWM1A", "48302000", "48302200", "P9_14"},
+  { "ehrpwm1", 4, 1, 6, "ehrpwm.1:1", "EHRPWM1B", "48302000", "48302200", "P9_16"},
+  { "ehrpwm0", 1, 1, 3, "ehrpwm.0:1", "EHRPWM0B", "48300000", "48300200", "P9_21"},
+  { "ehrpwm0", 0, 0, 3, "ehrpwm.0:0", "EHRPWM0A", "48300000", "48300200", "P9_22"},
+  {   "ecap2", 7, 0, 4, "ecap.2",     "ECAPPWM2", "48304000", "48304100", "P9_28"},
+  { "ehrpwm0", 1, 1, 1, "ehrpwm.0:1", "EHRPWM0B", "48300000", "48300200", "P9_29"},
+  { "ehrpwm0", 0, 0, 1, "ehrpwm.0:0", "EHRPWM0A", "48300000", "48300200", "P9_31"},
+  {   "ecap0", 2, 0, 0, "ecap.0",     "ECAPPWM0", "48300000", "48300100", "P9_42"},
+  { NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL }
+};
 
 
 
@@ -901,9 +919,10 @@ bool pwmIsEnabled(const byte gpio) {
  */
 void pwmInit() {
   if(!pwmInitialized) {
-    loadDeviceTree("am33xx_pwm");
-    buildPath("/sys/devices", "ocp", pathOcp, sizeof(pathOcp));
+    /*loadDeviceTree("am33xx_pwm");*/
+    buildPath("/sys/devices/platform", "ocp", pathOcp, sizeof(pathOcp));
     pwmInitialized = true;
+    /* do nothing for new beaglebones, only build pathOcp*/
   }
 }
 
@@ -924,6 +943,23 @@ pwmNode_t* pwmGetPin(const char *key) {
 }
 
 /**
+ * Gets the row with the directories from the PWM table
+ */
+result_t get_pwm_by_key(const char *key, pwm_t **pwm)
+{
+    pwm_t *p;
+    // Loop through the table
+    for (p = pwm_table; p->key != NULL; ++p) {
+        if (strcmp(p->key, key) == 0) {
+            // Return the pwm_t struct
+            *pwm = p;
+            return BBIO_OK;
+        }
+    }
+    return SUCCESS;
+}
+
+/**
  * Enables PWM for pin key
  */
 result_t pwmEnable(const char *key) {
@@ -932,34 +968,58 @@ result_t pwmEnable(const char *key) {
     return SUCCESS;
   }
 
-  char slotsFragment[16];
-  char pwmTestFragment[16];
-  char pathPwmTest[64];
+  //char slotsFragment[16];
+  //char pwmTestFragment[16];
+  char pathPwmTest[100];
   pwmNode_t *aux;
   pwmNode_t *newNode;
 
   if(!pwmInitialized) {
     pwmInit();
   }
-
-  snprintf(slotsFragment, sizeof(slotsFragment), "bone_pwm_%s", key);
-  if (loadDeviceTree(slotsFragment) == ERROR) {
-    debug("Could not load device tree %s", slotsFragment);
+  
+  FILE *f = NULL;
+  char pwm_dev_path[45]; // "/sys/devices/platform/ocp/48300000.epwmss"
+  char pwm_addr_path[60]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm"
+  char pwm_chip_path[75]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0"
+  char pwm_export_path[80]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/export"
+  char pwm_path[80]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/pwm1"
+  char duty_path[90]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/pwm1/duty_cycle"
+  char period_path[90];
+  char polarity_path[90];
+  char enable_path[90];
+  char pin_mode[PIN_MODE_LEN]; // "pwm" or "pwm2"
+  pwm_t *p;
+  get_pwm_by_key(key,&p);
+  
+  if(build_path(pathOcp, p->chip, pwm_dev_path, sizeof(pwm_dev_path)) == ERROR) {
+    debug("Could not build path to %s", p->chip);
     return ERROR;
   }
-
-  // Sleep some time for loadDeviceTree to take effect
-  usleep(300 * 1000);
-
-  snprintf(pwmTestFragment, sizeof(pwmTestFragment), "pwm_test_%s", key);
-  if(buildPath(pathOcp, pwmTestFragment, pathPwmTest, sizeof(pathPwmTest)) == ERROR) {
-    debug("Could not build path to %s", pwmTestFragment);
+  if(build_path(pwm_dev_path, p->addr, pwm_addr_path, sizeof(pwm_addr_path)) == ERROR) {
+    debug("Could not build path to %s", p->addr);
     return ERROR;
   }
+  if(build_path(pwm_addr_path, "pwm/pwmchip", pwm_chip_path, sizeof(pwm_chip_path)) == ERROR) {
+    debug("Could not build path to %s", "pwm/pwmchip");
+    return ERROR;
+  }
+  snprintf(pwm_path, sizeof(pwm_path), "%s/pwm%d", pwm_chip_path, p->index);
+  
+  /* Exporting pwm0 or pwm1 */
+  snprintf(pwm_export_path, sizeof(pwm_export_path), "%s/export", pwm_chip_path);
+  f = fopen(pwm_export_path, "w");
+  if (f == NULL) { // Can't open the export file
+    debug("Could not build path to %s", "pwm/pwmchip");
+    return ERROR;
+  }
+  fprintf(f, "%d", p->index);
+  fclose(f);
+  
 
   newNode = (pwmNode_t*) malloc(sizeof(pwmNode_t));
   newNode->key = key;
-  newNode->pathPwmTest = strdup(pathPwmTest);
+  newNode->pathPwmTest = strdup(pwm_path);
   newNode->next = NULL;
 
   // Empty pwmList
@@ -1054,7 +1114,7 @@ result_t pwmSetDuty(const char *key, const ulong duty) {
     return ERROR;
   }
 
-  snprintf(pathDuty, sizeof(pathDuty), "%s/duty", aux->pathPwmTest);
+  snprintf(pathDuty, sizeof(pathDuty), "%s/duty_cycle", aux->pathPwmTest);
   if((fdDuty = open(pathDuty, O_WRONLY)) < 0) {
     debug("Could not open file %s", pathDuty);
     return ERROR;
@@ -1081,7 +1141,7 @@ ulong pwmGetDuty(const char *key) {
     return -1;
   }
 
-  snprintf(pathDuty, sizeof(pathDuty), "%s/duty", aux->pathPwmTest);
+  snprintf(pathDuty, sizeof(pathDuty), "%s/duty_cycle", aux->pathPwmTest);
   if((fdDuty = open(pathDuty, O_RDONLY)) < 0) {
     debug("Could not open file %s", pathDuty);
     return -1;
