@@ -981,7 +981,7 @@ result_t pwmEnable(const char *key) {
   FILE *f = NULL;
   char pwm_dev_path[45]; // "/sys/devices/platform/ocp/48300000.epwmss"
   char pwm_addr_path[60]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm"
-  char pwm_addr_path2[60]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm"
+  char pwm_addr_path2[75]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm"
   char pwm_chip_path[75]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0"
   char pwm_export_path[80]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/export"
   char pwm_path[80]; // "/sys/devices/platform/ocp/48300000.epwmss/48300200.ehrpwm/pwm/pwmchip0/pwm1"
