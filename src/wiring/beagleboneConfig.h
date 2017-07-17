@@ -182,6 +182,18 @@ result_t ledReset      (const byte gpio);
 /**************************************************************************************************
  * 6.PWM
  *************************************************************************************************/
+  
+typedef struct pwm_t {
+  const char *module;
+  const int sysfs;
+  const int index;
+  const int muxmode;
+  const char *path;
+  const char *name;
+  const char *chip;
+  const char *addr;
+  const char *key;  // Pin name eg P9_21
+} pwm_t;
 
 void       pwmInit        ();
 bool       pwmIsValid     (const byte gpio);
