@@ -1045,10 +1045,10 @@ result_t pwmEnable(const char *key) {
  * Disables PWM pin
  */
 result_t pwmDisable(const char *key) {
-  char fragment[16];
+  /*char fragment[16];
 
   sprintf(fragment, "bone_pwm_%s", key);
-  return unloadDeviceTree(fragment);
+  return unloadDeviceTree(fragment);*/
 }
 
 /**
@@ -1057,7 +1057,7 @@ result_t pwmDisable(const char *key) {
 result_t pwmSetPeriod(const char *key, ulong period) {
   pwmNode_t *aux;
   char buf[16];
-  char pathPeriod[64];
+  char pathPeriod[90];
   int fdPeriod;
 
   if((aux = pwmGetPin(key)) == NULL) {
@@ -1084,7 +1084,7 @@ result_t pwmSetPeriod(const char *key, ulong period) {
 ulong pwmGetPeriod(const char *key) {
   pwmNode_t *aux;
   char buf[16];
-  char pathPeriod[64];
+  char pathPeriod[90];
   int fdPeriod;
 
   if((aux = pwmGetPin(key)) == NULL) {
@@ -1110,7 +1110,7 @@ ulong pwmGetPeriod(const char *key) {
 result_t pwmSetDuty(const char *key, const ulong duty) {
   pwmNode_t *aux;
   char buf[16];
-  char pathDuty[64];
+  char pathDuty[90];
   int fdDuty;
 
   if((aux = pwmGetPin(key)) == NULL) {
@@ -1137,7 +1137,7 @@ result_t pwmSetDuty(const char *key, const ulong duty) {
 ulong pwmGetDuty(const char *key) {
   pwmNode_t *aux;
   char buf[20];
-  char pathDuty[64];
+  char pathDuty[90];
   int fdDuty;
 
   if((aux = pwmGetPin(key)) == NULL) {
@@ -1163,7 +1163,7 @@ ulong pwmGetDuty(const char *key) {
 result_t pwmSetPolarity(const char *key, const byte polarity) {
   pwmNode_t *aux;
   char buf[16];
-  char pathPolarity[64];
+  char pathPolarity[90];
   int fdPolarity;
   int len;
 
@@ -1191,7 +1191,7 @@ result_t pwmSetPolarity(const char *key, const byte polarity) {
 byte pwmGetPolarity(const char *key) {
   pwmNode_t *aux;
   char buf[20];
-  char pathPolarity[64];
+  char pathPolarity[90];
   int fdPolarity;
 
   if((aux = pwmGetPin(key)) == NULL) {
@@ -1217,7 +1217,7 @@ byte pwmGetPolarity(const char *key) {
 result_t pwmSetRun(const char* key, const byte run) {
   pwmNode_t *aux;
   char buf[16];
-  char pathRun[64];
+  char pathRun[90];
   int fdRun;
   int len;
 
@@ -1245,7 +1245,7 @@ result_t pwmSetRun(const char* key, const byte run) {
 byte pwmGetRun(const char* key) {
   pwmNode_t *aux;
   char buf[20];
-  char pathRun[64];
+  char pathRun[90];
   int fdRun;
 
   if((aux = pwmGetPin(key)) == NULL) {
