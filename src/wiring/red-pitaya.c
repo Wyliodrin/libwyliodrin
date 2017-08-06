@@ -35,10 +35,11 @@ rp_apin_t aout[] = {RP_AOUT0, RP_AOUT1, RP_AOUT2, RP_AOUT3};
 #define GPIO	24
 #define AIN	4
 #define AOUT	4
-#define AWRITE_MAX_VALUE	255
-#define AREAD_MAX_VALUE		1023
+#define AWRITE_MAX_VALUE	0xFF
+#define AREAD_MAX_VALUE		0x3FF
 #define RP_AWRITE_MAX_VALUE	156
-#define RP_AREAD_MAX_VALUE	2047
+#define RP_AREAD_MAX_VALUE	0xFFF
+
 /**************************************************************************************************
  * 1.General
  *************************************************************************************************/
@@ -57,7 +58,9 @@ void pinReset (int pin)
 	printf("%s function not implemented\n",__func__);
 }
 
-
+/**************************************************************************************************
+ * Digital pins
+ *************************************************************************************************/
 
 void pinMode(int pin, int mode)
 {
@@ -100,9 +103,12 @@ int digitalRead (int pin)
 	return -1;
 }
 
+/**************************************************************************************************
+ * Analog pins
+ *************************************************************************************************/
+
 void analogWrite (int pin, int value)
 {
-	//Scale values from 0-1023 to 0-2047
 	int scaled_value = value*RP_AWRITE_MAX_VALUE/AWRITE_MAX_VALUE;
 	if(pin<AOUT)
 	{
@@ -113,6 +119,48 @@ void analogWrite (int pin, int value)
 	else
 		printf("Pin %d is not analog output\n",pin);
 }	
+
+void analogWriteRaw (int pin, int value)
+{
+	if(pin<AOUT)
+	{
+		int rc = rp_ApinSetValueRaw(aout[pin], value);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog output\n",pin);
+}
+
+void analogWriteVoltage (int pin, float value)
+{
+	if(pin<AOUT)
+	{
+		int rc = rp_ApinSetValue(aout[pin], value);
+		if(rc != RP_OK)
+			printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog output\n",pin);
+}
+
+int analogRead (int pin)
+{
+	if(pin<AIN)
+	{
+		int value;
+		int rc = rp_ApinGetValueRaw(ain[pin], &value);
+		if(rc == RP_OK)
+		{
+			int scaled_value = value * 2*AREAD_MAX_VALUE/RP_AREAD_MAX_VALUE;
+			return scaled_value;
+		}
+		printf("%s\n", rp_GetError(rc));
+	}
+	else
+		printf("Pin %d is not analog input\n",pin);
+	return -1;
+}
 
 int analogReadRaw (int pin)
 {
@@ -129,42 +177,16 @@ int analogReadRaw (int pin)
 	return -1;
 }
 
-void analogWriteRaw (int pin, int value)
+float analogReadVoltage (int pin)
 {
-	if(pin<AOUT)
-	{
-		int rc = rp_ApinSetValueRaw(aout[pin], value);
-		if(rc != RP_OK)
-			printf("%s\n", rp_GetError(rc));
-	}
-	else
-		printf("Pin %d is not analog output\n",pin);
-}
-
-
-void analogWriteVoltage (int pin, float value)
-{
-	if(pin<AOUT)
-	{
-		int rc = rp_ApinSetValue(aout[pin], value);
-		if(rc != RP_OK)
-			printf("%s\n", rp_GetError(rc));
-	}
-	else
-		printf("Pin %d is not analog output\n",pin);
-}
-
-int analogRead (int pin)
-{
-	int scaled_value;
 	if(pin<AIN)
 	{
 		int value;
+		float scaled_value;
 		int rc = rp_ApinGetValueRaw(ain[pin], &value);
 		if(rc == RP_OK)
 		{
-			//scale read value from 0-156 to 0-255
-			scaled_value = value*RP_AREAD_MAX_VALUE/AREAD_MAX_VALUE;
+			scaled_value = (float) value * 7.0/RP_AREAD_MAX_VALUE;
 			return scaled_value;
 		}
 		printf("%s\n", rp_GetError(rc));
@@ -174,20 +196,9 @@ int analogRead (int pin)
 	return -1;
 }
 
-float analogReadVoltage (int pin)
-{
-	if(pin<AIN)
-	{
-		float value;
-		int rc = rp_ApinGetValue(ain[pin], &value);
-		if(rc == RP_OK)
-			return value;
-		printf("%s\n", rp_GetError(rc));
-	}
-	else
-		printf("Pin %d is not analog input\n",pin);
-	return -1;
-}
+/**************************************************************************************************
+ * delays
+ *************************************************************************************************/
 
 void delay (unsigned int milliseconds)
 {
@@ -218,7 +229,7 @@ unsigned int micros()
 
 unsigned long pulseIn(uint8_t pin, uint8_t state)
 {
-	printf ("pulseIn is not implemented for BeagleBone Black");
+	printf ("pulseIn is not implemented for Red Pitaya");
   	return 0;
 }
 
